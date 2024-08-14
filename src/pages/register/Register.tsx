@@ -9,13 +9,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createClient } from "@supabase/supabase-js";
-import { Bounce, toast } from "react-toastify";
-
-const supabase = createClient(
-  "https://zjrtoubswronpztidprq.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqcnRvdWJzd3JvbnB6dGlkcHJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA0NDk2NDUsImV4cCI6MjAzNjAyNTY0NX0.ovLBcydaTQofm8BZwpM0kv4rl8i82oKgb53rhgQGwIA"
-);
+import { auth } from "../../services/auth";
 
 export const Register = () => {
   
@@ -24,41 +18,13 @@ export const Register = () => {
     const data = new FormData(e.currentTarget);
     const user = {
       email: data.get("email") as string,
+      name: data.get("name") as string,
+      ramal: data.get("ramal") as number,
       password: data.get("password") as string,
     };
-    const { email, password } = user;
-    try {
-      supabase.auth.signUp({
-        email: email,
-        password: password,
-      });
-      toast.success('Usuario criado com sucesso!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        });
-      setTimeout(() => {
-        window.location.href = "/login"
-      }, 3500)
-    } catch (error) {
-      toast.error(`${error}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        });
-    }
+    const { email, name, ramal, password } = user;
+
+    auth.signUp(email, name, ramal, password)
   };
 
   return (
@@ -79,25 +45,25 @@ export const Register = () => {
         </Typography>
         <Box component="form" noValidate onSubmit={createUser} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 autoComplete="given-name"
-                name="firstName"
+                name="name"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="name"
+                label="Name"
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
+                name="ramal"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
+                id="ramal"
+                label="Ramal"
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -131,7 +97,7 @@ export const Register = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
