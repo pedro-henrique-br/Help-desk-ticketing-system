@@ -9,16 +9,34 @@ const supabase = createClient(
 
 export const Home = () => {
   const [users, setUsers] = useState([]);
-  const [ticket, setTicket] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [priority, setPriority] = useState("")
+  const [openedTickets, setOpenedTickets] = useState([])
 
   const createTicket = async () => {
-    await supabase.from("users").update({ticket: ticket}).eq("id", 42)
+
+    // const tickets = []
+    // tickets.push({ticket: inputValue, priority: priority})
+
+    await supabase.rpc("ticket", {
+      id: 3,
+      ticket: "new ticket",
+    });
+
+    // const { data, error } = await supabase
+    // .from('users')
+    // .insert([{ticket: tickets}])
+    // .eq('id', 3)
+    
+    // setOpenedTickets(tickets[0].ticket)
+    const tickets = await supabase.from("users").select("ticket").eq("id", 3)
+    console.log(JSON.parse(tickets.data[0].ticket[0]))
+    // console.log("erro", error)
   }
 
   useEffect(() => {
     const getUsers = async () => {
       const response = await auth.fetchUsers();
-      console.log(response);
       setUsers(response);
     };
     getUsers();
@@ -47,8 +65,9 @@ export const Home = () => {
             ))}
         </tbody>
       </table>
-        {users[0] ? (<h1>ticket: {users[0].ticket}</h1>) : (null)}
-      <input type="text" onChange={(e) => setTicket(e.target.value)} placeholder="ticket" />
+        {openedTickets ? (<h1>ticket: {openedTickets}</h1>) : (null)}
+      <input type="text" onChange={(e) => setInputValue(e.target.value)} placeholder="ticket" />
+      <input type="text" onChange={(e) => setPriority(e.target.value)} placeholder="Priority" />
       <button onClick={createTicket}>Create Ticket</button>
     </div>
   );

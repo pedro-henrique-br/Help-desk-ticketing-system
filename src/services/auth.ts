@@ -44,7 +44,6 @@ const signUp = async (
       name: name,
       ramal: ramal,
       email: email,
-      ticket: "",
       isAdmin: false
     });
     setTimeout(() => {
