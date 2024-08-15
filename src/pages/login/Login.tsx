@@ -20,7 +20,6 @@ export const Login = () => {
       password: data.get("password") as string,
     };
     const { email, password } = user;
-
     auth.signIn(email, password)
   };
 

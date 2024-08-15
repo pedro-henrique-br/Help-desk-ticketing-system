@@ -3,9 +3,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { Login } from './pages/login/Login'
 import { Register } from './pages/register/Register'
-import { Home } from './pages/home/Home'
+import { Home } from './pages/Home/Home'
 
 function App() {
+
+  console.log(localStorage.getItem("acess_token"))
 
   return (
     <>

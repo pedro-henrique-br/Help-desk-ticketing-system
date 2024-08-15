@@ -1,3 +1,4 @@
+import { isUnitless } from "@mui/material/styles/cssUtils";
 import { createClient } from "@supabase/supabase-js";
 import { Bounce, toast } from "react-toastify";
 
@@ -40,11 +41,13 @@ const signUp = async (
       theme: "light",
       transition: Bounce,
     });
+    console.log(response.data.user?.id)
     await supabase.from("users").insert({
       name: name,
       ramal: ramal,
       email: email,
-      isAdmin: false
+      isAdmin: false,
+      user_id:response.data.user?.id
     });
     setTimeout(() => {
       signIn(email, password)
@@ -59,7 +62,23 @@ const signIn = async (email: string, password: string) => {
   });
 
   if ((await response).data.user?.aud === "authenticated") {
-    window.location.href = "/home";
+    const acess_token = (await response).data.session?.access_token
+    localStorage.setItem("acess_token", acess_token as string)
+
+    
+    const userId = (await (response)).data.user?.id
+    const { data } = await supabase.from("users").select("*").eq("user_id", userId);
+    
+    localStorage.setItem("user_id", userId as string)
+    
+    console.log(localStorage.getItem("user_id"))
+
+    const isUserAdmin = data[0].isAdmin
+    console.log(isUserAdmin)
+
+    setTimeout(() => {
+      window.location.href = "/home"
+      }, 3000)
   }
 
   if ((await response).error) {
