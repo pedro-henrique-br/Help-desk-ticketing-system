@@ -41,7 +41,6 @@ const signUp = async (
       theme: "light",
       transition: Bounce,
     });
-    console.log(response.data.user?.id)
     await supabase.from("users").insert({
       name: name,
       ramal: ramal,
@@ -65,6 +64,9 @@ const signIn = async (email: string, password: string) => {
     const acess_token = (await response).data.session?.access_token
     localStorage.setItem("acess_token", acess_token as string)
 
+    const isAuthenticated = (await response).data.user?.role
+    localStorage.setItem("isAuthenticated", isAuthenticated as string)
+
     
     const userId = (await (response)).data.user?.id
     const { data } = await supabase.from("users").select("*").eq("user_id", userId);
@@ -78,7 +80,7 @@ const signIn = async (email: string, password: string) => {
 
     setTimeout(() => {
       window.location.href = "/home"
-      }, 3000)
+      }, 2500)
   }
 
   if ((await response).error) {
@@ -109,9 +111,8 @@ const signIn = async (email: string, password: string) => {
 };
 
 const signOut = async () => {
-  const response = await supabase.auth.signOut();
-  console.log(response);
-  console.log("signed out");
+  localStorage.clear()
+  await supabase.auth.signOut();
   window.location.href = "/";
 };
 
