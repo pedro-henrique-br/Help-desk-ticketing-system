@@ -40,7 +40,7 @@ function a11yProps(index: number) {
 export const Aside = () => {
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -58,7 +58,6 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}>
           <Tab label="Dashboard" {...a11yProps(0)} />
           <Tab label="Tickets" {...a11yProps(1)} />

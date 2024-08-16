@@ -10,8 +10,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
+import { Navigate } from "react-router-dom";
 
 export const Login = () => {
+
+  const isAuthenticated = localStorage.getItem("isAuthenticated")
+  const redirect = () => {
+    return isAuthenticated === "authenticated" ? (<Navigate to="/home" />) : (null)
+  }
+
+  redirect()
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);

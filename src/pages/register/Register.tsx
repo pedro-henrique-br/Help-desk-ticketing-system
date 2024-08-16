@@ -16,13 +16,13 @@ export const Register = () => {
   const createUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const user = {
+    const Form = {
       email: data.get("email") as string,
+      ramal: data.get("ramal") as string,
       name: data.get("name") as string,
-      ramal: data.get("ramal") as number,
       password: data.get("password") as string,
     };
-    const { email, name, ramal, password } = user;
+    const { email, name, ramal, password } = Form;
 
     auth.signUp(email, name, ramal, password)
   };
@@ -62,6 +62,7 @@ export const Register = () => {
                 required
                 fullWidth
                 id="ramal"
+                type="number"
                 label="Ramal"
                 autoFocus
               />

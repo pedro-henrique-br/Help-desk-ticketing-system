@@ -9,7 +9,7 @@ const supabase = createClient(
 const signUp = async (
   email: string,
   name: string,
-  ramal: number,
+  ramal: string,
   password: string
 ) => {
   const response = await supabase.auth.signUp({
@@ -112,7 +112,9 @@ const signOut = async () => {
 const isUserAdmin = async () => {
   const userId = localStorage.getItem("user_id")
   const { data } = await supabase.from("users").select("*").eq("user_id", userId);
-  return data[0].isAdmin
+  if(data){
+    return data[0].isAdmin
+  }
 }
 
 const fetchUsers = async () => {

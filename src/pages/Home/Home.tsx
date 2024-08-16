@@ -14,8 +14,6 @@ export const Home = () => {
     fetchIsAdmin()
   }, [])
 
-  console.log(isAdmin)
-
   return (
     <div className='Home' >
       <Nav />
