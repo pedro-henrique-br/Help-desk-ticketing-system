@@ -5,6 +5,7 @@ import { Login } from './pages/login/Login'
 import { Register } from './pages/register/Register'
 import { Home } from './pages/Home/Home'
 import { PrivateRoute } from './services/route/PrivateRoute'
+import { UserSettings } from './pages/settings/UserSettings'
 
 function App() {
 
@@ -20,6 +21,11 @@ function App() {
           <Route path='/home' element={
             <PrivateRoute auth={isAuthenticated}>
               <Home />
+            </PrivateRoute>
+          }/>
+          <Route path='/home/settings' element={
+            <PrivateRoute auth={isAuthenticated}>
+              <UserSettings />
             </PrivateRoute>
           }/>
         </Routes>

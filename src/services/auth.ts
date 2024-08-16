@@ -1,4 +1,3 @@
-import { isUnitless } from "@mui/material/styles/cssUtils";
 import { createClient } from "@supabase/supabase-js";
 import { Bounce, toast } from "react-toastify";
 
@@ -69,15 +68,9 @@ const signIn = async (email: string, password: string) => {
 
     
     const userId = (await (response)).data.user?.id
-    const { data } = await supabase.from("users").select("*").eq("user_id", userId);
     
     localStorage.setItem("user_id", userId as string)
     
-    console.log(localStorage.getItem("user_id"))
-
-    const isUserAdmin = data[0].isAdmin
-    console.log(isUserAdmin)
-
     setTimeout(() => {
       window.location.href = "/home"
       }, 2500)
@@ -116,6 +109,12 @@ const signOut = async () => {
   window.location.href = "/";
 };
 
+const isUserAdmin = async () => {
+  const userId = localStorage.getItem("user_id")
+  const { data } = await supabase.from("users").select("*").eq("user_id", userId);
+  return data[0].isAdmin
+}
+
 const fetchUsers = async () => {
   const { data } = await supabase.from("users").select("*");
   return data;
@@ -126,4 +125,5 @@ export const auth = {
   signIn,
   signOut,
   fetchUsers,
+  isUserAdmin
 };

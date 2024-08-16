@@ -39,7 +39,6 @@ function a11yProps(index: number) {
 
 export const Aside = () => {
   const [value, setValue] = React.useState(0);
-  const [isAdmin, setIsAdmin] = React.useState(true);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -47,42 +46,38 @@ export const Aside = () => {
 
   return (
     <>
-      {isAdmin ? (
-        <Box
-          sx={{
-            flexGrow: 1,
-            bgcolor: "background.paper",
-            display: "flex",
-            height: "100vh",
-          }}>
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={value}
-            onChange={handleChange}
-            aria-label="Vertical tabs example"
-            sx={{ borderRight: 1, borderColor: "divider" }}>
-            <Tab label="Dashboard" {...a11yProps(0)} />
-            <Tab label="Tickets" {...a11yProps(1)} />
-            <Tab label="Documentation" {...a11yProps(3)} />
-            <Tab label="Users" {...a11yProps(2)} />
-          </Tabs>
-          <TabPanel value={value} index={0}>
-            <Dashboard />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            Item Two
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Item Three
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            Item Four
-          </TabPanel>
-        </Box>
-      ) : (
-        null
-      )}
+      <Box
+        sx={{
+          flexGrow: 1,
+          bgcolor: "background.paper",
+          display: "flex",
+          height: "100vh",
+        }}>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          sx={{ borderRight: 1, borderColor: "divider" }}>
+          <Tab label="Dashboard" {...a11yProps(0)} />
+          <Tab label="Tickets" {...a11yProps(1)} />
+          <Tab label="Documentation" {...a11yProps(3)} />
+          <Tab label="Users" {...a11yProps(2)} />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <Dashboard />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          Item Two
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          Item Four
+        </TabPanel>
+      </Box>
     </>
   );
 };
