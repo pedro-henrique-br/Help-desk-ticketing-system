@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { DropDownMenu } from "../../components/dropdown/DropDownMenu";
-import { CreateTicketForm } from "../../components/Button/CreateTicketForm";
+import { CreateTicketForm } from "../../components/button/CreateTicketForm";
 interface user {
   isAdmin: unknown;
 }

@@ -5,7 +5,7 @@ import { Login } from './pages/login/Login'
 import { Register } from './pages/register/Register'
 import { Home } from './pages/Home/Home'
 import { PrivateRoute } from './services/route/PrivateRoute'
-import { UserSettings } from './pages/settings/UserSettings'
+import { UserSettings } from './pages/userSettings/UserSettings'
 import { FormTicket } from './components/formTicket/FormTicket'
 
 function App() {
