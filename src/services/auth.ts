@@ -1,10 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { Bounce, toast } from "react-toastify";
+import { supabaseClient } from "./supabase";
 
-const supabase = createClient(
-  "https://zjrtoubswronpztidprq.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqcnRvdWJzd3JvbnB6dGlkcHJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA0NDk2NDUsImV4cCI6MjAzNjAyNTY0NX0.ovLBcydaTQofm8BZwpM0kv4rl8i82oKgb53rhgQGwIA"
-);
 
 const signUp = async (
   email: string,
@@ -12,7 +8,7 @@ const signUp = async (
   ramal: string,
   password: string
 ) => {
-  const response = await supabase.auth.signUp({
+  const response = await supabaseClient.supabase.auth.signUp({
     email: email,
     password: password,
   });
@@ -40,7 +36,7 @@ const signUp = async (
       theme: "light",
       transition: Bounce,
     });
-    await supabase.from("users").insert({
+    await supabaseClient.supabase.from("users").insert({
       name: name,
       ramal: ramal,
       email: email,
@@ -54,15 +50,12 @@ const signUp = async (
 };
 
 const signIn = async (email: string, password: string) => {
-  const response = supabase.auth.signInWithPassword({
+  const response = supabaseClient.supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
 
   if ((await response).data.user?.aud === "authenticated") {
-    const acess_token = (await response).data.session?.access_token
-    localStorage.setItem("acess_token", acess_token as string)
-
     const isAuthenticated = (await response).data.user?.role
     localStorage.setItem("isAuthenticated", isAuthenticated as string)
 
@@ -77,7 +70,7 @@ const signIn = async (email: string, password: string) => {
   }
 
   if ((await response).error) {
-    toast.error(`${(await response).error}`, {
+    toast.error(`${(await response).error?.message === "Invalid login credentials" ? ("Usuario não encontrado") : ((await response).error?.message)}`, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -105,20 +98,30 @@ const signIn = async (email: string, password: string) => {
 
 const signOut = async () => {
   localStorage.clear()
-  await supabase.auth.signOut();
+  await supabaseClient.supabase.auth.signOut();
   window.location.href = "/";
 };
 
 const isUserAdmin = async () => {
   const userId = localStorage.getItem("user_id")
-  const { data } = await supabase.from("users").select("*").eq("user_id", userId);
+  const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
   if(data){
     return data[0].isAdmin
   }
+  return undefined
+}
+
+const getUserName = async () => {
+  const userId = localStorage.getItem("user_id")
+  const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
+  if(data){
+    return data[0].name
+  }
+  return undefined
 }
 
 const fetchUsers = async () => {
-  const { data } = await supabase.from("users").select("*");
+  const { data } = await supabaseClient.supabase.from("users").select("*");
   return data;
 };
 
@@ -127,5 +130,6 @@ export const auth = {
   signIn,
   signOut,
   fetchUsers,
-  isUserAdmin
+  isUserAdmin,
+  getUserName
 };

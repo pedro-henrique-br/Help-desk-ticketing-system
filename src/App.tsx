@@ -6,6 +6,7 @@ import { Register } from './pages/register/Register'
 import { Home } from './pages/Home/Home'
 import { PrivateRoute } from './services/route/PrivateRoute'
 import { UserSettings } from './pages/settings/UserSettings'
+import { FormTicket } from './components/formTicket/FormTicket'
 
 function App() {
 
@@ -27,6 +28,16 @@ function App() {
           <Route path='/home/settings' element={
             <PrivateRoute auth={isAuthenticated}>
               <UserSettings />
+            </PrivateRoute>
+          }/>
+          <Route path='/home/settings' element={
+            <PrivateRoute auth={isAuthenticated}>
+              <UserSettings />
+            </PrivateRoute>
+          }/>
+          <Route path='/home/formTicket' element={
+            <PrivateRoute auth={isAuthenticated}>
+              <FormTicket />
             </PrivateRoute>
           }/>
         </Routes>

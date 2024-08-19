@@ -4,7 +4,6 @@ import { PiCaretDownBold, PiUserFill, PiUserGear } from "react-icons/pi";
 import { auth } from "../../services/auth";
 import styles from "./dropDownMenu.module.css"
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
 
 export const DropDownMenu = () => {
   const [open, setOpen] = useState(false);
@@ -32,7 +31,7 @@ export const DropDownMenu = () => {
         <MenuItem>
         <Button variant="text" onClick={() => window.location.href = "/home/settings"}>
           <PiUserGear size={30}/>
-          <p>User settings</p>
+          <p>Profile</p>
         </Button>
         </MenuItem>
         <MenuItem>
