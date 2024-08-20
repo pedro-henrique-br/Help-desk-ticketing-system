@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { CreateTicketForm } from "../../components/button/CreateTicketForm";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import * as React from "react";
@@ -21,50 +19,48 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { AuthUnknownError } from "@supabase/supabase-js";
+import { CreateTicketForm } from "../button/CreateTicketForm";
 
 interface Data {
-  id: number;
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+  id: string,
+  request_type: string;
+  subject: string;
+  location: string;
+  priority: string;
+  assignee: string;
+  created_at: string;
 }
 
 function createData(
-  id: number,
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
+  id: string,
+  request_type: string,
+  subject: string,
+  location: string,
+  priority: string,
+  assignee: string,
+  created_at: string
 ): Data {
   return {
     id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    request_type,
+    subject,
+    location,
+    priority,
+    assignee,
+    created_at,
   };
 }
+interface ticket {
+  id: string,
+  request_type: string,
+  subject: string,
+  location: string,
+  priority: string,
+  assignee: string,
+  created_at: string
+}
 
-const rows = [
-  createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-  createData(2, "Donut", 452, 25.0, 51, 4.9),
-  createData(3, "Eclair", 262, 16.0, 24, 6.0),
-  createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-  createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-  createData(9, "KitKat", 518, 26.0, 65, 7.0),
-  createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-  createData(11, "Marshmallow", 318, 0, 81, 2.0),
-  createData(12, "Nougat", 360, 19.0, 9, 37.0),
-  createData(13, "Oreo", 437, 18.0, 63, 4.0),
-];
+const rows:ticket[] = []
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -86,8 +82,8 @@ function getComparator<Key extends keyof unknown>(
   b: { [key in Key]: number | string }
 ) => number {
   return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  ? (a, b) => descendingComparator(a, b, orderBy)
+  : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
@@ -118,34 +114,40 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: "name",
+    id: "request_type",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)",
+    label: "Request type",
   },
   {
-    id: "calories",
-    numeric: true,
+    id: "subject",
+    numeric: false,
     disablePadding: false,
-    label: "Calories",
+    label: "Subject",
   },
   {
-    id: "fat",
-    numeric: true,
+    id: "location",
+    numeric: false,
     disablePadding: false,
-    label: "Fat (g)",
+    label: "location",
   },
   {
-    id: "carbs",
-    numeric: true,
+    id: "priority",
+    numeric: false,
     disablePadding: false,
-    label: "Carbs (g)",
+    label: "priority",
   },
   {
-    id: "protein",
-    numeric: true,
+    id: "assignee",
+    numeric: false,
     disablePadding: false,
-    label: "Protein (g)",
+    label: "assignee",
+  },
+  {
+    id: "created_at",
+    numeric: false,
+    disablePadding: false,
+    label: "created at",
   },
 ];
 
@@ -171,10 +173,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
+  (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property);
+  };
+  
   return (
     <TableHead>
       <TableRow>
@@ -187,13 +189,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-          />
+            />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+          key={headCell.id}
+          align={headCell.numeric ? "right" : "left"}
+          padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -219,35 +221,35 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
-
+  
   return (
     <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
+    sx={{
+      pl: { sm: 2 },
+      pr: { xs: 1, sm: 1 },
+      ...(numSelected > 0 && {
+        bgcolor: (theme) =>
             alpha(
               theme.palette.primary.main,
               theme.palette.action.activatedOpacity
             ),
-        }),
-      }}>
+          }),
+        }}>
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div">
+        sx={{ flex: "1 1 100%" }}
+        color="inherit"
+        variant="subtitle1"
+        component="div">
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div">
-          Nutrition
+        sx={{ flex: "1 1 100%" }}
+        variant="h6"
+        id="tableTitle"
+        component="div">
+          Tickets
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -268,12 +270,25 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export const ClientTickets = () => {
-  const [tickets, setTickets] = useState("");
+  const [tickets, setTickets] = React.useState<ticket[] | []>([])
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
+  const [orderBy, setOrderBy] = React.useState<keyof Data>("created_at");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  
+  React.useEffect(() => {
+    const fetchAllTickets = async () => {
+      const userId = localStorage.getItem("user_id");
+      const fetchTickets = await api.getUserTickets(userId as string)
+      setTickets(fetchTickets)
+      tickets.forEach((ticket) => {
+        console.log(ticket)
+        rows.push(createData(ticket.id, ticket.request_type, ticket.subject, ticket.location, ticket.priority, ticket.assignee, ticket.created_at))
+      })
+    };
+    fetchAllTickets();
+  }, [])
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -283,11 +298,11 @@ export const ClientTickets = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
+  
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
-      setSelected(newSelected);
+      setSelected(newSelected as never);
       return;
     }
     setSelected([]);
@@ -331,22 +346,12 @@ export const ClientTickets = () => {
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(rows, getComparator(order, orderBy as never)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
     [order, orderBy, page, rowsPerPage]
   );
-
-  useEffect(() => {
-    const fetchAllTickets = async () => {
-      const userId = localStorage.getItem("user_id");
-      const fetchTickets = await api.getUserTickets(userId as string);
-      setTickets(fetchTickets);
-      console.log(fetchTickets);
-    };
-    fetchAllTickets();
-  }, []);
 
   return (
     <Box>
@@ -370,13 +375,13 @@ export const ClientTickets = () => {
                   />
                   <TableBody>
                     {visibleRows.map((row, index) => {
-                      const isItemSelected = isSelected(row.id);
+                      const isItemSelected = isSelected(row.id as never);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => handleClick(event, row.id)}
+                          onClick={(event) => handleClick(event, row.id as never)}
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
@@ -397,12 +402,13 @@ export const ClientTickets = () => {
                             id={labelId}
                             scope="row"
                             padding="none">
-                            {row.name}
+                            {row.request_type}
                           </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
+                          <TableCell align="right">{row.subject}</TableCell>
+                          <TableCell align="right">{row.location}</TableCell>
+                          <TableCell align="right">{row.priority}</TableCell>
+                          <TableCell align="right">{row.assignee === null ? ("Esperando um tecnico") : (`O chamado esta sendo atendido por ${row.assignee}`)}</TableCell>
+                          <TableCell align="right">{row.created_at}</TableCell>
                         </TableRow>
                       );
                     })}
@@ -429,16 +435,13 @@ export const ClientTickets = () => {
             </Paper>
           </Box>
       ) : (
-        null    
-      )}
-      {tickets.length === 0 && tickets != typeof "" ? (
-      <Box>
+        <Box>
             <Typography sx={{ fontSize: "2.5rem" }}>
               You don't have opened any ticket yet
             </Typography>
             <CreateTicketForm />
-          </Box>
-      ) : (null)}
+          </Box>  
+      )}
     </motion.div>
     </Box>
   );

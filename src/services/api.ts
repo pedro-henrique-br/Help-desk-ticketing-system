@@ -55,9 +55,8 @@ const getUserTickets = async (userId: string) => {
   const {data} = await supabaseClient.supabase.from("tickets").select("*").eq("user_id", userId)
   if(data){
     return data
-  } else {
-    return null
   }
+  return []
 }
 
 const getAllTickets = async () => {

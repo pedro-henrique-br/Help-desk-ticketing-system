@@ -1,9 +1,9 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Login } from './pages/login/Login'
 import { Register } from './pages/register/Register'
-import { Home } from './pages/Home/Home'
+import { Home } from './pages/home/Home'
 import { PrivateRoute } from './services/route/PrivateRoute'
 import { UserSettings } from './pages/userSettings/UserSettings'
 import { FormTicket } from './components/formTicket/FormTicket'
@@ -23,11 +23,6 @@ function App() {
           <Route path='/home' element={
             <PrivateRoute auth={isAuthenticated}>
               <Home />
-            </PrivateRoute>
-          }/>
-          <Route path='/home/settings' element={
-            <PrivateRoute auth={isAuthenticated}>
-              <UserSettings />
             </PrivateRoute>
           }/>
           <Route path='/home/settings' element={

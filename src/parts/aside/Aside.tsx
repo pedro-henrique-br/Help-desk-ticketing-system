@@ -2,7 +2,7 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { Dashboard } from "../../pages/dashboard/Dashboard";
+import { Dashboard } from "@mui/icons-material";
 
 interface TabPanelProps {
   children?: React.ReactNode;
