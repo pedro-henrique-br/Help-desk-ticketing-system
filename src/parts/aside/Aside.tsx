@@ -2,7 +2,8 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { Dashboard } from "@mui/icons-material";
+import { Dashboard } from "../../pages/dashboard/Dashboard";
+import { AdminTickets } from "../../components/adminTickets/AdminTickets";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -67,7 +68,7 @@ export const Aside = () => {
           <Dashboard />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <AdminTickets />
         </TabPanel>
         <TabPanel value={value} index={2}>
           Item Three

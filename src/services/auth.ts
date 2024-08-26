@@ -59,10 +59,11 @@ const signIn = async (email: string, password: string) => {
     const isAuthenticated = (await response).data.user?.role
     localStorage.setItem("isAuthenticated", isAuthenticated as string)
 
-    
     const userId = (await (response)).data.user?.id
+    const userEmail = (await (response)).data.user?.email
     
     localStorage.setItem("user_id", userId as string)
+    localStorage.setItem("email", userEmail as string)
     
     setTimeout(() => {
       window.location.href = "/home"
@@ -111,15 +112,6 @@ const isUserAdmin = async () => {
   return undefined
 }
 
-const getUserName = async () => {
-  const userId = localStorage.getItem("user_id")
-  const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
-  if(data){
-    return data[0].name
-  }
-  return undefined
-}
-
 const fetchUsers = async () => {
   const { data } = await supabaseClient.supabase.from("users").select("*");
   return data;
@@ -131,5 +123,4 @@ export const auth = {
   signOut,
   fetchUsers,
   isUserAdmin,
-  getUserName
 };
