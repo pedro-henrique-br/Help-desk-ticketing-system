@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import * as React from "react";
-import { CreateTicketForm } from "../button/CreateTicketForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 const columns: GridColDef[] = [
@@ -10,7 +9,12 @@ const columns: GridColDef[] = [
   { field: "subject", headerName: "Assunto", width: 170,},
   { field: "location", headerName: "Local", width: 170 },
   { field: "priority", headerName: "Prioridade", width: 130 },
+  { field: "user_name", headerName: "Nome", width: 200 },
+  { field: "assignee", headerName: "Tecnico", width: 150 },
   { field: "created_at", headerName: "Aberto em", width: 200 },
+  { field: "status", headerName: "status", width: 100 },
+  { field: "ramal", headerName: "ramal", width: 150 },
+  { field: "email", headerName: "email", width: 150 },
 ];
 
 interface ticket {
@@ -18,34 +22,37 @@ interface ticket {
   subject: string,
   location: string,
   priority: string,
-  created_at: string
+  user_name: string,
+  created_at: string,
+  status: string,
+  assignee: string,
 }
 
-export const ClientTickets = () => {
+export const AdminTickets = () => {
   const [rows, setRows] = React.useState([]);
-  const [clientTicketsLenght, setClientTicketsLenght] = React.useState()
+  const [ticketsLenght, setTicketsLenght] = React.useState()
 
   React.useEffect(() => {
     const fetchClientTickets = async () => {
-      const userId = localStorage.getItem("user_id");
-      const fetchTickets: ticket[] = await api.getUserTickets(userId as string);
-      fetchTickets.forEach((row) => {
+      const fetchTickets: ticket[] = await api.getAllTickets();
+        fetchTickets.forEach((row) => {
         row.created_at = new Date(row.created_at).toString().slice(0, 25)
+        row.status = "new"
       })
       setRows(fetchTickets as never);
       if(fetchTickets.length){
-        setClientTicketsLenght(fetchTickets.length as never)
+        setTicketsLenght(fetchTickets.length as never)
        } else {
-        setClientTicketsLenght(fetchTickets.length as never)
+        setTicketsLenght(fetchTickets.length as never)
        }
-    };
+    }
     fetchClientTickets();
   }, []);
 
   return (
     <Box>
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        {clientTicketsLenght != undefined && clientTicketsLenght >= 1 ? (
+        {ticketsLenght != undefined && ticketsLenght >= 1 ? (
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
               rows={rows}
@@ -59,12 +66,11 @@ export const ClientTickets = () => {
             />
           </div>
         ) : (null)}
-        {clientTicketsLenght != undefined && clientTicketsLenght === 0 ? (
+        {ticketsLenght != undefined && ticketsLenght === 0 ? (
           <Box>
             <Typography sx={{ fontSize: "2.5rem" }}>
-              You don't have opened any ticket yet
+              Don't have any tickets opened
             </Typography>
-            <CreateTicketForm />
           </Box>) :
           (null)}
       </motion.div>
