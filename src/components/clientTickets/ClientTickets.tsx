@@ -22,7 +22,7 @@ import { visuallyHidden } from "@mui/utils";
 import { CreateTicketForm } from "../button/CreateTicketForm";
 
 interface Data {
-  id: string,
+  id: string;
   request_type: string;
   subject: string;
   location: string;
@@ -51,16 +51,16 @@ function createData(
   };
 }
 interface ticket {
-  id: string,
-  request_type: string,
-  subject: string,
-  location: string,
-  priority: string,
-  assignee: string,
-  created_at: string
+  id: string;
+  request_type: string;
+  subject: string;
+  location: string;
+  priority: string;
+  assignee: string;
+  created_at: string;
 }
 
-const rows:ticket[] = []
+const rows: ticket[] = [];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -82,8 +82,8 @@ function getComparator<Key extends keyof unknown>(
   b: { [key in Key]: number | string }
 ) => number {
   return order === "desc"
-  ? (a, b) => descendingComparator(a, b, orderBy)
-  : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
@@ -173,10 +173,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
   } = props;
   const createSortHandler =
-  (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
-  
+    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
+
   return (
     <TableHead>
       <TableRow>
@@ -189,13 +189,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            />
+          />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-          key={headCell.id}
-          align={headCell.numeric ? "right" : "left"}
-          padding={headCell.disablePadding ? "none" : "normal"}
+            key={headCell.id}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -221,34 +221,34 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
-  
+
   return (
     <Toolbar
-    sx={{
-      pl: { sm: 2 },
-      pr: { xs: 1, sm: 1 },
-      ...(numSelected > 0 && {
-        bgcolor: (theme) =>
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
             alpha(
               theme.palette.primary.main,
               theme.palette.action.activatedOpacity
             ),
-          }),
-        }}>
+        }),
+      }}>
       {numSelected > 0 ? (
         <Typography
-        sx={{ flex: "1 1 100%" }}
-        color="inherit"
-        variant="subtitle1"
-        component="div">
+          sx={{ flex: "1 1 100%" }}
+          color="inherit"
+          variant="subtitle1"
+          component="div">
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
-        sx={{ flex: "1 1 100%" }}
-        variant="h6"
-        id="tableTitle"
-        component="div">
+          sx={{ flex: "1 1 100%" }}
+          variant="h6"
+          id="tableTitle"
+          component="div">
           Tickets
         </Typography>
       )}
@@ -270,25 +270,34 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export const ClientTickets = () => {
-  const [tickets, setTickets] = React.useState<ticket[] | []>([])
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("created_at");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
+
   React.useEffect(() => {
     const fetchAllTickets = async () => {
       const userId = localStorage.getItem("user_id");
-      const fetchTickets = await api.getUserTickets(userId as string)
-      setTickets(fetchTickets)
-      tickets.forEach((ticket) => {
-        console.log(ticket)
-        rows.push(createData(ticket.id, ticket.request_type, ticket.subject, ticket.location, ticket.priority, ticket.assignee, ticket.created_at))
-      })
+      const fetchTickets = await api.getUserTickets(userId as string);
+      fetchTickets.forEach((ticket) => {
+        console.log(ticket);
+        rows.push(
+          createData(
+            ticket.id,
+            ticket.request_type,
+            ticket.subject,
+            ticket.location,
+            ticket.priority,
+            ticket.assignee,
+            ticket.created_at
+          )
+        );
+      });
     };
+
     fetchAllTickets();
-  }, [])
+  }, []);
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -298,7 +307,7 @@ export const ClientTickets = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  
+
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -355,8 +364,8 @@ export const ClientTickets = () => {
 
   return (
     <Box>
-    <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-      {tickets.length > 0 ? (
+      <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+        {rows.length > 0 ? (
           <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
               <EnhancedTableToolbar numSelected={selected.length} />
@@ -381,7 +390,9 @@ export const ClientTickets = () => {
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => handleClick(event, row.id as never)}
+                          onClick={(event) =>
+                            handleClick(event, row.id as never)
+                          }
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
@@ -407,7 +418,11 @@ export const ClientTickets = () => {
                           <TableCell align="right">{row.subject}</TableCell>
                           <TableCell align="right">{row.location}</TableCell>
                           <TableCell align="right">{row.priority}</TableCell>
-                          <TableCell align="right">{row.assignee === null ? ("Esperando um tecnico") : (`O chamado esta sendo atendido por ${row.assignee}`)}</TableCell>
+                          <TableCell align="right">
+                            {row.assignee === null
+                              ? "Esperando um tecnico"
+                              : `O chamado esta sendo atendido por ${row.assignee}`}
+                          </TableCell>
                           <TableCell align="right">{row.created_at}</TableCell>
                         </TableRow>
                       );
@@ -434,15 +449,15 @@ export const ClientTickets = () => {
               />
             </Paper>
           </Box>
-      ) : (
-        <Box>
+        ) : (
+          <Box>
             <Typography sx={{ fontSize: "2.5rem" }}>
               You don't have opened any ticket yet
             </Typography>
             <CreateTicketForm />
-          </Box>  
-      )}
-    </motion.div>
+          </Box>
+        )}
+      </motion.div>
     </Box>
   );
 };
