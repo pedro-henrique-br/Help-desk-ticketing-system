@@ -17,6 +17,7 @@ import { BsCloud } from "react-icons/bs";
 import styled from "@emotion/styled";
 import { Navigate } from "react-router-dom";
 import { api } from "../../services/api";
+import { useMutation, useQueryClient } from "react-query";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -36,6 +37,8 @@ export const FormTicket = () => {
   const [location, setLocation] = React.useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false)
 
+  const queryClient = useQueryClient()
+
   const ticketTypes = [
     "📨 Problemas com email",
     "🖨️ Problemas com impressora",
@@ -49,6 +52,7 @@ export const FormTicket = () => {
     "💬 Outro...",
   ];
 
+
   const handleChangeType = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
   };
@@ -58,6 +62,14 @@ export const FormTicket = () => {
   const handleChangeLocation = (event: SelectChangeEvent) => {
     setLocation(event.target.value as string);
   };
+
+  
+  const mutation = useMutation({
+  mutationFn: (newTicket: object) => api.createTicket(newTicket._type, newTicket._priority, newTicket._location, newTicket.subject, newTicket.message),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['tickets'] })
+  }
+})
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,10 +83,8 @@ export const FormTicket = () => {
         message: data.get("message") as string,
       };
 
-      const {_type, _priority, _location, subject, message} = ticket
-      api.createTicket(_type, _priority, _location, subject, message)
-
-  };
+      mutation.mutate(ticket);
+    };
 
   return (
     <>

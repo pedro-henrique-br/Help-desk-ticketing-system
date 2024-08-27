@@ -1,13 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
-import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 130 },
-  { field: "subject", headerName: "Assunto", width: 170,},
+  { field: "subject", headerName: "Assunto", width: 170 },
   { field: "location", headerName: "Local", width: 170 },
   { field: "priority", headerName: "Prioridade", width: 130 },
   { field: "user_name", headerName: "Nome", width: 200 },
@@ -19,58 +18,38 @@ const columns: GridColDef[] = [
 ];
 
 interface ticket {
-  request_type: string,
-  subject: string,
-  location: string,
-  priority: string,
-  user_name: string,
-  created_at: string,
-  status: string,
-  assignee: string,
+  request_type: string;
+  subject: string;
+  location: string;
+  priority: string;
+  user_name: string;
+  created_at: string;
+  status: string;
+  assignee: string;
 }
 
 export const AdminTickets = () => {
-  const queryClient = useQueryClient()
+  const fetchClientTickets = async () => {
+    const fetchTickets: ticket[] = await api.getAllTickets();
+    fetchTickets.forEach((row) => {
+      row.created_at = new Date(row.created_at).toString().slice(0, 25);
+      row.status = "new";
+    });
+    console.log(fetchTickets);
+    return fetchTickets;
+  };
 
-  const { data } = useQuery(
-    "events",
-    async () => {
-      return await api.getAllTickets() 
-    },
-    { refetchOnWindowFocus: false }
-  )
-
-  console.log(data)
-
-  // const { mutate: createEvent } = useMutation<void, unknown { title: string }>(
-  //   (data) => {
-  //     queryClient.invalidateQueries("events")
-  //     return await api.getAllTickets() 
-  //   }
-  // )
-
-  const [rows, setRows] = React.useState([]);
-  const [ticketsLenght, setTicketsLenght] = React.useState()
-
-    const fetchClientTickets = async () => {
-      const fetchTickets: ticket[] = await api.getAllTickets();
-        fetchTickets.forEach((row) => {
-        row.created_at = new Date(row.created_at).toString().slice(0, 25)
-        row.status = "new"
-      })
-      setRows(fetchTickets as never);
-      if(fetchTickets.length){
-        setTicketsLenght(fetchTickets.length as never)
-       } else {
-        setTicketsLenght(fetchTickets.length as never)
-       }
-    }
-    fetchClientTickets();
+  const { data: rows = [], isLoading, refetch } = useQuery({
+    queryKey: ["tickets"],
+    queryFn: fetchClientTickets,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <Box>
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        {ticketsLenght != undefined && ticketsLenght >= 1 ? (
+        <Button onClick={() => refetch()}>Refetch</Button>
+        {rows.length >= 1 ? (
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
               rows={rows}
@@ -83,14 +62,14 @@ export const AdminTickets = () => {
               pageSizeOptions={[5, 10]}
             />
           </div>
-        ) : (null)}
-        {ticketsLenght != undefined && ticketsLenght === 0 ? (
+        ) : (
           <Box>
             <Typography sx={{ fontSize: "2.5rem" }}>
               Don't have any tickets opened
             </Typography>
-          </Box>) :
-          (null)}
+          </Box>
+        )}
+        {isLoading ? <h1>Loading...</h1> : null}
       </motion.div>
     </Box>
   );
