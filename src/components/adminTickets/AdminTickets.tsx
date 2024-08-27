@@ -17,31 +17,22 @@ const columns: GridColDef[] = [
   { field: "email", headerName: "email", width: 150 },
 ];
 
-interface ticket {
-  request_type: string;
-  subject: string;
-  location: string;
-  priority: string;
-  user_name: string;
-  created_at: string;
-  status: string;
-  assignee: string;
-}
-
 export const AdminTickets = () => {
+
   const fetchClientTickets = async () => {
-    const fetchTickets: ticket[] = await api.getAllTickets();
-    fetchTickets.forEach((row) => {
-      row.created_at = new Date(row.created_at).toString().slice(0, 25);
-      row.status = "new";
-    });
-    console.log(fetchTickets);
-    return fetchTickets;
+    const fetchTickets  = await api.getAllTickets();
+    if(fetchTickets){
+      fetchTickets.forEach((row) => {
+        row.created_at = new Date(row.created_at).toString().slice(0, 25);
+        row.status = "new";
+      });
+      return fetchTickets
+    }
   };
 
   const { data: rows = [], isLoading, refetch } = useQuery({
     queryKey: ["tickets"],
-    queryFn: fetchClientTickets,
+    queryFn: () => fetchClientTickets(),
     refetchOnWindowFocus: false,
   });
 

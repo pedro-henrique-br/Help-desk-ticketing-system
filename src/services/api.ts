@@ -66,10 +66,22 @@ const getUserTickets = async (userId: string) => {
   return [];
 };
 
+
+interface ticket {
+  request_type: string;
+  subject: string;
+  location: string;
+  priority: string;
+  user_name: string;
+  created_at: string;
+  status: string;
+  assignee: string;
+}
+
 const getAllTickets = async () => {
   const { data } = await supabaseClient.supabase.from("tickets").select("*");
   if (data) {
-    return data;
+    return data as ticket[];
   }
 };
 
