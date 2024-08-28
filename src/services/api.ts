@@ -85,8 +85,19 @@ const getAllTickets = async () => {
   }
 };
 
+const uploadFile = async (file: File) => {
+  const { data, error } = await supabaseClient.supabase.storage.from('screenshots').upload(`${file.name}`, file)
+  if (error) {
+    console.log(error)
+  } else {
+    console.log(data)
+  }
+}
+
+
 export const api = {
   createTicket,
   getUserTickets,
   getAllTickets,
+  uploadFile
 };

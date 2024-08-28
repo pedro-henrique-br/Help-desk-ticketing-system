@@ -17,7 +17,6 @@ import { BsCloud } from "react-icons/bs";
 import styled from "@emotion/styled";
 import { Navigate } from "react-router-dom";
 import { api } from "../../services/api";
-import { Query, useMutation, useQuery, useQueryClient } from "react-query";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -36,8 +35,6 @@ export const FormTicket = () => {
   const [priority, setPriority] = React.useState("");
   const [location, setLocation] = React.useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false)
-
-  const queryClient = useQueryClient()
 
   const ticketTypes = [
     "📨 Problemas com email",
@@ -65,25 +62,18 @@ export const FormTicket = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
       const data = new FormData(e.currentTarget);
-      
       const ticket = {
         _type: type,
         _priority: priority,
         _location: location,
         subject: data.get("subject") as string,
         message: data.get("message") as string,
+        file: data.get("file") 
       };
       
-      mutation.mutate(ticket);
+      api.uploadFile(ticket.file as never)
+      api.createTicket(ticket._type, ticket._priority, ticket._location, ticket.subject, ticket.message)
     };
-
-    const mutation = useMutation({
-      mutationFn: (newTicket: object) => api.createTicket(newTicket._type, newTicket._priority, newTicket._location, newTicket.subject, newTicket.message),
-      onSuccess: async () => {
-        console.log("sucess")
-        queryClient.invalidateQueries({queryKey: ["tickets"]})
-      },
-  })
 
   return (
     <>
@@ -182,7 +172,7 @@ export const FormTicket = () => {
                   tabIndex={-1}
                   startIcon={<BsCloud />}>
                   Anexe uma imagem
-                  <VisuallyHiddenInput type="file" />
+                  <VisuallyHiddenInput name="file" type="file" />
                 </Button>
                 <InputLabel sx={{ display: "flex", gap: "20px" }}>
                   <InputLabel>

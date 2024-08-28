@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "react-query";
+import { PiArrowsClockwise } from "react-icons/pi";
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 130 },
@@ -17,29 +18,28 @@ const columns: GridColDef[] = [
   { field: "email", headerName: "email", width: 150 },
 ];
 
-export const AdminTickets = () => {
 
+export const AdminTickets = () => {
   const fetchClientTickets = async () => {
-    const fetchTickets  = await api.getAllTickets();
+    const fetchTickets = await api.getAllTickets();
     if(fetchTickets){
       fetchTickets.forEach((row) => {
         row.created_at = new Date(row.created_at).toString().slice(0, 25);
         row.status = "new";
       });
-      return fetchTickets
+      console.log(fetchTickets);
+      return fetchTickets;
     }
   };
 
   const { data: rows = [], isLoading, refetch } = useQuery({
     queryKey: ["tickets"],
-    queryFn: () => fetchClientTickets(),
-    refetchOnWindowFocus: false,
+    queryFn: fetchClientTickets,
   });
 
   return (
     <Box>
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        <Button onClick={() => refetch()}>Refetch</Button>
         {rows.length >= 1 ? (
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
@@ -61,6 +61,7 @@ export const AdminTickets = () => {
           </Box>
         )}
         {isLoading ? <h1>Loading...</h1> : null}
+        <Button onClick={() => refetch()}><PiArrowsClockwise />Refetch</Button>
       </motion.div>
     </Box>
   );
