@@ -1,6 +1,17 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
 
+interface ticket {
+  request_type: string;
+  subject: string;
+  location: string;
+  priority: string;
+  user_name: string;
+  created_at: string;
+  status: string;
+  assignee: string;
+}
+
 const createTicket = async (
   type: string,
   priority: string,
@@ -67,17 +78,6 @@ const getUserTickets = async (userId: string) => {
 };
 
 
-interface ticket {
-  request_type: string;
-  subject: string;
-  location: string;
-  priority: string;
-  user_name: string;
-  created_at: string;
-  status: string;
-  assignee: string;
-}
-
 const getAllTickets = async () => {
   const { data } = await supabaseClient.supabase.from("tickets").select("*");
   if (data) {
@@ -86,12 +86,20 @@ const getAllTickets = async () => {
 };
 
 const uploadFile = async (file: File) => {
-  const { data, error } = await supabaseClient.supabase.storage.from('screenshots').upload(`${file.name}`, file)
+  const { error } = await supabaseClient.supabase.storage.from('screenshots').upload(`${file.name}`, file)
   if (error) {
-    console.log(error)
-  } else {
-    console.log(data)
-  }
+    toast.error(`Ocorreu um erro com o arquivo inserido ${error.message}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  } 
 }
 
 

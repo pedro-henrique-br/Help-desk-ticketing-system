@@ -103,6 +103,57 @@ const signOut = async () => {
   window.location.href = "/";
 };
 
+const resetPassword = async (email: string, new_password: string) => {
+  const { data: user} = await supabaseClient.supabase
+    .from("users")
+    .select("*")
+    .eq("email", email);
+  
+  console.log(user)
+  if(user?.length === 1 ){
+    const { data, error } = await supabaseClient.supabase.auth.updateUser({
+      email: email,
+      password: new_password,
+    })
+    return data ? (
+      window.location.href = "/login",
+      toast.success(`Senha redefinida com sucesso!`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    })
+  ) : (toast.error(`Ocorreu um erro! ${error}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    }))
+  } else {
+    toast.error(`Ocorreu um erro! Usuario não encontrado`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    })
+  }
+}
+
 const isUserAdmin = async () => {
   const userId = localStorage.getItem("user_id")
   const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
@@ -123,4 +174,5 @@ export const auth = {
   signOut,
   fetchUsers,
   isUserAdmin,
+  resetPassword,
 };

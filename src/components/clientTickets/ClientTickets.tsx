@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
-import * as React from "react";
 import { CreateTicketForm } from "../button/CreateTicketForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { PiArrowsClockwise } from "react-icons/pi";
@@ -15,19 +14,11 @@ const columns: GridColDef[] = [
   { field: "created_at", headerName: "Aberto em", width: 200 },
 ];
 
-interface ticket {
-  request_type: string,
-  subject: string,
-  location: string,
-  priority: string,
-  created_at: string
-}
-
 export const ClientTickets = () => {
 
     const fetchClientTickets = async () => {
       const userId = localStorage.getItem("user_id");
-      const fetchTickets: ticket[] = await api.getUserTickets(userId as string);
+      const fetchTickets = await api.getUserTickets(userId as string);
       fetchTickets.forEach((row) => {
         row.created_at = new Date(row.created_at).toString().slice(0, 25)
       })

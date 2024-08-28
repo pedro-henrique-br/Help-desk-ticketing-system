@@ -7,6 +7,8 @@ import { Home } from './pages/home/Home'
 import { PrivateRoute } from './services/route/PrivateRoute'
 import { UserSettings } from './pages/userSettings/UserSettings'
 import { FormTicket } from './components/formTicket/FormTicket'
+import { ForgotPassword } from './pages/fortgotPassword/ForgotPassword'
+import { ResetPassword } from './pages/newPassword/ResetPassword'
 
 function App() {
 
@@ -20,6 +22,8 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/login' element={<Login />}/>
           <Route path='/register' element={<Register />}/>
+          <Route path='/forgotpassword' element={<ForgotPassword />}/>
+          <Route path='/resetpassword' element={<ResetPassword />}/>
           <Route path='/home' element={
             <PrivateRoute auth={isAuthenticated}>
               <Home />

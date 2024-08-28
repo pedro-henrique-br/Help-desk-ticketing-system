@@ -8,28 +8,23 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
-import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 
-export const Login = () => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
-  const redirect = () => {
-    return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
-  };
-
-  redirect();
+export const ResetPassword = () => {
+  const [isPasswordEqual, setIsPasswordEqual] = React.useState(Boolean(true))
+  const [password, setPassword] = React.useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const user = {
       email: data.get("email") as string,
-      password: data.get("password") as string,
+      new_password: data.get("password") as string,
     };
-    const { email, password } = user;
+    const { email, new_password } = user;
     
-    if (email != "" && password != "") {
-      auth.signIn(email, password);
+    if (email != "" && new_password != "") {
+      auth.resetPassword(email, new_password)
     } else {
       toast.info(`Preencha todos os campos`, {
         position: "top-right",
@@ -61,26 +56,41 @@ export const Login = () => {
           style={{ width: "200px", height: "100px" }}
         />
         <Typography component="h1" variant="h5">
-          Entrar
+          Redefina sua senha
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
+            sx={{marginTop: "20px"}}
             margin="normal"
             fullWidth
             id="email"
             placeholder="Email"
             name="email"
             autoComplete="email"
-            autoFocus
           />
           <TextField
+          sx={{margin: "8px 0 8px 0"}}
+            onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             fullWidth
             name="password"
-            placeholder="Senha"
+            placeholder="Nova senha"
             type="password"
             autoComplete="current-password"
           />
+          <TextField
+                error={!isPasswordEqual}
+                required
+                fullWidth
+                name="password"
+                placeholder="Confirme sua senha"
+                onChange={(e) => setIsPasswordEqual(e.target.value === password)}
+                color={!isPasswordEqual ? ("error") : ("primary")}
+                helperText={!isPasswordEqual ? ("As senhas não coicidem") : (null)}
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
           <Button
             type="submit"
             fullWidth

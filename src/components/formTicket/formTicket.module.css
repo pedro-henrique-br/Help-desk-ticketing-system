@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #e2e2e2;
+  display: "flex";
+  justify-content: "center";
+  align-items: "center";
+}
+
+.image {
+  height: 300px;
+  width: 450px;
+}
+
+.form-container {
+  margin: 2vh 0 2vh 0;
+  background: #ffff;
+  height: 80vh;
+  width: 85%;
+  border-radius: 8px;
+  border: 1px solid #cecece;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+}
+
+.home-button {
+  align-self: center;
+  width: 400px;
+}
+
+@media screen and (max-width: 1224px) {
+  .image {
+    display: none;
+  }
+}
