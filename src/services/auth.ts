@@ -109,25 +109,25 @@ const resetPassword = async (email: string, new_password: string) => {
     .select("*")
     .eq("email", email);
   
-  console.log(user)
   if(user?.length === 1 ){
     const { data, error } = await supabaseClient.supabase.auth.updateUser({
-      email: email,
       password: new_password,
     })
     return data ? (
-      window.location.href = "/login",
       toast.success(`Senha redefinida com sucesso!`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
       theme: "light",
       transition: Bounce,
-    })
+    }),
+    setTimeout(() => {
+      window.location.href = "/login"
+    }, 3500)
   ) : (toast.error(`Ocorreu um erro! ${error}`, {
       position: "top-right",
       autoClose: 5000,
