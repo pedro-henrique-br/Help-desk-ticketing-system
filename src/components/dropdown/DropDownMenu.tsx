@@ -28,14 +28,14 @@ export const DropDownMenu = () => {
         onClose={handleClose}
         onOpen={handleOpen}
       >
-        <MenuItem>
-        <Button variant="text" onClick={() => window.location.href = "/home/settings"}>
+        <MenuItem sx={{padding: "0", width: "150px"}}>
+        <Button sx={{width: "100%", display: "flex", gap: "10px"}} variant="text" onClick={() => window.location.href = "/home/settings"}>
           <PiUserGear size={30}/>
           <p>Profile</p>
         </Button>
         </MenuItem>
-        <MenuItem>
-          <Button variant="text" onClick={auth.signOut} >
+        <MenuItem sx={{padding: "0", width: "150px"}}>
+          <Button sx={{width: "100%", display: "flex", gap: "10px"}} variant="text" onClick={auth.signOut} >
             <BsBoxArrowInLeft style={{color: "red"}} size={30}/>
             <p>Logout</p>
           </Button>

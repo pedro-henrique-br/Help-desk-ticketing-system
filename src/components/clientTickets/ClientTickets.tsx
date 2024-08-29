@@ -45,14 +45,15 @@ export const ClientTickets = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
+            <Button onClick={() => refetch()}><PiArrowsClockwise />Refetch</Button>
           </div>
-        ) : (<Box>
-            <Typography sx={{ fontSize: "2.5rem" }}>
-              You don't have opened any ticket yet
+        ) : (<Box sx={{height: "70vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px"}}>
+            <Typography sx={{ fontSize: "2rem" }}>
+              Você ainda não abriu nenhum chamado!
             </Typography>
             <CreateTicketForm />
           </Box>)}
-      <Button onClick={() => refetch()}><PiArrowsClockwise />Refetch</Button>
+      
       </motion.div>
     </Box>
   );

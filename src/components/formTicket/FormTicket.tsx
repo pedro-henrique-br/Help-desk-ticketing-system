@@ -140,11 +140,8 @@ export const FormTicket = () => {
                     <InputLabel id="demo-simple-select-label">
                       Tipo de chamado
                     </InputLabel>
-                    <Select
+                    <Select 
                       sx={{ width: "500px" }}
-                      labelId="demo-simple-select-label"
-                      label="type"
-                      id="demo-simple-select"
                       value={type}
                       onChange={handleChangeType}>
                       {ticketTypes &&
@@ -163,7 +160,7 @@ export const FormTicket = () => {
                       required
                       fullWidth
                       id="subject"
-                      label={`Assunto do chamado, ex: "Estou sem internet" `}
+                      placeholder={`Assunto do chamado, ex: "Estou sem internet" `}
                       name="subject"
                     />
                   </InputLabel>
@@ -173,11 +170,12 @@ export const FormTicket = () => {
                       required
                       fullWidth
                       name="message"
-                      label="Conte-nos mais sobre o plobema..."
+                      placeholder="Conte-nos mais sobre o plobema..."
                       id="message"
                     />
                   </InputLabel>
                   <Button
+                    sx={{marginBottom: "1vh"}}
                     component="label"
                     role={undefined}
                     variant="contained"
@@ -210,7 +208,6 @@ export const FormTicket = () => {
                       <Select
                         sx={{ width: "240px" }}
                         labelId="demo-simple-select-label"
-                        label="location"
                         id="demo-simple-select"
                         value={location}
                         onChange={handleChangeLocation}>

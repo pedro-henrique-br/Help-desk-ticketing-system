@@ -14,7 +14,7 @@ export const CreateTicketForm = () => {
     <div>
       {
         !isButtonClicked ? (
-          <Button variant="contained" onClick={handleTicketCreate}>Create Ticket</Button>
+          <Button variant="contained" onClick={handleTicketCreate}>Abrir chamado</Button>
         ) :
         (
           <Navigate to={"/home/formTicket"} />
