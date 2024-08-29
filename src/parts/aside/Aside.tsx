@@ -57,23 +57,23 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider" }}>
-          <Tab label="Dashboard" {...a11yProps(0)} />
-          <Tab label="Tickets" {...a11yProps(1)} />
-          <Tab label="Documentation" {...a11yProps(3)} />
-          <Tab label="Users" {...a11yProps(2)} />
+          sx={{ borderRight: 1, borderColor: "divider"}}>
+          <Tab label="Painel" {...a11yProps(0)} />
+          <Tab sx={{color:"black"}} label="Chamados" {...a11yProps(1)} />
+          <Tab label="Documentação" {...a11yProps(3)} />
+          <Tab label="Usuários" {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item Three
+          Painel
         </TabPanel>
         <TabPanel value={value} index={1}>
           <AdminTickets />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          Documentação
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Item Four
+          Usuários
         </TabPanel>
       </Box>
     </>

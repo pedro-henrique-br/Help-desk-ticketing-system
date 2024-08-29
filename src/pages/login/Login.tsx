@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
 import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
+import { InputLabel } from "@mui/material";
 
 export const Login = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -60,24 +61,31 @@ export const Login = () => {
           alt=""
           style={{ width: "200px", height: "100px" }}
         />
-        <Typography component="h1" variant="h5">
+        <Typography sx={{margin: "10px 0 15px 0"}} component="h1" variant="h5">
           Entrar
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
+          <InputLabel sx={{marginBottom: "5px"}}>
+            Email
+          </InputLabel>
           <TextField
-            margin="normal"
+            sx={{marginBottom: "15px"}}
+            margin="none"
             fullWidth
             id="email"
-            placeholder="Email"
+            placeholder="ex: seunome@caprichoveiculos.com.br"
             name="email"
             autoComplete="email"
             autoFocus
           />
+          <InputLabel sx={{marginBottom: "5px"}}>
+          Senha
+          </InputLabel>
           <TextField
-            margin="normal"
+            margin="none"
             fullWidth
             name="password"
-            placeholder="Senha"
+            placeholder="••••••••••"
             type="password"
             autoComplete="current-password"
           />
@@ -88,7 +96,7 @@ export const Login = () => {
             sx={{ mt: 3, mb: 2 }}>
             Entrar
           </Button>
-          <Grid container>
+          <Grid container sx={{display: "flex", gap: "15px"}}>
             <Grid item xs>
               <Link href="/forgotpassword" variant="body2">
                 Esqueceu sua senha?

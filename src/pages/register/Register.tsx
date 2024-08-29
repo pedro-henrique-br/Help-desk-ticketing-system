@@ -12,8 +12,8 @@ import { InputLabel } from "@mui/material";
 import { Bounce, toast } from "react-toastify";
 
 export const Register = () => {
-  const [password, setPassword] = useState("")
-  const [isPasswordEqual, setIsPasswordEqual] = useState(Boolean(true))
+  const [password, setPassword] = useState("");
+  const [isPasswordEqual, setIsPasswordEqual] = useState(Boolean(true));
 
   const createUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ export const Register = () => {
     };
     const { email, name, ramal, password } = Form;
 
-    if((email != "" && name != "") && (isPasswordEqual && ramal != "")){
+    if (email != "" && name != "" && isPasswordEqual && ramal != "") {
       auth.signUp(email, name, ramal, password);
     } else {
       toast.info(`Preencha todos os campos`, {
@@ -43,13 +43,12 @@ export const Register = () => {
     }
   };
 
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -65,41 +64,49 @@ export const Register = () => {
         <Box component="form" noValidate onSubmit={createUser} sx={{ mt: 3 }}>
           <Grid container spacing={1.5}>
             <Grid item xs={12}>
-              <InputLabel style={{display: "flex", gap: "10px"}}>
-                <TextField
-                  autoComplete="given-name"
-                  name="name"
-                  required
-                  id="name"
-                  placeholder="Nome"
-                  autoFocus
-                />
-                <TextField
-                  name="ramal"
-                  required
-                  id="ramal"
-                  type="text"
-                  placeholder="Ramal/telefone"
-                  autoFocus
-                />
+              <InputLabel style={{ display: "flex", gap: "10px" }}>
+                <InputLabel>
+                  <InputLabel sx={{ marginBottom: "5px" }}>Nome</InputLabel>
+                  <TextField
+                    autoComplete="given-name"
+                    name="name"
+                    required
+                    id="name"
+                    placeholder="Nome e sobrenome"
+                    autoFocus
+                  />
+                </InputLabel>
+                <InputLabel>
+                  <InputLabel sx={{ marginBottom: "5px" }}>Ramal</InputLabel>
+                  <TextField
+                    name="ramal"
+                    required
+                    id="ramal"
+                    type="text"
+                    placeholder="ex: 5036"
+                    autoFocus
+                  />
+                </InputLabel>
               </InputLabel>
             </Grid>
             <Grid item xs={12}>
+              <InputLabel sx={{ marginBottom: "5px" }}>Email</InputLabel>
               <TextField
                 required
                 fullWidth
                 id="email"
-                placeholder="Email"
+                placeholder="ex: seunome@caprichoveiculos.com.br"
                 name="email"
                 autoComplete="email"
               />
             </Grid>
             <Grid item xs={12}>
+              <InputLabel sx={{ marginBottom: "5px" }}>Senha</InputLabel>
               <TextField
                 required
                 fullWidth
                 name="password"
-                placeholder="Senha"
+                placeholder="••••••••••"
                 type="password"
                 id="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,9 +120,11 @@ export const Register = () => {
                 fullWidth
                 name="password"
                 placeholder="Confirme sua senha"
-                onChange={(e) => setIsPasswordEqual(e.target.value === password)}
-                color={!isPasswordEqual ? ("error") : ("primary")}
-                helperText={!isPasswordEqual ? ("As senhas não coicidem") : (null)}
+                onChange={(e) =>
+                  setIsPasswordEqual(e.target.value === password)
+                }
+                color={!isPasswordEqual ? "error" : "primary"}
+                helperText={!isPasswordEqual ? "As senhas não coicidem" : null}
                 type="password"
                 id="password"
                 autoComplete="new-password"

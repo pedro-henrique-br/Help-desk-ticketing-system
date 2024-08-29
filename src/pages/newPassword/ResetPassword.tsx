@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
 import { Bounce, toast } from "react-toastify";
+import { InputLabel } from "@mui/material";
 
 export const ResetPassword = () => {
   const [isPasswordEqual, setIsPasswordEqual] = React.useState(Boolean(true))
@@ -59,19 +60,25 @@ export const ResetPassword = () => {
           Redefina sua senha
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
+          <InputLabel sx={{marginBottom: "5px"}}>
+            Email
+          </InputLabel>
           <TextField
-            sx={{marginTop: "20px"}}
-            margin="normal"
+            sx={{marginBottom: "15px"}}
+            margin="none"
             fullWidth
             id="email"
-            placeholder="Email"
+            placeholder="ex: seunome@caprichoveiculos.com.br"
             name="email"
             autoComplete="email"
           />
+           <InputLabel sx={{marginBottom: "5px"}}>
+            Senha
+          </InputLabel>
           <TextField
-          sx={{margin: "8px 0 8px 0"}}
+          sx={{margin: "0px 0 15px 0"}}
             onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
+            margin="none"
             fullWidth
             name="password"
             placeholder="Nova senha"
@@ -96,17 +103,12 @@ export const ResetPassword = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}>
-            Entrar
+            Redefinir
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="/forgotpassword" variant="body2">
-                Esqueceu sua senha?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="/register" variant="body2">
-                {"Ainda não se registrou? Registre-se"}
+              <Link href="/login" variant="body2">
+                Sua senha ja foi alterada? voltar
               </Link>
             </Grid>
           </Grid>

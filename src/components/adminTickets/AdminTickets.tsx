@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -18,31 +18,44 @@ const columns: GridColDef[] = [
   { field: "email", headerName: "email", width: 150 },
 ];
 
-
 export const AdminTickets = () => {
   const fetchClientTickets = async () => {
     const fetchTickets = await api.getAllTickets();
-    if(fetchTickets){
+    if (fetchTickets) {
       fetchTickets.forEach((row) => {
         row.created_at = new Date(row.created_at).toString().slice(0, 25);
         row.status = "new";
       });
-      console.log(fetchTickets);
       return fetchTickets;
     }
   };
 
-  const { data: rows = [], isLoading, refetch } = useQuery({
+  const {
+    data: rows = [],
+    isLoading,
+    refetch,
+    isFetching
+  } = useQuery({
     queryKey: ["tickets"],
     queryFn: fetchClientTickets,
   });
 
   return (
-    <Box>
-      <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        {rows.length >= 1 ? (
-          <div style={{ height: 400, width: "100%" }}>
+    <Box
+      sx={{
+        padding: 0,
+        display: "flex",
+        justifyContent: "center",
+        height: "100%",
+        width: "100vw",
+        alignItems: "center",
+      }}>
+      {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
+      <div >
+        {(!isLoading && rows.length >= 1) && !isFetching ? (
+          <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} style={{ height: "70vh", width: "100%" }}>
             <DataGrid
+              sx={{ fontSize: "1rem" }}
               rows={rows}
               columns={columns}
               initialState={{
@@ -52,17 +65,24 @@ export const AdminTickets = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
-          </div>
-        ) : (
+            <Button onClick={() => refetch()}>
+              <PiArrowsClockwise />
+              Refetch
+            </Button>
+          </motion.div>
+        ) : null}
+        {!isLoading && rows.length === 0 ? (
           <Box>
             <Typography sx={{ fontSize: "2.5rem" }}>
               Don't have any tickets opened
             </Typography>
+            <Button onClick={() => refetch()}>
+              <PiArrowsClockwise />
+              Refetch
+            </Button>
           </Box>
-        )}
-        {isLoading ? <h1>Loading...</h1> : null}
-        <Button onClick={() => refetch()}><PiArrowsClockwise />Refetch</Button>
-      </motion.div>
+        ) : null}
+      </div>
     </Box>
   );
 };
