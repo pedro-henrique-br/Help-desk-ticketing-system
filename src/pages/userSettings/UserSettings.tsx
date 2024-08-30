@@ -31,22 +31,23 @@ export const UserSettings = () => {
   return (
     <>
       <Nav isAdmin={true} />
+      <Button variant="contained" onClick={() => window.location.href = "/home"}>Voltar</Button>
       {user != undefined || null ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "center",
               alignItems: "center",
               width: "100vw",
+              height: "100vh",
             }}>
             <Box
               sx={{
-                mr: "50vh",
+                mr: "60vh",
                 display: "flex",
                 justifyContent: "space-around",
                 alignItems: "center",
-                height: "50vh",
                 width: "40vw",
               }}>
               <PiUserCircleFill color="#1976d2" size={"30vh"} />

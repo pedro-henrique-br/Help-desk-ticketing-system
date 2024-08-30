@@ -13,9 +13,8 @@ const columns: GridColDef[] = [
   { field: "user_name", headerName: "Nome", width: 200 },
   { field: "assignee", headerName: "Tecnico", width: 150 },
   { field: "created_at", headerName: "Aberto em", width: 200 },
-  { field: "status", headerName: "status", width: 100 },
-  { field: "ramal", headerName: "ramal", width: 150 },
-  { field: "email", headerName: "email", width: 150 },
+  { field: "ramal", headerName: "Ramal", width: 150 },
+  { field: "email", headerName: "Email", width: 150 },
 ];
 
 export const AdminTickets = () => {
@@ -24,7 +23,6 @@ export const AdminTickets = () => {
     if (fetchTickets) {
       fetchTickets.forEach((row) => {
         row.created_at = new Date(row.created_at).toString().slice(0, 25);
-        row.status = "new";
       });
       return fetchTickets;
     }
@@ -33,27 +31,28 @@ export const AdminTickets = () => {
   const {
     data: rows = [],
     isLoading,
-    refetch,
-    isFetching
+    refetch
   } = useQuery({
     queryKey: ["tickets"],
     queryFn: fetchClientTickets,
   });
-
+  
+  console.log(rows)
   return (
     <Box
       sx={{
-        padding: 0,
         display: "flex",
-        justifyContent: "center",
-        height: "100%",
-        width: "100vw",
+        height: "100vh",
+        width: "80vw",
         alignItems: "center",
       }}>
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
-      <div >
-        {(!isLoading && rows.length > 0) && !isFetching ? (
-          <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} style={{ height: "70vh", width: "100%" }}>
+      {!isLoading && rows.length > 0 ? (
+        <div>
+          <motion.div
+            animate={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
+            style={{ height: "70vh", width: "100%" }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
               rows={rows}
@@ -70,19 +69,19 @@ export const AdminTickets = () => {
               Refetch
             </Button>
           </motion.div>
-        ) : null}
-        {!isLoading && rows.length === 0 ? (
-          <Box>
-            <Typography sx={{ fontSize: "2.5rem" }}>
-              Don't have any tickets opened
-            </Typography>
-            <Button onClick={() => refetch()}>
-              <PiArrowsClockwise />
-              Refetch
-            </Button>
-          </Box>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
+      {!isLoading && rows.length === 0 ? (
+        <Box>
+          <Typography sx={{ fontSize: "2.5rem" }}>
+            Don't have any tickets opened
+          </Typography>
+          <Button onClick={() => refetch()}>
+            <PiArrowsClockwise />
+            Refetch
+          </Button>
+        </Box>
+      ) : null}
     </Box>
   );
 };

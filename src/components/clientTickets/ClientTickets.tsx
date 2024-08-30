@@ -1,9 +1,8 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import { CreateTicketForm } from "../button/CreateTicketForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { PiArrowsClockwise } from "react-icons/pi";
 import { useQuery } from "react-query";
 import Cookies from 'js-cookie'
 
@@ -26,17 +25,17 @@ export const ClientTickets = () => {
     return fetchTickets;
   };
 
-  const { data: rows = [], refetch, isLoading } = useQuery({
+  const { data: rows = [], isLoading } = useQuery({
     queryKey: ["tickets"],
     queryFn: () => fetchClientTickets(),
   });
 
   return (
-    <Box sx={{display: "flex", justifyContent: "center", height: "90vh", width: "100vw",alignItems: "center"}}>
+    <Box sx={{display: "flex", justifyContent: "center", height: "90vh", width: "100vw", alignItems: "center"}}>
       {isLoading ? (<CircularProgress sx={{mb: 16}} />) : (null)}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         {!isLoading && rows?.length > 0 ? (
-          <div style={{ height: "90vh", width: "100vw" }}>
+          <div style={{ height: "90vh", width: "100vw"}}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
               rows={rows}
@@ -48,10 +47,6 @@ export const ClientTickets = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
-            <Button onClick={() => refetch()}>
-              <PiArrowsClockwise />
-              Refetch
-            </Button>
           </div>
         ) : null}
         {!isLoading && rows?.length === 0  ? (

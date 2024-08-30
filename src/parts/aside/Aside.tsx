@@ -3,6 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { AdminTickets } from "../../components/adminTickets/AdminTickets";
+import { PiBookBookmarkFill, PiChalkboardTeacherDuotone, PiChartLineBold, PiUsersThreeDuotone } from "react-icons/pi";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,11 +58,11 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider"}}>
-          <Tab label="Painel" {...a11yProps(0)} />
-          <Tab sx={{color:"black"}} label="Chamados" {...a11yProps(1)} />
-          <Tab label="Documentação" {...a11yProps(3)} />
-          <Tab label="Usuários" {...a11yProps(2)} />
+          sx={{ borderRight: 1, borderColor: "divider", width: "200px"}}>
+          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Painel {<PiChartLineBold color="#1976d2" size={25} />}</p>} {...a11yProps(0)} />
+          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Tickets {<PiChalkboardTeacherDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(1)} />
+          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Documentação {<PiBookBookmarkFill color="#1976d2" size={25} />}</p>} {...a11yProps(3)} />
+          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Usuários {<PiUsersThreeDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           Painel
