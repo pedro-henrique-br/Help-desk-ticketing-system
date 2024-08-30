@@ -64,7 +64,7 @@ const signIn = async (email: string, password: string) => {
 
     setTimeout(() => {
       window.location.href = "/home";
-    }, 2000);
+    }, 1500);
   }
 
   if ((await response).error) {

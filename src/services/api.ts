@@ -51,6 +51,9 @@ const createTicket = async (
         theme: "light",
         transition: Bounce,
       });
+      setTimeout(() => {
+        window.location.href = "/home"
+      }, 2000)
     } else {
       toast.error(`Ocorreu um erro ${response.error?.message}`, {
         position: "top-right",

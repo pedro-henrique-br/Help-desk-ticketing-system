@@ -29,13 +29,13 @@ export const DropDownMenu = () => {
         onOpen={handleOpen}
       >
         <MenuItem sx={{padding: "0", width: "150px", alignItems: "center"}}>
-        <Button sx={{width: "100%", display: "flex", gap: "10px", background: "none"}} variant="text" onClick={() => window.location.href = "/home/settings"}>
+        <Button sx={{width: "100%", display: "flex", gap: "10px", background: "#fff"}} variant="text" onClick={() => window.location.href = "/home/settings"}>
           <PiUserGear size={30}/>
           <p>Perfil</p>
         </Button>
         </MenuItem>
         <MenuItem sx={{padding: "0", width: "150px", alignItems: "center"}}>
-          <Button sx={{width: "100%", display: "flex", gap: "15px", background: "none"}} variant="text" onClick={auth.signOut} >
+          <Button sx={{width: "100%", display: "flex", gap: "15px", background: "#ffff"}} variant="text" onClick={auth.signOut} >
             <BsBoxArrowInLeft style={{color: "red"}} size={30}/>
             <p style={{color: "red", width: "40px", textAlign: "start"}}>Sair</p>
           </Button>
