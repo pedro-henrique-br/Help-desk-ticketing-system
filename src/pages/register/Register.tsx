@@ -10,10 +10,20 @@ import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
 import { InputLabel } from "@mui/material";
 import { Bounce, toast } from "react-toastify";
+import Cookies from 'js-cookie'
+import { Navigate } from "react-router-dom";
+
+const isAuthenticated = Cookies.get("isAuthenticated");
+const redirect = () => {
+  return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
+};
+
+redirect();
 
 export const Register = () => {
   const [password, setPassword] = useState("");
   const [isPasswordEqual, setIsPasswordEqual] = useState(Boolean(true));
+
 
   const createUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

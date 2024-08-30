@@ -11,14 +11,16 @@ import { auth } from "../../services/auth";
 import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import { InputLabel } from "@mui/material";
+import Cookies from 'js-cookie'
+
+const isAuthenticated = Cookies.get("isAuthenticated");
+const redirect = () => {
+  return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
+};
+
+redirect();
 
 export const Login = () => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
-  const redirect = () => {
-    return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
-  };
-
-  redirect();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

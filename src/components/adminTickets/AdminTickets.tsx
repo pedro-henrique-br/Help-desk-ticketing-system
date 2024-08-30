@@ -52,7 +52,7 @@ export const AdminTickets = () => {
       }}>
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       <div >
-        {(!isLoading && rows.length >= 1) && !isFetching ? (
+        {(!isLoading && rows.length > 0) && !isFetching ? (
           <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} style={{ height: "70vh", width: "100%" }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}

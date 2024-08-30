@@ -9,10 +9,11 @@ import { UserSettings } from './pages/userSettings/UserSettings'
 import { FormTicket } from './components/formTicket/FormTicket'
 import { ForgotPassword } from './pages/fortgotPassword/ForgotPassword'
 import { ResetPassword } from './pages/newPassword/ResetPassword'
+import Cookies from 'js-cookie'
 
 function App() {
 
-  const isAuthenticated = localStorage.getItem("isAuthenticated")
+  const isAuthenticated = Cookies.get("isAuthenticated")
 
   return (
     <>

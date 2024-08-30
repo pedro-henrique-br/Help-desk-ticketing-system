@@ -1,5 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
+import Cookies from 'js-cookie'
 
 interface ticket {
   request_type: string;
@@ -19,7 +20,7 @@ const createTicket = async (
   subject: string,
   message: string
 ) => {
-  const userId = localStorage.getItem("user_id");
+  const userId = Cookies.get("user_id");
   const { data } = await supabaseClient.supabase
     .from("users")
     .select("*")
@@ -78,6 +79,26 @@ const getUserTickets = async (userId: string) => {
 };
 
 
+const getUserInfo = async () => {
+  const userId = Cookies.get("user_id")
+  const { data, error } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
+  if(data){
+    return data
+  } else if(error){
+    toast.error(`Ocorreu um erro ${error?.message}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  }
+}
+
 const getAllTickets = async () => {
   const { data } = await supabaseClient.supabase.from("tickets").select("*");
   if (data) {
@@ -102,10 +123,10 @@ const uploadFile = async (file: File) => {
   } 
 }
 
-
 export const api = {
   createTicket,
   getUserTickets,
   getAllTickets,
-  uploadFile
+  uploadFile,
+  getUserInfo
 };

@@ -5,6 +5,7 @@ import { CreateTicketForm } from "../button/CreateTicketForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { PiArrowsClockwise } from "react-icons/pi";
 import { useQuery } from "react-query";
+import Cookies from 'js-cookie'
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 300 },
@@ -17,7 +18,7 @@ const columns: GridColDef[] = [
 
 export const ClientTickets = () => {
   const fetchClientTickets = async () => {
-    const userId = localStorage.getItem("user_id");
+    const userId = Cookies.get("user_id");
     const fetchTickets = await api.getUserTickets(userId as string);
     fetchTickets.forEach((row) => {
       row.created_at = new Date(row.created_at).toString().slice(0, 25);
@@ -34,7 +35,7 @@ export const ClientTickets = () => {
     <Box sx={{display: "flex", justifyContent: "center", height: "90vh", width: "100vw",alignItems: "center"}}>
       {isLoading ? (<CircularProgress sx={{mb: 16}} />) : (null)}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        {!isLoading && rows?.length >= 0 ? (
+        {!isLoading && rows?.length > 0 ? (
           <div style={{ height: "90vh", width: "100vw" }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
@@ -56,7 +57,7 @@ export const ClientTickets = () => {
         {!isLoading && rows?.length === 0  ? (
           <Box
             sx={{
-              height: "70vh",
+              mb: 15,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",

@@ -1,6 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
-
+import Cookies from 'js-cookie';
 
 const signUp = async (
   email: string,
@@ -41,11 +41,11 @@ const signUp = async (
       ramal: ramal,
       email: email,
       isAdmin: false,
-      user_id:response.data.user?.id
+      user_id: response.data.user?.id,
     });
     setTimeout(() => {
-      signIn(email, password)
-    }, 3000);
+      signIn(email, password);
+    }, 2000);
   }
 };
 
@@ -56,32 +56,36 @@ const signIn = async (email: string, password: string) => {
   });
 
   if ((await response).data.user?.aud === "authenticated") {
-    const isAuthenticated = (await response).data.user?.role
-    localStorage.setItem("isAuthenticated", isAuthenticated as string)
+    const isAuthenticated = (await response).data.user?.role;
+    Cookies.set("isAuthenticated", isAuthenticated as string, { expires : 1, sameSite: "Lax"  });
 
-    const userId = (await (response)).data.user?.id
-    const userEmail = (await (response)).data.user?.email
-    
-    localStorage.setItem("user_id", userId as string)
-    localStorage.setItem("email", userEmail as string)
-    
+    const userId = (await response).data.user?.id;
+    Cookies.set("user_id", userId as string, { expires : 1, sameSite: "Lax" });
+
     setTimeout(() => {
-      window.location.href = "/home"
-      }, 2500)
+      window.location.href = "/home";
+    }, 2000);
   }
 
   if ((await response).error) {
-    toast.error(`${(await response).error?.message === "Invalid login credentials" ? ("Usuario não encontrado") : ((await response).error?.message)}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    toast.error(
+      `${
+        (await response).error?.message === "Invalid login credentials"
+          ? "Usuario não encontrado"
+          : (await response).error?.message
+      }`,
+      {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      }
+    );
   } else {
     toast.success("Bem vindo!", {
       position: "top-right",
@@ -98,47 +102,48 @@ const signIn = async (email: string, password: string) => {
 };
 
 const signOut = async () => {
-  localStorage.clear()
+  Cookies.remove("isAuthenticated");
+  Cookies.remove("user_id");
   await supabaseClient.supabase.auth.signOut();
   window.location.href = "/";
 };
 
 const resetPassword = async (email: string, new_password: string) => {
-  const { data: user} = await supabaseClient.supabase
+  const { data: user } = await supabaseClient.supabase
     .from("users")
     .select("*")
     .eq("email", email);
-  
-  if(user?.length === 1 ){
+
+  if (user?.length === 1) {
     const { data, error } = await supabaseClient.supabase.auth.updateUser({
       password: new_password,
-    })
-    return data ? (
-      toast.success(`Senha redefinida com sucesso!`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    }),
-    setTimeout(() => {
-      window.location.href = "/login"
-    }, 3500)
-  ) : (toast.error(`Ocorreu um erro! ${error}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    }))
+    });
+    return data
+      ? (toast.success(`Senha redefinida com sucesso!`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }),
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000))
+      : toast.error(`Ocorreu um erro! ${error}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
   } else {
     toast.error(`Ocorreu um erro! Usuario não encontrado`, {
       position: "top-right",
@@ -150,18 +155,21 @@ const resetPassword = async (email: string, new_password: string) => {
       progress: undefined,
       theme: "light",
       transition: Bounce,
-    })
+    });
   }
-}
+};
 
 const isUserAdmin = async () => {
-  const userId = localStorage.getItem("user_id")
-  const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
-  if(data){
-    return data[0].isAdmin
+  const userId = Cookies.get("user_id");
+  const { data } = await supabaseClient.supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", userId);
+  if (data) {
+    return data[0].isAdmin;
   }
-  return undefined
-}
+  return undefined;
+};
 
 const fetchUsers = async () => {
   const { data } = await supabaseClient.supabase.from("users").select("*");
