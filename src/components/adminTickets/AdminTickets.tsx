@@ -1,18 +1,46 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridApi, GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "react-query";
 import { PiArrowsClockwise } from "react-icons/pi";
 
+const handleClick = (params) => {
+  console.log(params)
+}
+
 const columns: GridColDef[] = [
+  {
+    field: 'action',
+    headerName: 'Action',
+    sortable: false,
+    renderCell: (params) => {
+      const onClick = (e: Event) => {
+        e.stopPropagation(); // don't select this row after clicking
+        console.log(e.target)
+        const api: GridApi = params.api;
+        const thisRow: Record<string, GridCellValue> = {};
+
+        api
+          .getAllColumns()
+          .filter((c) => c.field !== '__check__' && !!c)
+          .forEach(
+            (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+          );
+
+        return alert(JSON.stringify(thisRow, null, 4));
+      };
+
+      return <Button onClick={(e) => onClick(e)}>Click</Button>;
+    },
+  },
   { field: "request_type", headerName: "Tipo do chamado", width: 130 },
   { field: "subject", headerName: "Assunto", width: 170 },
   { field: "location", headerName: "Local", width: 170 },
   { field: "priority", headerName: "Prioridade", width: 130 },
   { field: "user_name", headerName: "Nome", width: 200 },
   { field: "assignee", headerName: "Tecnico", width: 150 },
-  { field: "created_at", headerName: "Aberto em", width: 200 },
+  { field: "created_at", headerName: "Aberto em", width: 250 },
   { field: "ramal", headerName: "Ramal", width: 150 },
   { field: "email", headerName: "Email", width: 150 },
 ];

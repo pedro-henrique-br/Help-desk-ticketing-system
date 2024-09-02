@@ -26,11 +26,17 @@ export const UserSettings = () => {
     fetchUserName();
   }, []);
 
-  console.log(user);
-
   return (
     <>
       <Nav isAdmin={true} />
+      <Box
+       sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100vw",
+        height: "100vh",
+      }}>
       <Button variant="contained" onClick={() => window.location.href = "/home"}>Voltar</Button>
       {user != undefined || null ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -44,13 +50,13 @@ export const UserSettings = () => {
             }}>
             <Box
               sx={{
-                mr: "60vh",
+                mr: "100vh",
                 display: "flex",
                 justifyContent: "space-around",
                 alignItems: "center",
-                width: "40vw",
+                width: "100vw",
               }}>
-              <PiUserCircleFill color="#1976d2" size={"30vh"} />
+              <PiUserCircleFill color="#1976d2" size={"35vh"} />
               <Box component={"form"}>
                 <Typography fontSize={"2rem"}>{user?.name}</Typography>
                 <InputLabel>Nome</InputLabel>
@@ -62,11 +68,12 @@ export const UserSettings = () => {
                 <Typography fontSize={"1rem"}>Tipo de usuário</Typography>
                 <TextField disabled={true} value={user?.isAdmin ? "Administrador" : "Usuario Comum"}></TextField>
               </Box>
-            <Button onClick={() => setHandleEdit(handleEdit ? (false) : (true))}>Edit user</Button>
+            <Button onClick={() => setHandleEdit(handleEdit ? (false) : (true))}>Editar usuário</Button>
             </Box>
           </Box>
         </motion.div>
       ) : null}
+    </Box>
     </>
   );
 };
