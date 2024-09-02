@@ -19,7 +19,7 @@ export const DropDownMenu = () => {
   return (
     <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
       <Button sx={{display: "flex", alignSelf: "center"}} onClick={handleOpen}>
-        <PiUserCircleFill size={50} className={styles.icon}  />
+        <PiUserCircleFill size={40} className={styles.icon}  />
         <PiCaretDownBold  className={styles.icon}/>
       </Button>
       <Select

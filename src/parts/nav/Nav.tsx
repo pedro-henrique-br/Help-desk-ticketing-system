@@ -10,7 +10,7 @@ export const Nav = ({ isAdmin }: user) => {
       <Box
         sx={{
           width: "100vw",
-          height: "10vh",
+          height: "8vh",
           borderBottom: "1px solid #cecece",
           display: "flex",
           justifyContent: "flex-end",

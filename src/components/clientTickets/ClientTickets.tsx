@@ -35,7 +35,7 @@ export const ClientTickets = () => {
       {isLoading ? (<CircularProgress sx={{mb: 16}} />) : (null)}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         {!isLoading && rows?.length > 0 ? (
-          <div style={{ height: "90vh", width: "100vw"}}>
+          <div style={{ height: "92vh", width: "100vw"}}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
               rows={rows}

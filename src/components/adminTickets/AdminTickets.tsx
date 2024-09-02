@@ -31,20 +31,18 @@ export const AdminTickets = () => {
   const {
     data: rows = [],
     isLoading,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ["tickets"],
     queryFn: fetchClientTickets,
   });
-  
-  console.log(rows)
+
   return (
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         height: "100vh",
-        width: "80vw",
-        alignItems: "center",
       }}>
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       {!isLoading && rows.length > 0 ? (
@@ -64,10 +62,6 @@ export const AdminTickets = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
-            <Button onClick={() => refetch()}>
-              <PiArrowsClockwise />
-              Refetch
-            </Button>
           </motion.div>
         </div>
       ) : null}
@@ -76,12 +70,12 @@ export const AdminTickets = () => {
           <Typography sx={{ fontSize: "2.5rem" }}>
             Don't have any tickets opened
           </Typography>
-          <Button onClick={() => refetch()}>
-            <PiArrowsClockwise />
-            Refetch
-          </Button>
         </Box>
       ) : null}
+      <Button sx={{ alignSelf: "center", mt: 2, display: "flex", gap: "5px", justifyContent: "center", height: "50px" }} onClick={() => refetch()}>
+          Refresh
+        <PiArrowsClockwise style={{marginBottom: "3px"}} size={20}/>
+      </Button>
     </Box>
   );
 };
