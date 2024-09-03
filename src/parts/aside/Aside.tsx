@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import { AdminTickets } from "../../components/adminTickets/AdminTickets";
 import { PiBookBookmarkFill, PiChalkboardTeacherDuotone, PiChartLineBold, PiUsersThreeDuotone } from "react-icons/pi";
 import { Dashboard } from "../../components/dashboard/Dashboard";
+import { UsersInfo } from "../../components/users/UsersInfo";
+import { Docs } from "../../components/documentation/Docs";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -23,7 +25,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}>
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           {children}
         </Box>
       )}
@@ -46,7 +48,6 @@ export const Aside = () => {
   };
 
   return (
-    <>
       <Box
         sx={{
           flexGrow: 1,
@@ -59,25 +60,20 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider", width: "200px"}}>
+          sx={{ borderRight: 1, borderColor: "divider", width: "12vw"}}>
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Painel {<PiChartLineBold color="#1976d2" size={25} />}</p>} {...a11yProps(0)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Tickets {<PiChalkboardTeacherDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(1)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Documentação {<PiBookBookmarkFill color="#1976d2" size={25} />}</p>} {...a11yProps(3)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Usuários {<PiUsersThreeDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(2)} />
         </Tabs>
-        <TabPanel value={value} index={0}>
-          <Dashboard />
+        <TabPanel value={value} index={0} children={<Dashboard />} >
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          <AdminTickets />
+        <TabPanel value={value} index={1} children={<AdminTickets />}>
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          Documentação
+        <TabPanel value={value} index={2} children={<Docs />}>
         </TabPanel>
-        <TabPanel value={value} index={3}>
-          Usuários
+        <TabPanel value={value} index={3} children={<UsersInfo />}>
         </TabPanel>
       </Box>
-    </>
   );
 };

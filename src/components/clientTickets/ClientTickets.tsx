@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import { CreateTicketForm } from "../button/CreateTicketForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "react-query";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
+import { supabaseClient } from "../../services/supabase";
+import { useEffect, useState } from "react";
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 300 },
@@ -16,29 +17,47 @@ const columns: GridColDef[] = [
 ];
 
 export const ClientTickets = () => {
+  const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(Boolean(true));
+
   const fetchClientTickets = async () => {
     const userId = Cookies.get("user_id");
     const fetchTickets = await api.getUserTickets(userId as string);
-    fetchTickets.forEach((row) => {
-      row.created_at = new Date(row.created_at).toString().slice(0, 25);
-    });
-    return fetchTickets;
+    setTickets(fetchTickets as never);
+    if (fetchTickets) {
+      setIsLoading(false);
+    }
   };
 
-  const { data: rows = [], isLoading } = useQuery({
-    queryKey: ["tickets"],
-    queryFn: () => fetchClientTickets(),
-  });
+  useEffect(() => {
+    fetchClientTickets();
+  }, []);
+
+  supabaseClient.supabase
+    .channel("tickets")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "tickets" },
+      fetchClientTickets
+    )
+    .subscribe();
 
   return (
-    <Box sx={{display: "flex", justifyContent: "center", height: "90vh", width: "100vw", alignItems: "center"}}>
-      {isLoading ? (<CircularProgress sx={{mb: 16}} />) : (null)}
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        height: "90vh",
+        width: "100vw",
+        alignItems: "center",
+      }}>
+      {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        {!isLoading && rows?.length > 0 ? (
-          <div style={{ height: "92vh", width: "100vw"}}>
+        {!isLoading && tickets.length > 0 ? (
+          <div style={{ height: "92vh", width: "100vw" }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
-              rows={rows}
+              rows={tickets}
               columns={columns}
               initialState={{
                 pagination: {
@@ -49,7 +68,7 @@ export const ClientTickets = () => {
             />
           </div>
         ) : null}
-        {!isLoading && rows?.length === 0  ? (
+        {!isLoading && tickets.length === 0 ? (
           <Box
             sx={{
               mb: 15,

@@ -1,6 +1,7 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
 import Cookies from 'js-cookie';
+import { api } from "./api";
 
 const signUp = async (
   email: string,
@@ -50,29 +51,34 @@ const signUp = async (
 };
 
 const signIn = async (email: string, password: string) => {
-  const response = supabaseClient.supabase.auth.signInWithPassword({
+  const {error, data} = await supabaseClient.supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
 
-  if ((await response).data.user?.aud === "authenticated") {
-    const isAuthenticated = (await response).data.user?.role;
+  if (data.user?.aud === "authenticated") {
+    const isAuthenticated = data.user?.role;
     Cookies.set("isAuthenticated", isAuthenticated as string, { expires : 1, sameSite: "Lax"  });
 
-    const userId = (await response).data.user?.id;
+    const userId = data.user?.id;
     Cookies.set("user_id", userId as string, { expires : 1, sameSite: "Lax" });
-
-    setTimeout(() => {
-      window.location.href = "/home";
+    
+    setTimeout(async ()  => {
+      const userName = await api.getUserInfo()
+      if(userName){
+        console.log(userName)
+        Cookies.set("user_name", userName[0].name, {sameSite: "Lax"})
+        window.location.href = "/home";
+      }
     }, 1500);
   }
 
-  if ((await response).error) {
+  if (error) {
     toast.error(
       `${
-        (await response).error?.message === "Invalid login credentials"
+        error.message === "Invalid login credentials"
           ? "Usuario não encontrado"
-          : (await response).error?.message
+          : error.message
       }`,
       {
         position: "top-right",

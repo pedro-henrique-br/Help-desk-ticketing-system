@@ -81,6 +81,10 @@ const getUserTickets = async (userId: string) => {
   return [];
 };
 
+const getUserByName = async (name: string) => {
+  const { data } = await supabaseClient.supabase.from("users").select("*").textSearch("name", name).select()
+  return data
+}
 
 const getUserInfo = async () => {
   const userId = Cookies.get("user_id")
@@ -126,10 +130,72 @@ const uploadFile = async (file: File) => {
   } 
 }
 
+const changeAssignee = async (id: number, name: string) => {
+  const { data, error } = await supabaseClient.supabase.from("tickets").update({"assignee": name}).eq("id", id).select();
+  if (error) {
+    toast.error(`Ocorreu um erro ao atender o chamado ${error.message}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  } else if (data){
+    toast.info(`Chamado sendo atendido`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+    }
+}
+
+const closeTicket = async (ticketId: number) => {
+  const response = await supabaseClient.supabase.from("tickets").delete().eq("id", ticketId)
+  if(response?.error){
+    toast.error(`Ocorreu um erro ao fechar o chamado ${response?.error}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  } else if(response?.status === 204) {
+    toast.info(`Chamado fechado`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+    return response
+  }
+}
+
 export const api = {
   createTicket,
   getUserTickets,
   getAllTickets,
   uploadFile,
-  getUserInfo
+  getUserInfo,
+  changeAssignee,
+  closeTicket,
+  getUserByName
 };

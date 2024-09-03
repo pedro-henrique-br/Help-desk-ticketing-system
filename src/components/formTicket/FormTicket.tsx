@@ -192,7 +192,6 @@ export const FormTicket = () => {
                       <Select
                         sx={{ width: "240px" }}
                         labelId="demo-simple-select-label"
-                        label="priority"
                         id="demo-simple-select"
                         value={priority}
                         onChange={handleChangePriority}>
