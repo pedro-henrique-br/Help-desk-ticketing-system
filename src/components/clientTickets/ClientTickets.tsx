@@ -6,13 +6,13 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Cookies from "js-cookie";
 import { supabaseClient } from "../../services/supabase";
 import { useEffect, useState } from "react";
+import { formatDate } from "../../services/date";
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 300 },
-  { field: "subject", headerName: "Assunto", width: 250 },
-  { field: "location", headerName: "Local", width: 170 },
+  { field: "department", headerName: "Departamento", width: 170 },
   { field: "priority", headerName: "Prioridade", width: 130 },
-  { field: "assignee", headerName: "Técnico", width: 130 },
+  { field: "assignee", headerName: "Técnico", width: 200 },
   { field: "created_at", headerName: "Aberto em", width: 250 },
 ];
 
@@ -23,6 +23,9 @@ export const ClientTickets = () => {
   const fetchClientTickets = async () => {
     const userId = Cookies.get("user_id");
     const fetchTickets = await api.getUserTickets(userId as string);
+    fetchTickets.forEach((ticket) => {
+      return ticket.created_at = formatDate(ticket.created_at as string)
+    })
     setTickets(fetchTickets as never);
     if (fetchTickets) {
       setIsLoading(false);

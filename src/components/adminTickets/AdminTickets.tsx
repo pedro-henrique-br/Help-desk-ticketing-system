@@ -20,6 +20,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Cookies from "js-cookie";
 import { supabaseClient } from "../../services/supabase";
+import { formatDate } from "../../services/date";
 interface ticketData {
   id: number;
   user_name: string;
@@ -35,9 +36,9 @@ export const AdminTickets = () => {
       hideable: false,
       sortable: false,
       editable: false,
-      minWidth: 200,
-      maxWidth: 200,
-      width: 200,
+      minWidth: 175,
+      maxWidth: 175,
+      width: 175,
       renderCell: (params) => {
         const userName = Cookies.get("user_name");
         if (params.row.assignee === userName) {
@@ -45,7 +46,7 @@ export const AdminTickets = () => {
             <Button
               variant="contained"
               sx={{
-                width: "180px",
+                width: "160px",
                 background: "#5F8670",
                 "&:hover": {
                   backgroundColor: "#2F8670",
@@ -59,7 +60,7 @@ export const AdminTickets = () => {
           return (
             <Button
               sx={{
-                width: "180px",
+                width: "160px",
               }}
               variant="contained"
               onClick={() => handleClickOpen(params)}>
@@ -71,7 +72,7 @@ export const AdminTickets = () => {
             <Button
               variant="contained"
               sx={{
-                width: "180px",
+                width: "160px",
                 background: "#CD5C08",
                 "&:hover": {
                   backgroundColor: "#CD5C08",
@@ -84,14 +85,13 @@ export const AdminTickets = () => {
       },
     },
     { field: "request_type", headerName: "Tipo do chamado", width: 130 },
-    { field: "subject", headerName: "Assunto", width: 170 },
     { field: "message", headerName: "Mensagem", width: 170 },
-    { field: "location", headerName: "Local", width: 170 },
-    { field: "priority", headerName: "Prioridade", width: 130 },
+    { field: "department", headerName: "Departamento", width: 150 },
+    { field: "priority", headerName: "Prioridade", width: 100 },
     { field: "user_name", headerName: "Nome", width: 200 },
     { field: "assignee", headerName: "Tecnico", width: 150 },
-    { field: "created_at", headerName: "Aberto em", width: 250 },
-    { field: "ramal", headerName: "Ramal", width: 150 },
+    { field: "created_at", headerName: "Aberto em", width: 200 },
+    { field: "ramal", headerName: "Ramal", width: 80 },
     { field: "email", headerName: "Email", width: 150 },
   ];
 
@@ -135,8 +135,11 @@ export const AdminTickets = () => {
 
   const fetchClientTickets = async () => {
     const fetchTickets = await api.getAllTickets();
-    setTickets(fetchTickets as never);
     if (fetchTickets) {
+      fetchTickets.forEach((ticket) => {
+        return ticket.created_at = formatDate(ticket.created_at as string)
+      })
+      setTickets(fetchTickets as never);
       setIsLoading(false);
     }
   };
@@ -157,9 +160,7 @@ export const AdminTickets = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "88vw",
+        width: "88vw"
       }}>
       {isLoading ? (
         <Box
@@ -177,9 +178,9 @@ export const AdminTickets = () => {
           <motion.div
             animate={{ opacity: 1 }}
             initial={{ opacity: 0 }}
-            style={{ height: "70vh", width: "100%" }}>
+            style={{ height: "92vh"}}>
             <DataGrid
-              sx={{ fontSize: "1rem" }}
+              sx={{ fontSize: "0.8rem", width: "100%" }}
               rows={tickets}
               columns={columns}
               initialState={{

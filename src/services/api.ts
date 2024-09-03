@@ -4,9 +4,8 @@ import Cookies from "js-cookie";
 
 interface ticket {
   request_type: string;
-  subject: string;
-  location: string;
   priority: string;
+  department: string;
   user_name: string;
   created_at: string;
   status: string;
@@ -22,8 +21,7 @@ interface userData {
 const createTicket = async (
   type: string,
   priority: string,
-  location: string,
-  subject: string,
+  department: string,
   message: string
 ) => {
   const userId = Cookies.get("user_id");
@@ -36,12 +34,11 @@ const createTicket = async (
     const response = await supabaseClient.supabase.from("tickets").insert({
       user_id: userId,
       user_name: data[0].name,
-      subject: subject,
       message: message,
+      department: department,
       priority: priority,
       isClosed: false,
       request_type: type,
-      location: location,
       email: data[0].email,
       ramal: data[0].ramal,
     });
@@ -57,9 +54,6 @@ const createTicket = async (
         theme: "light",
         transition: Bounce,
       });
-      setTimeout(() => {
-        window.location.href = "/home";
-      }, 2000);
     } else {
       toast.error(`Ocorreu um erro ${response.error?.message}`, {
         position: "top-right",
@@ -214,21 +208,24 @@ const closeTicket = async (ticketId: number) => {
 const changeUserInfo = async (user: userData) => {
   const userId = Cookies.get("user_id");
   await supabaseClient.supabase
-    .from("users")
-    .update({ email: user?.email })
-    .eq("user_id", userId);
+  .from("users")
+  .update({ email: user?.email })
+  .eq("user_id", userId);
   await supabaseClient.supabase.auth.updateUser({
     email: user.email,
   });
-  await supabaseClient.supabase
+  const response = await supabaseClient.supabase
     .from("users")
     .update({ name: user?.name })
     .eq("user_id", userId);
-  await supabaseClient.supabase
+    await supabaseClient.supabase
     .from("users")
     .update({ ramal: user?.ramal })
     .eq("user_id", userId);
-};
+    if(response?.status === 204){
+      Cookies.set("user_name", user?.name)
+    }
+  };
 
 export const api = {
   createTicket,

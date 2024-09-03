@@ -35,21 +35,31 @@ const VisuallyHiddenInput = styled("input")({
 export const FormTicket = () => {
   const [type, setType] = React.useState("");
   const [priority, setPriority] = React.useState("");
-  const [location, setLocation] = React.useState("");
+  const [department, setDepartment] = React.useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const ticketTypes = [
-    "📨 Problemas com email",
-    "🖨️ Problemas com impressora",
-    "💻 Problemas com computador",
-    "👤 Suporte TI",
-    "🖥️ Requisição de computador",
-    "🚫 Requisição de acesso(s)",
-    "⚠️ Problemas com nbs",
-    "⚛️ Problemas com via nuvem",
-    "📞 Problemas com ramal/telefone",
+    "📨 Problemas com Email",
+    "🖨️ Problemas com Impressora",
+    "💻 Problemas com Computador",
+    "🔑 Alteração de Senha",
+    "🖥️ Requisição de Computador",
+    "🚫 Requisição de Acesso(s)",
+    "⚠️ Problemas com NBS",
+    "⚛️ Problemas com Via Nuvem",
+    "📞 Problemas com Ramal/Telefone",
     "💬 Outro...",
   ];
+
+  const departments = [
+    "Vendas",
+    "Oficina",
+    "Administrativo",
+    "Peças",
+    "Eccomerce",
+    "CRM",
+    "Caixa"
+  ]
 
   const handleChangeType = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
@@ -58,7 +68,7 @@ export const FormTicket = () => {
     setPriority(event.target.value as string);
   };
   const handleChangeLocation = (event: SelectChangeEvent) => {
-    setLocation(event.target.value as string);
+    setDepartment(event.target.value as string);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,8 +77,7 @@ export const FormTicket = () => {
     const ticket = {
       _type: type,
       _priority: priority,
-      _location: location,
-      subject: data.get("subject") as string,
+      _department: department,
       message: data.get("message") as string,
       file: data.get("file") as File,
     };
@@ -78,19 +87,18 @@ export const FormTicket = () => {
     if (
       ticket._type != "" &&
       ticket._priority != "" &&
-      ticket._location != "" &&
-      ticket.subject != "" &&
+      ticket._department != "" &&
       ticket.message != ""
     ) {
       api.createTicket(
         ticket._type,
         ticket._priority,
-        ticket._location,
-        ticket.subject,
+        ticket._department,
         ticket.message
       );
+      setIsButtonClicked(true)
     } else {
-      toast.info(`preencha todos os campos`, {
+      toast.info(`Preencha todos os campos`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -133,12 +141,12 @@ export const FormTicket = () => {
                   component="h1"
                   variant="h5"
                   sx={{ marginTop: "1vh" }}>
-                  Abertura de chamado
+                  Abertura de Chamado
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit}>
                   <InputLabel>
                     <InputLabel id="demo-simple-select-label">
-                      Tipo de chamado
+                      Tipo de Chamado
                     </InputLabel>
                     <Select 
                       sx={{ width: "500px" }}
@@ -159,18 +167,8 @@ export const FormTicket = () => {
                       margin="normal"
                       required
                       fullWidth
-                      id="subject"
-                      placeholder={`Assunto do chamado, ex: "Estou sem internet" `}
-                      name="subject"
-                    />
-                  </InputLabel>
-                  <InputLabel>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
                       name="message"
-                      placeholder="Conte-nos mais sobre o plobema..."
+                      placeholder="Conte-nos mais sobre o problema..."
                       id="message"
                     />
                   </InputLabel>
@@ -181,13 +179,13 @@ export const FormTicket = () => {
                     variant="contained"
                     tabIndex={-1}
                     startIcon={<BsCloud />}>
-                    Anexe uma imagem
+                    Anexar imagem
                     <VisuallyHiddenInput name="file" type="file" />
                   </Button>
                   <InputLabel sx={{ display: "flex", gap: "20px" }}>
                     <InputLabel>
                       <InputLabel id="demo-simple-select-label">
-                        Prioridade do chamado
+                        Prioridade do Chamado
                       </InputLabel>
                       <Select
                         sx={{ width: "240px" }}
@@ -202,21 +200,17 @@ export const FormTicket = () => {
                     </InputLabel>
                     <InputLabel>
                       <InputLabel id="demo-simple-select-label">
-                        Local
+                        Departamento
                       </InputLabel>
                       <Select
                         sx={{ width: "240px" }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={location}
+                        value={department}
                         onChange={handleChangeLocation}>
-                        <MenuItem value={"Jacareí"}>Jacareí</MenuItem>
-                        <MenuItem value={"São José Dos Campos"}>
-                          São José Dos Campos
-                        </MenuItem>
-                        <MenuItem value={"Caçapava"}>Caçapava</MenuItem>
-                        <MenuItem value={"SGMK"}>SGMK</MenuItem>
-                        <MenuItem value={"Outro"}>Outro...</MenuItem>
+                        {departments && departments.map((department) => {
+                          return <MenuItem key={department} value={department}>{department}</MenuItem>
+                        })}
                       </Select>
                     </InputLabel>
                   </InputLabel>
@@ -244,7 +238,7 @@ export const FormTicket = () => {
               className={styles["home-button"]}
               variant="contained"
               onClick={() => setIsButtonClicked(true)}>
-              Voltar para pagina inicial
+              Voltar para Página Inicial
             </Button>
           ) : (
             <Navigate to={"/home"} />
