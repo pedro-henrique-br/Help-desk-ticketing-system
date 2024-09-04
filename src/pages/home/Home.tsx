@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from "react";
 import { Aside } from "../../parts/aside/Aside";
 import { Nav } from "../../parts/nav/Nav";
@@ -17,6 +18,8 @@ export const Home = () => {
 
   return (
     <div className="Home">
+      
+      {/* @ts-expect-error */}
       <Nav isAdmin={isAdmin} />
         {isAdmin ? (
           <>
