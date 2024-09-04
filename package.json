@@ -20,6 +20,8 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.1",
     "@tanstack/react-query-devtools": "^5.52.2",
+    "@types/node": "^22.5.3",
+    "dotenv": "^16.4.5",
     "framer-motion": "^11.3.28",
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
