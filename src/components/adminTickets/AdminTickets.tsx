@@ -94,6 +94,14 @@ export const AdminTickets = () => {
     { field: "created_at", headerName: "Aberto em", width: 200 },
     { field: "ramal", headerName: "Ramal", width: 80 },
     { field: "email", headerName: "Email", width: 150 },
+    { field: "photo", headerName: "Imagem", width: 250, renderCell: (params) => {
+      if(params.row.image){
+        const imageURL = api.getFile(params.row.image as string)
+        return <a href={imageURL} target="_blank">Clique para ver a imagem</a>
+      } else {
+        return <p>Sem imagem</p>
+      }
+    } },
   ];
 
   const [open, setOpen] = useState(false);
