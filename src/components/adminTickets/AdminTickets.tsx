@@ -27,6 +27,7 @@ interface ticketData {
   user_name: string;
   request_type: string;
   message: string;
+  image: string;
 }
 
 export const AdminTickets = () => {
@@ -85,15 +86,32 @@ export const AdminTickets = () => {
         }
       },
     },
-    { field: "request_type", headerName: "Tipo do chamado", width: 200 },
-    { field: "message", headerName: "Mensagem", width: 170 },
-    { field: "department", headerName: "Departamento", width: 150 },
-    { field: "priority", headerName: "Prioridade", width: 145 },
-    { field: "user_name", headerName: "Nome", width: 200 },
+    { field: "request_type", headerName: "Tipo do chamado", width: 220 },
+    { field: "message", headerName: "Mensagem", width: 250 },
+    { field: "department", headerName: "Departamento", width: 120 },
+    { field: "priority", headerName: "Prioridade", width: 100 },
+    { field: "user_name", headerName: "Nome", width: 120 },
     { field: "assignee", headerName: "Tecnico", width: 150 },
     { field: "created_at", headerName: "Aberto em", width: 200 },
     { field: "ramal", headerName: "Ramal", width: 80 },
-    { field: "email", headerName: "Email", width: 150 },
+    { field: "email", headerName: "Email", width: 200 },
+    {
+      field: "photo",
+      headerName: "Imagem",
+      width: 250,
+      renderCell: (params) => {
+        if (params.row.image) {
+          const imageURL = api.getFile(params.row.image as string);
+          return (
+            <a href={imageURL} target="_blank">
+              Clique para ver a imagem
+            </a>
+          );
+        } else {
+          return <p>Sem imagem</p>;
+        }
+      },
+    },
   ];
 
   const [open, setOpen] = useState(false);
@@ -115,6 +133,9 @@ export const AdminTickets = () => {
   const closeTicket = async (
     params: GridRenderCellParams<ticketData, unknown, GridTreeNodeWithRender>
   ) => {
+    if (params.row.image) {
+      api.deleteTicketFile(params.row.image);
+    }
     await api.closeTicket(params.row.id);
   };
 
@@ -138,8 +159,8 @@ export const AdminTickets = () => {
     const fetchTickets = await api.getAllTickets();
     if (fetchTickets) {
       fetchTickets.forEach((ticket) => {
-        return ticket.created_at = formatDate(ticket.created_at as string)
-      })
+        return (ticket.created_at = formatDate(ticket.created_at as string));
+      });
       setTickets(fetchTickets as never);
       setIsLoading(false);
     }
@@ -159,7 +180,10 @@ export const AdminTickets = () => {
     .subscribe();
 
   return (
-    <Box>
+    <Box
+      sx={{
+        width: "88vw",
+      }}>
       {isLoading ? (
         <Box
           sx={{
@@ -167,27 +191,31 @@ export const AdminTickets = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "80vh",
-            width: "100%"
+            width: "100%",
           }}>
-          <CircularProgress sx={{ mb: 16, left: "50%", position: "absolute"}} />
+          <CircularProgress
+            sx={{ mb: 16, left: "50%", position: "absolute" }}
+          />
         </Box>
       ) : null}
       {!isLoading && tickets.length > 0 ? (
         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-          <Paper>
+          <Paper sx={{ width: "100%", height: "92vh" }}>
             <DataGrid
-              sx={{ fontSize: "0.8rem", width: "100%", height: "92vh"}}
+              sx={{ fontSize: "0.8rem" }}
               rows={tickets}
               columns={columns}
-              density="comfortable"
               disableColumnSelector
               disableColumnMenu
               disableDensitySelector
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                }}}
-              pageSizeOptions={[5, 10]}
+                  paginationModel: { page: 0, pageSize: 25 },
+                },
+                sorting: {
+                  sortModel: [{ field: "priority", sort: "asc" }],
+                },
+              }}
             />
           </Paper>
           <Dialog

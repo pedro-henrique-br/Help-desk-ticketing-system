@@ -50,7 +50,6 @@ export const Aside = () => {
   return (
       <Box
         sx={{
-          flexGrow: 1,
           bgcolor: "background.paper",
           display: "flex",
           height: "100vh",
@@ -60,7 +59,7 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider", width: "9vw", minWidth: "170px"}}>
+          sx={{ borderRight: 1, borderColor: "divider", width: "12vw"}}>
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Painel {<PiChartLineBold color="#1976d2" size={25} />}</p>} {...a11yProps(0)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Chamados {<PiChalkboardTeacherDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(1)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Documentação {<PiBookBookmarkFill color="#1976d2" size={25} />}</p>} {...a11yProps(3)} />

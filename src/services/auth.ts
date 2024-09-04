@@ -66,7 +66,6 @@ const signIn = async (email: string, password: string) => {
     setTimeout(async ()  => {
       const userName = await api.getUserInfo()
       if(userName){
-        console.log(userName)
         Cookies.set("user_name", userName[0].name, {sameSite: "Lax"})
         window.location.href = "/home";
       }

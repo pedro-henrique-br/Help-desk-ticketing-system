@@ -17,7 +17,7 @@ function App() {
   const isAuthenticated = Cookies.get("isAuthenticated")
 
   return (
-    <>
+    <div className='App'>
       <BrowserRouter>
         <Routes>
           <Route path='/*' element={<NotFound />} />
@@ -43,7 +43,7 @@ function App() {
           }/>
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   )
 }
 

@@ -22,7 +22,8 @@ const createTicket = async (
   type: string,
   priority: string,
   department: string,
-  message: string
+  message: string,
+  image: string
 ) => {
   const userId = Cookies.get("user_id");
   const { data } = await supabaseClient.supabase
@@ -37,10 +38,10 @@ const createTicket = async (
       message: message,
       department: department,
       priority: priority,
-      isClosed: false,
       request_type: type,
       email: data[0].email,
       ramal: data[0].ramal,
+      image: image,
     });
     if (response.status === 201) {
       toast.success(`Ticket aberto com sucesso`, {
@@ -120,6 +121,18 @@ const getAllTickets = async () => {
   }
 };
 
+const getFile = (fileName: string) => {
+  const { data } = supabaseClient.supabase.storage
+    .from("screenshots")
+    .getPublicUrl(`${fileName}`);
+  if(data){
+    const {publicUrl} = data
+    return publicUrl as string
+  } else {
+    return "" as string
+  }
+}
+
 const uploadFile = async (file: File) => {
   const { error } = await supabaseClient.supabase.storage
     .from("screenshots")
@@ -171,6 +184,15 @@ const changeAssignee = async (id: number, name: string) => {
     });
   }
 };
+
+const deleteTicketFile = async (fileName: string) => {
+  const {error} = await supabaseClient.supabase.storage
+    .from("screenshots")
+    .remove([fileName])
+    if(error){
+      console.error(error)
+    }
+}
 
 const closeTicket = async (ticketId: number) => {
   const response = await supabaseClient.supabase
@@ -237,4 +259,6 @@ export const api = {
   closeTicket,
   getUserByName,
   changeUserInfo,
+  getFile,
+  deleteTicketFile
 };

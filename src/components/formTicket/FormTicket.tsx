@@ -58,8 +58,8 @@ export const FormTicket = () => {
     "Peças",
     "Eccomerce",
     "CRM",
-    "Caixa"
-  ]
+    "Caixa",
+  ];
 
   const handleChangeType = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
@@ -81,10 +81,25 @@ export const FormTicket = () => {
       message: data.get("message") as string,
       file: data.get("file") as File,
     };
-    if (ticket.file?.name != "") {
-      api.uploadFile(ticket.file as never);
-    }
     if (
+      ticket._type != "" &&
+      ticket._priority != "" &&
+      ticket._department != "" &&
+      ticket.message != "" &&
+      ticket.file?.name != ""
+    ) {
+      api.createTicket(
+        ticket._type,
+        ticket._priority,
+        ticket._department,
+        ticket.message,
+        ticket.file.name
+      );
+      api.uploadFile(ticket.file as never);
+      setTimeout(() => {
+        setIsButtonClicked(true)
+      }, 1000);
+    } else if (
       ticket._type != "" &&
       ticket._priority != "" &&
       ticket._department != "" &&
@@ -94,9 +109,12 @@ export const FormTicket = () => {
         ticket._type,
         ticket._priority,
         ticket._department,
-        ticket.message
+        ticket.message,
+        ""
       );
-      setIsButtonClicked(true)
+      setTimeout(() => {
+        setIsButtonClicked(true)
+      }, 1000);
     } else {
       toast.info(`Preencha todos os campos`, {
         position: "top-right",
@@ -148,7 +166,7 @@ export const FormTicket = () => {
                     <InputLabel id="demo-simple-select-label">
                       Tipo de Chamado
                     </InputLabel>
-                    <Select 
+                    <Select
                       sx={{ width: "500px" }}
                       value={type}
                       onChange={handleChangeType}>
@@ -173,7 +191,7 @@ export const FormTicket = () => {
                     />
                   </InputLabel>
                   <Button
-                    sx={{marginBottom: "1vh"}}
+                    sx={{ marginBottom: "1vh" }}
                     component="label"
                     role={undefined}
                     variant="contained"
@@ -208,9 +226,14 @@ export const FormTicket = () => {
                         id="demo-simple-select"
                         value={department}
                         onChange={handleChangeLocation}>
-                        {departments && departments.map((department) => {
-                          return <MenuItem key={department} value={department}>{department}</MenuItem>
-                        })}
+                        {departments &&
+                          departments.map((department) => {
+                            return (
+                              <MenuItem key={department} value={department}>
+                                {department}
+                              </MenuItem>
+                            );
+                          })}
                       </Select>
                     </InputLabel>
                   </InputLabel>

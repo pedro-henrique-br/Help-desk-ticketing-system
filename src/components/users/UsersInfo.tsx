@@ -10,7 +10,7 @@ interface user {
 
 export const UsersInfo = () => {
   const [name, setName] = useState("")
-  const [users, setUsers] = useState<user | []>()
+  const [users, setUsers] = useState<user | []>([])
 
   useEffect(() => {
     setTimeout( async () => {

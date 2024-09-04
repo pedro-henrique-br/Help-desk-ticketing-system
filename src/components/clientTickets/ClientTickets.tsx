@@ -11,9 +11,18 @@ import { formatDate } from "../../services/date";
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 300 },
   { field: "department", headerName: "Departamento", width: 170 },
+  { field: "message", headerName: "Mensagem", width: 280 },
   { field: "priority", headerName: "Prioridade", width: 130 },
   { field: "assignee", headerName: "Técnico", width: 200 },
   { field: "created_at", headerName: "Aberto em", width: 250 },
+  { field: "photo", headerName: "Imagem", width: 250, renderCell: (params) => {
+    if(params.row.image){
+      const imageURL = api.getFile(params.row.image as string)
+      return <a href={imageURL} target="_blank">Clique para ver a imagem</a>
+    } else {
+      return <p>Sem imagem</p>
+    }
+  } },
 ];
 
 export const ClientTickets = () => {
@@ -50,24 +59,27 @@ export const ClientTickets = () => {
       sx={{
         display: "flex",
         justifyContent: "center",
-        height: "90vh",
+        height: "100vh",
         width: "100vw",
-        alignItems: "center",
+        alignItems: "flex-start",
       }}>
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         {!isLoading && tickets.length > 0 ? (
-          <Paper sx={{ height: "91vh", width: '100vw' }}>
+          <Paper sx={{ height: "92vh", width: '100vw' }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
               rows={tickets}
               columns={columns}
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
+                  paginationModel: { page: 0, pageSize: 20 },
+                }, sorting: {
+                  sortModel: [
+                    { field: 'priority', sort: "asc" },
+                  ],
                 },
               }}
-              pageSizeOptions={[5, 10]}
             />
           </Paper>
         ) : null}

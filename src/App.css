@@ -3,7 +3,11 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  overflow: hidden;
   font-family: Karla;
   font-weight: 700;
+}
+
+.App {
+  overflow: hidden;
+  height: 100vh;
 }
