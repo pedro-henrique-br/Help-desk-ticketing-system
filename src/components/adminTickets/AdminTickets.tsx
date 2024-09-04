@@ -175,7 +175,6 @@ export const AdminTickets = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "80vh",
-            width: "100%"
           }}>
           <CircularProgress sx={{ mb: 16, left: "50%", position: "absolute"}} />
         </Box>
@@ -184,7 +183,7 @@ export const AdminTickets = () => {
         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
           <Paper>
             <DataGrid
-              sx={{ fontSize: "0.8rem", width: "100%", height: "92vh"}}
+              sx={{ fontSize: "0.8rem", width: "88vw", height: "92vh"}}
               rows={tickets}
               columns={columns}
               density="comfortable"
