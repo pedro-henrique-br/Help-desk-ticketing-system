@@ -13,14 +13,18 @@ import { Bounce, toast } from "react-toastify";
 import { InputLabel } from "@mui/material";
 import Cookies from 'js-cookie'
 
-const isAuthenticated = Cookies.get("isAuthenticated");
-const redirect = () => {
-  return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
-};
-
-redirect();
 
 export const Login = () => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(Boolean(false))
+
+  React.useEffect(() => {
+    const fetchAuth = Cookies.get("isAuthenticated");
+    const redirect = () => {
+      return fetchAuth === "authenticated" ? setIsAuthenticated(true) : null;
+    };
+    
+    redirect()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +54,7 @@ export const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
+      {isAuthenticated ? <Navigate to="/home" /> : null}
       <CssBaseline />
       <Box
         sx={{

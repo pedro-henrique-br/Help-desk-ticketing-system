@@ -13,17 +13,19 @@ import { Bounce, toast } from "react-toastify";
 import Cookies from 'js-cookie'
 import { Navigate } from "react-router-dom";
 
-const isAuthenticated = Cookies.get("isAuthenticated");
-const redirect = () => {
-  return isAuthenticated === "authenticated" ? <Navigate to="/home" /> : null;
-};
-
-redirect();
-
 export const Register = () => {
   const [password, setPassword] = useState("");
   const [isPasswordEqual, setIsPasswordEqual] = useState(Boolean(true));
+  const [isAuthenticated, setIsAuthenticated] = React.useState(Boolean(false))
 
+  React.useEffect(() => {
+    const fetchAuth = Cookies.get("isAuthenticated");
+    const redirect = () => {
+      return fetchAuth === "authenticated" ? setIsAuthenticated(true) : null;
+    };
+    
+    redirect()
+  }, [])
 
   const createUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,6 +57,7 @@ export const Register = () => {
 
   return (
     <Container component="main" maxWidth="xs">
+      {isAuthenticated ? <Navigate to="/home" /> : null}
       <CssBaseline />
       <Box
         sx={{

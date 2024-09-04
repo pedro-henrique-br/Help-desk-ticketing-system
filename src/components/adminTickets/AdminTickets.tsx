@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Dialog,
+  Paper,
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
@@ -36,9 +37,9 @@ export const AdminTickets = () => {
       hideable: false,
       sortable: false,
       editable: false,
-      minWidth: 175,
-      maxWidth: 175,
-      width: 175,
+      minWidth: 190,
+      maxWidth: 170,
+      width: 170,
       renderCell: (params) => {
         const userName = Cookies.get("user_name");
         if (params.row.assignee === userName) {
@@ -84,10 +85,10 @@ export const AdminTickets = () => {
         }
       },
     },
-    { field: "request_type", headerName: "Tipo do chamado", width: 130 },
+    { field: "request_type", headerName: "Tipo do chamado", width: 200 },
     { field: "message", headerName: "Mensagem", width: 170 },
     { field: "department", headerName: "Departamento", width: 150 },
-    { field: "priority", headerName: "Prioridade", width: 100 },
+    { field: "priority", headerName: "Prioridade", width: 145 },
     { field: "user_name", headerName: "Nome", width: 200 },
     { field: "assignee", headerName: "Tecnico", width: 150 },
     { field: "created_at", headerName: "Aberto em", width: 200 },
@@ -158,10 +159,7 @@ export const AdminTickets = () => {
     .subscribe();
 
   return (
-    <Box
-      sx={{
-        width: "88vw"
-      }}>
+    <Box>
       {isLoading ? (
         <Box
           sx={{
@@ -169,28 +167,29 @@ export const AdminTickets = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "80vh",
+            width: "100%"
           }}>
-          <CircularProgress sx={{ mb: 16 }} />
+          <CircularProgress sx={{ mb: 16, left: "50%", position: "absolute"}} />
         </Box>
       ) : null}
       {!isLoading && tickets.length > 0 ? (
-        <div>
-          <motion.div
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            style={{ height: "92vh"}}>
+        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+          <Paper>
             <DataGrid
-              sx={{ fontSize: "0.8rem", width: "100%" }}
+              sx={{ fontSize: "0.8rem", width: "100%", height: "92vh"}}
               rows={tickets}
               columns={columns}
+              density="comfortable"
+              disableColumnSelector
+              disableColumnMenu
+              disableDensitySelector
               initialState={{
                 pagination: {
                   paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
+                }}}
               pageSizeOptions={[5, 10]}
             />
-          </motion.div>
+          </Paper>
           <Dialog
             open={open}
             onClose={handleClose}
@@ -216,7 +215,7 @@ export const AdminTickets = () => {
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
+        </motion.div>
       ) : null}
       {!isLoading && tickets.length === 0 ? (
         <Box

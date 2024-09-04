@@ -10,6 +10,7 @@ import { FormTicket } from './components/formTicket/FormTicket'
 import { ForgotPassword } from './pages/fortgotPassword/ForgotPassword'
 import { ResetPassword } from './pages/newPassword/ResetPassword'
 import Cookies from 'js-cookie'
+import { NotFound } from './pages/notFound/NotFound'
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/*' element={<h1>Not found</h1>} />
+          <Route path='/*' element={<NotFound />} />
           <Route path='/' element={<Login />} />
           <Route path='/login' element={<Login />}/>
           <Route path='/register' element={<Register />}/>

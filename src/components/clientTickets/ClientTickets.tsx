@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../services/api";
 import { CreateTicketForm } from "../button/CreateTicketForm";
@@ -57,7 +57,7 @@ export const ClientTickets = () => {
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         {!isLoading && tickets.length > 0 ? (
-          <div style={{ height: "92vh", width: "100vw" }}>
+          <Paper sx={{ height: "91vh", width: '100vw' }}>
             <DataGrid
               sx={{ fontSize: "1rem" }}
               rows={tickets}
@@ -69,7 +69,7 @@ export const ClientTickets = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
-          </div>
+          </Paper>
         ) : null}
         {!isLoading && tickets.length === 0 ? (
           <Box

@@ -60,9 +60,9 @@ export const Aside = () => {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider", width: "12vw"}}>
+          sx={{ borderRight: 1, borderColor: "divider", width: "9vw", minWidth: "170px"}}>
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Painel {<PiChartLineBold color="#1976d2" size={25} />}</p>} {...a11yProps(0)} />
-          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Tickets {<PiChalkboardTeacherDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(1)} />
+          <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Chamados {<PiChalkboardTeacherDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(1)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Documentação {<PiBookBookmarkFill color="#1976d2" size={25} />}</p>} {...a11yProps(3)} />
           <Tab sx={{fontFamily: "Karla", fontWeight: "700"}} label={<p style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "5px"}}>Usuários {<PiUsersThreeDuotone color="#1976d2" size={25} />}</p>} {...a11yProps(2)} />
         </Tabs>
