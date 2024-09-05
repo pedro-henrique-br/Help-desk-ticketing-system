@@ -91,6 +91,22 @@ const getUserByName = async (name: string) => {
   return data;
 };
 
+const getUserByEmail = async (email: string) => {
+  const { data } = await supabaseClient.supabase
+    .from("users")
+    .select("*")
+    .textSearch("email", email)
+    .select();
+  return data;
+};
+
+const getAllUsers = async () => {
+  const { data } = await supabaseClient.supabase
+    .from("users")
+    .select("*")
+  return data;
+}
+
 const getUserInfo = async () => {
   const userId = Cookies.get("user_id");
   const { data, error } = await supabaseClient.supabase
@@ -249,6 +265,7 @@ const changeUserInfo = async (user: userData) => {
     }
   };
 
+
 export const api = {
   createTicket,
   getUserTickets,
@@ -260,5 +277,7 @@ export const api = {
   getUserByName,
   changeUserInfo,
   getFile,
-  deleteTicketFile
+  deleteTicketFile,
+  getUserByEmail,
+  getAllUsers
 };
