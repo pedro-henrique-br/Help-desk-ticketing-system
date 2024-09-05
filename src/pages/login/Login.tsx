@@ -10,7 +10,6 @@ import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
 import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
-import { InputLabel } from "@mui/material";
 import Cookies from 'js-cookie'
 
 
@@ -64,7 +63,7 @@ export const Login = () => {
           alignItems: "center",
         }}>
         <img
-          src="src\assets\img\Imagem2.png"
+          src="/Imagem2.png"
           alt=""
           style={{ width: "200px", height: "100px" }}
         />
@@ -72,26 +71,22 @@ export const Login = () => {
           Entrar
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
-          <InputLabel sx={{marginBottom: "5px"}}>
-            Email
-          </InputLabel>
           <TextField
             sx={{marginBottom: "15px"}}
             margin="none"
             fullWidth
             id="email"
+            label="Email"
             placeholder="ex: seunome@caprichoveiculos.com.br"
             name="email"
             autoComplete="email"
             autoFocus
           />
-          <InputLabel sx={{marginBottom: "5px"}}>
-          Senha
-          </InputLabel>
           <TextField
             margin="none"
             fullWidth
             name="password"
+            label="Senha"
             placeholder="••••••••••"
             type="password"
             autoComplete="current-password"

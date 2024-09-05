@@ -1,6 +1,5 @@
-import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import { Nav } from "../../parts/nav/Nav";
-import { PiUserCircleFill } from "react-icons/pi";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { motion } from "framer-motion";
@@ -22,6 +21,7 @@ export const UserSettings = () => {
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
   const [userRamal, setUserRamal] = useState("")
+  const [userInitials, setUserInitials] = useState("")
 
   const handleSubmit = () => {
     if((userName === "" || userEmail === "") || userRamal === ""){
@@ -53,6 +53,8 @@ export const UserSettings = () => {
       setUserName(data[0]?.name)
       setUserEmail(data[0]?.email)
       setUserRamal(data[0]?.ramal)
+      const nameArray = data[0]?.name.replace(" ", ",").split(",")
+      setUserInitials(`${nameArray[0] ? (nameArray[0].slice(0,1)) : (null)}${nameArray[1] ? (nameArray[1].slice(0,1)) : (null)}`)
     }
   };
 
@@ -75,6 +77,8 @@ export const UserSettings = () => {
       <Nav isAdmin={true} />
       <Box
         sx={{
+          width: "100%",
+          height: "92vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -83,41 +87,44 @@ export const UserSettings = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{display: "flex", justifyContent: "center"}}>
             <Box
               sx={{
+                border: 1,
+                borderRadius: "8px",
+                borderColor: "divider",
                 display: "flex",
                 justifyContent: "center",
-                flexDirection: "column",
                 alignItems: "center",
-                width: "100vw",
-                height: "80vh",
+                width: "60vw",
+                height: "85vh",
               }}>
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: "100px",
                   width: "100vw",
                 }}>
-                <PiUserCircleFill color="#1976d2" size={"35vh"} />
-                <Box component={"form"}>
-                  <Typography fontSize={"2rem"}>{user?.name}</Typography>
+                <Box component={"form"} sx={{display: "flex", width: "300px", flexDirection: "column"}}>
+                <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-around", mb: 1}}>
+                  <Avatar sx={{ bgcolor: "#1976d2", height: "70px", width: "70px", fontSize: "2rem" }}>{userInitials != "" ? (userInitials) : (null)}</Avatar>
+                  <Typography component={"h4"}>{userName}</Typography>
+                </Box>
                   <InputLabel>Nome</InputLabel>
                   <TextField
-                    sx={{ mb: "15px", width: "300px" }}
+                    sx={{ mb: "10px", width: "300px"}}
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Nome"}></TextField>
                   <InputLabel>Email</InputLabel>
                   <TextField
-                    sx={{ mb: "15px", width: "300px" }}
+                    sx={{ mb: "10px", width: "300px" }}
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Email"}></TextField>
                   <InputLabel>Ramal</InputLabel>
                   <TextField
-                    sx={{ mb: "15px", width: "300px" }}
+                    sx={{ mb: "10px", width: "300px" }}
                     value={userRamal}
                     onChange={(e) => setUserRamal(e.target.value)}
                     disabled={handleEdit}
@@ -144,14 +151,15 @@ export const UserSettings = () => {
                   </Box>
                 </Box>
               </Box>  
-             
             </Box> <Button
                 variant="contained"
                 onClick={() => setIsButtonPress(true)}
                 sx={{
                   position: "absolute",
                   bottom: 0,
-                  mb: "3vh",
+                  left: 0,
+                  mb: "1vh",
+                  ml: "0.5vw",
                   width: "180px",
                 }}>
                 Voltar

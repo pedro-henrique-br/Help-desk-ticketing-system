@@ -86,6 +86,8 @@ export const ClientTickets = () => {
         {!isLoading && tickets.length === 0 ? (
           <Box
             sx={{
+              width: "100vw",
+              height: "80vh",
               mb: 15,
               display: "flex",
               flexDirection: "column",

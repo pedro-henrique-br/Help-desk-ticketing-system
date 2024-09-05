@@ -10,22 +10,22 @@ import Container from "@mui/material/Container";
 import { auth } from "../../services/auth";
 import { InputLabel } from "@mui/material";
 import { Bounce, toast } from "react-toastify";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import { Navigate } from "react-router-dom";
 
 export const Register = () => {
   const [password, setPassword] = useState("");
   const [isPasswordEqual, setIsPasswordEqual] = useState(Boolean(true));
-  const [isAuthenticated, setIsAuthenticated] = React.useState(Boolean(false))
+  const [isAuthenticated, setIsAuthenticated] = React.useState(Boolean(false));
 
   React.useEffect(() => {
     const fetchAuth = Cookies.get("isAuthenticated");
     const redirect = () => {
       return fetchAuth === "authenticated" ? setIsAuthenticated(true) : null;
     };
-    
-    redirect()
-  }, [])
+
+    redirect();
+  }, []);
 
   const createUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,7 +67,7 @@ export const Register = () => {
           alignItems: "center",
         }}>
         <img
-          src="src\assets\img\Imagem2.png"
+          src="/Imagem2.png"
           alt=""
           style={{ width: "200px", height: "100px" }}
         />
@@ -76,38 +76,31 @@ export const Register = () => {
         </Typography>
         <Box component="form" noValidate onSubmit={createUser} sx={{ mt: 3 }}>
           <Grid container spacing={1.5}>
-            <Grid item xs={12}>
-              <InputLabel style={{ display: "flex", gap: "10px" }}>
-                <InputLabel>
-                  <InputLabel sx={{ marginBottom: "5px" }}>Nome</InputLabel>
-                  <TextField
-                    autoComplete="given-name"
-                    name="name"
-                    required
-                    id="name"
-                    placeholder="Nome e sobrenome"
-                    autoFocus
-                  />
-                </InputLabel>
-                <InputLabel>
-                  <InputLabel sx={{ marginBottom: "5px" }}>Ramal</InputLabel>
-                  <TextField
-                    name="ramal"
-                    required
-                    id="ramal"
-                    type="text"
-                    placeholder="ex: 5036"
-                    autoFocus
-                  />
-                </InputLabel>
-              </InputLabel>
+            <Grid item xs={12} sx={{display: "flex", gap: "5px"}}>
+              <TextField
+                autoComplete="given-name"
+                name="name"
+                required
+                id="name"
+                label="Nome e sobrenome"
+                autoFocus
+              />
+              <TextField
+                name="ramal"
+                required
+                id="ramal"
+                type="text"
+                label="Ramal"
+                placeholder="ex: 5036"
+                autoFocus
+              />
             </Grid>
             <Grid item xs={12}>
-              <InputLabel sx={{ marginBottom: "5px" }}>Email</InputLabel>
               <TextField
                 required
                 fullWidth
                 id="email"
+                label="Email"
                 placeholder="ex: seunome@caprichoveiculos.com.br"
                 name="email"
                 autoComplete="email"
@@ -132,7 +125,8 @@ export const Register = () => {
                 required
                 fullWidth
                 name="password"
-                placeholder="Confirme sua senha"
+                label="Confirme sua senha"
+                placeholder="••••••••••"
                 onChange={(e) =>
                   setIsPasswordEqual(e.target.value === password)
                 }
