@@ -231,8 +231,9 @@ export const AdminTickets = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "60vh",
+            width: "80vw"
           }}>
-          <Typography sx={{ fontSize: "2rem" }}>
+          <Typography sx={{ fontSize: "1.4rem" }}>
             Não há nenhum chamado aberto
           </Typography>
         </Box>

@@ -139,20 +139,26 @@ export const UsersInfo = () => {
             Nenhum Usuário encontrado
           </Typography>
         )}
-        <Box sx={{height: "100%"}}>
+        <Box>
         {users &&
           users.map((user) => {
             return (
-              <Paper key={user.id} sx={{ width: "80vw", m: 4, mt: 5,mb: 2, height: "70px" }}>
-                {user?.name}
-                <Button variant="contained">Enviar Email para redefinição de Senha</Button>
-                <Button variant="contained">Editar informações</Button>
+              <Paper key={user.id} sx={{ width: "80vw", m: 4, mt: 1,mb: 4, display: "flex", flexDirection: "column" }}>
                 <Accordion>
                   <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
                     aria-controls="panel1-content"
                     id="panel1-header">
-                    <Typography>Visualizar Informações</Typography>
+                <Box sx={{width: "98%", display: "flex", justifyContent: "space-between"}} >
+                  <Box sx={{ display: "flex", flexDirection: "column"}}>
+                    <Typography sx={{fontSize: "1rem"}}>Nome do Usuário: {user?.name}</Typography>
+                    <Typography sx={{fontSize: "0.9rem"}}>Email: {user?.email}</Typography>
+                  </Box>
+                  <Box sx={{display: "flex", gap: "10px", alignItems: "center"}}>
+                    <Button variant="contained" sx={{height: "30px"}}>Enviar Email para redefinição de Senha</Button>
+                    <Button variant="contained" sx={{height: "30px"}}>Editar informações</Button>
+                  </Box>
+                </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
