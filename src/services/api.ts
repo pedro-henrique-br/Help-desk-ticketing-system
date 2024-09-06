@@ -82,23 +82,6 @@ const getUserTickets = async (userId: string) => {
   return [];
 };
 
-const getUserByName = async (name: string) => {
-  const { data } = await supabaseClient.supabase
-    .from("users")
-    .select("*")
-    .textSearch("name", name)
-    .select();
-  return data;
-};
-
-const getUserByEmail = async (email: string) => {
-  const { data } = await supabaseClient.supabase
-    .from("users")
-    .select("*")
-    .textSearch("email", email)
-    .select();
-  return data;
-};
 
 const getAllUsers = async () => {
   const { data } = await supabaseClient.supabase
@@ -274,10 +257,8 @@ export const api = {
   getUserInfo,
   changeAssignee,
   closeTicket,
-  getUserByName,
   changeUserInfo,
   getFile,
   deleteTicketFile,
-  getUserByEmail,
   getAllUsers
 };
