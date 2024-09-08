@@ -228,27 +228,43 @@ const closeTicket = async (ticketId: number) => {
 
 const changeUserInfo = async (user: userData) => {
   const userId = Cookies.get("user_id");
-  await supabaseClient.supabase
+
+  const { data}  = await supabaseClient.supabase
   .from("users")
-  .update({ email: user?.email })
+  .select("*")
   .eq("user_id", userId);
-  await supabaseClient.supabase.auth.updateUser({
-    email: user.email,
-  });
-  const response = await supabaseClient.supabase
-    .from("users")
-    .update({ name: user?.name })
-    .eq("user_id", userId);
-    await supabaseClient.supabase
-    .from("users")
-    .update({ ramal: user?.ramal })
-    .eq("user_id", userId);
-    if(response?.status === 204){
-      Cookies.set("user_name", user?.name)
+
+  if(data){
+    const oldUser = data[0]
+    if(oldUser.email != user.email){
+      await supabaseClient.supabase
+      .from("users")
+      .update({ email: user?.email })
+      .eq("user_id", userId);
+      await supabaseClient.supabase.auth.updateUser({
+        email: user.email,
+      });
     }
-  };
-
-
+    
+    if(oldUser.name != user.name){
+      await supabaseClient.supabase
+      .from("users")
+      .update({ name: user?.name })
+      .eq("user_id", userId);
+    }
+    
+    if(oldUser.ramal != user.ramal){
+      const response = await supabaseClient.supabase
+      .from("users")
+      .update({ ramal: user?.ramal })
+      .eq("user_id", userId);
+      if(response?.status === 204){
+        Cookies.set("user_name", user?.name)
+      }}
+    }
+    };
+    
+    
 export const api = {
   createTicket,
   getUserTickets,

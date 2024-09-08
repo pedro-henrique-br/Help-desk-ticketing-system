@@ -69,7 +69,7 @@ const signIn = async (email: string, password: string) => {
         Cookies.set("user_name", userName[0].name, {sameSite: "Lax"})
         window.location.href = "/home";
       }
-    }, 1500);
+    }, 1000);
   }
 
   if (error) {
