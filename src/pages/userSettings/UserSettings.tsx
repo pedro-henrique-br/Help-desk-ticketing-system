@@ -41,6 +41,7 @@ export const UserSettings = () => {
         name: userName,
         email: userEmail,
         ramal: userRamal,
+        user_id: ""
       }
       api.changeUserInfo(userChange)
     }
@@ -93,8 +94,8 @@ export const UserSettings = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "60vw",
-                height: "85vh",
+                width: "750px",
+                height: "80vh",
               }}>
               <Box
                 sx={{
@@ -103,28 +104,28 @@ export const UserSettings = () => {
                   alignItems: "center",
                   width: "100vw",
                 }}>
-                <Box component={"form"} sx={{display: "flex", width: "300px", flexDirection: "column"}}>
+                <Box component={"form"} sx={{display: "flex", width: "400px", flexDirection: "column"}}>
                 <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-around", mb: 1}}>
                   <Avatar sx={{ bgcolor: "#1976d2", height: "70px", width: "70px", fontSize: "2rem" }}>{userInitials != "" ? (userInitials) : (null)}</Avatar>
                   <Typography component={"h4"}>{userName}</Typography>
                 </Box>
                   <InputLabel>Nome</InputLabel>
                   <TextField
-                    sx={{ mb: "10px", width: "300px"}}
+                    sx={{ mb: "10px", width: "100%"}}
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Nome"}></TextField>
                   <InputLabel>Email</InputLabel>
                   <TextField
-                    sx={{ mb: "10px", width: "300px" }}
+                    sx={{ mb: "10px", width: "100" }}
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Email"}></TextField>
                   <InputLabel>Ramal</InputLabel>
                   <TextField
-                    sx={{ mb: "10px", width: "300px" }}
+                    sx={{ mb: "10px", width: "100" }}
                     value={userRamal}
                     onChange={(e) => setUserRamal(e.target.value)}
                     disabled={handleEdit}
@@ -136,7 +137,7 @@ export const UserSettings = () => {
                       user?.isAdmin ? "Administrador" : "Usuario Comum"
                     }>
                   </TextField>
-                  <Box sx={{mt: 3, display: "flex", justifyContent: "space-around", width: "300px" }}>
+                  <Box sx={{mt: 3, display: "flex", justifyContent: "space-around", width: "100%" }}>
                   <Button
                   sx={{}}
                     onClick={() => setHandleEdit(handleEdit ? false : true)}>

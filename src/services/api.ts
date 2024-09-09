@@ -241,11 +241,11 @@ const changeUserInfo = async (user: userData) => {
     .from("users")
     .update({ name: user?.name })
     .eq("user_id", userId);
-  if(data){
+  if(data && data[0].isAdmin){
     await supabaseClient.supabase
     .from("tickets")
     .update({ assignee: user?.name })
-    .eq("user_name", data[0].user_name);
+    .eq("assignee", data[0].name);
   }
   if (response?.status === 204) {
     Cookies.set("user_name", user?.name);
