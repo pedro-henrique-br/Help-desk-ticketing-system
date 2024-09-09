@@ -16,6 +16,7 @@ interface userData {
   name: string;
   email: string;
   ramal: string;
+  user_id: string;
 }
 
 const createTicket = async (
@@ -82,13 +83,10 @@ const getUserTickets = async (userId: string) => {
   return [];
 };
 
-
 const getAllUsers = async () => {
-  const { data } = await supabaseClient.supabase
-    .from("users")
-    .select("*")
+  const { data } = await supabaseClient.supabase.from("users").select("*");
   return data;
-}
+};
 
 const getUserInfo = async () => {
   const userId = Cookies.get("user_id");
@@ -124,13 +122,13 @@ const getFile = (fileName: string) => {
   const { data } = supabaseClient.supabase.storage
     .from("screenshots")
     .getPublicUrl(`${fileName}`);
-  if(data){
-    const {publicUrl} = data
-    return publicUrl as string
+  if (data) {
+    const { publicUrl } = data;
+    return publicUrl as string;
   } else {
-    return "" as string
+    return "" as string;
   }
-}
+};
 
 const uploadFile = async (file: File) => {
   const { error } = await supabaseClient.supabase.storage
@@ -185,13 +183,13 @@ const changeAssignee = async (id: number, name: string) => {
 };
 
 const deleteTicketFile = async (fileName: string) => {
-  const {error} = await supabaseClient.supabase.storage
+  const { error } = await supabaseClient.supabase.storage
     .from("screenshots")
-    .remove([fileName])
-    if(error){
-      console.error(error)
-    }
-}
+    .remove([fileName]);
+  if (error) {
+    console.error(error);
+  }
+};
 
 const closeTicket = async (ticketId: number) => {
   const response = await supabaseClient.supabase
@@ -229,42 +227,94 @@ const closeTicket = async (ticketId: number) => {
 const changeUserInfo = async (user: userData) => {
   const userId = Cookies.get("user_id");
 
-  const { data}  = await supabaseClient.supabase
-  .from("users")
-  .select("*")
-  .eq("user_id", userId);
+  const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
 
+  try{await supabaseClient.supabase
+    .from("users")
+    .update({ email: user?.email })
+    .eq("user_id", userId);
+  await supabaseClient.supabase.auth.updateUser({
+    email: user.email,
+  });
+
+  const response = await supabaseClient.supabase
+    .from("users")
+    .update({ name: user?.name })
+    .eq("user_id", userId);
   if(data){
-    const oldUser = data[0]
-    if(oldUser.email != user.email){
+    await supabaseClient.supabase
+    .from("tickets")
+    .update({ assignee: user?.name })
+    .eq("user_name", data[0].user_name);
+  }
+  if (response?.status === 204) {
+    Cookies.set("user_name", user?.name);
+  }
+
+  await supabaseClient.supabase
+    .from("users")
+    .update({ ramal: user?.ramal })
+    .eq("user_id", userId);
+    toast.success(`As suas informações foram alteradas com Sucesso!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+} catch(error){
+  toast.error(`Ocorreu um Erro ao alterar suas informações ${error}`, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,
+  });
+}
+};
+
+const changeUsersInfo = async (user: userData) => {
+  const { data } = await supabaseClient.supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", user.user_id);
+
+  if (data) {
+    const oldUser = data[0];
+    if (oldUser.email != user.email) {
       await supabaseClient.supabase
-      .from("users")
-      .update({ email: user?.email })
-      .eq("user_id", userId);
+        .from("users")
+        .update({ email: user?.email })
+        .eq("user_id", user.user_id);
       await supabaseClient.supabase.auth.updateUser({
         email: user.email,
       });
     }
-    
-    if(oldUser.name != user.name){
+
+    if (oldUser.name != user.name) {
       await supabaseClient.supabase
-      .from("users")
-      .update({ name: user?.name })
-      .eq("user_id", userId);
+        .from("users")
+        .update({ name: user?.name })
+        .eq("user_id", user.user_id);
     }
-    
-    if(oldUser.ramal != user.ramal){
-      const response = await supabaseClient.supabase
-      .from("users")
-      .update({ ramal: user?.ramal })
-      .eq("user_id", userId);
-      if(response?.status === 204){
-        Cookies.set("user_name", user?.name)
-      }}
+
+    if (oldUser.ramal != user.ramal) {
+      await supabaseClient.supabase
+        .from("users")
+        .update({ ramal: user?.ramal })
+        .eq("user_id", user.user_id);
     }
-    };
-    
-    
+  }
+};
+
 export const api = {
   createTicket,
   getUserTickets,
@@ -276,5 +326,6 @@ export const api = {
   changeUserInfo,
   getFile,
   deleteTicketFile,
-  getAllUsers
+  getAllUsers,
+  changeUsersInfo,
 };

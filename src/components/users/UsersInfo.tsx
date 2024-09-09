@@ -12,20 +12,16 @@ import {
   Typography,
 } from "@mui/material";
 import { PiFunnelFill } from "react-icons/pi";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { supabaseClient } from "../../services/supabase";
 import { Bounce, toast } from "react-toastify";
+import { supabaseClient } from "../../services/supabase";
 
 interface userData {
-  id: string;
+  user_id: string;
   name: string;
   email: string;
   ramal: string;
@@ -39,6 +35,7 @@ export const UsersInfo = () => {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(Boolean(false));
   const [open, setOpen] = useState(false);
+  const [userId, setUserId] = useState("")
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
   const [userRamal, setUserRamal] = useState("")
@@ -62,23 +59,16 @@ export const UsersInfo = () => {
         name: userName,
         email: userEmail,
         ramal: userRamal,
+        user_id: userId
       }
-      api.changeUserInfo(userChange)
+      api.changeUsersInfo(userChange)
     }
   }
-
-  supabaseClient.supabase
-    .channel("users")
-    .on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "users" },
-      () => handleSubmit("", "email")
-    )
-    .subscribe();
 
   const handleClickOpen = (user: userData) => {
     setOpen(true);
     setUserDialog(user)
+    setUserId(user?.user_id)
     setUserName(user?.name)
     setUserEmail(user?.email)
     setUserRamal(user?.ramal)
@@ -185,7 +175,7 @@ export const UsersInfo = () => {
           </Button>
         </Box>
       </Box>
-      <Box sx={{ overflow: "visible" }}>
+      <Box>
         {isLoading ? (
           <CircularProgress
             sx={{ position: "absolute", left: "55%", mt: 10 }}
@@ -198,21 +188,20 @@ export const UsersInfo = () => {
             Nenhum Usuário encontrado
           </Typography>
         )}
-        <Box>
+        <Box sx={{overflowY: "scroll", height: "66.5vh", display: "flex", flexDirection: "column"}}>
           {users &&
             users.map((user) => {
               const nameArray = userDialog?.name.replace(" ", ",").split(",")
               const formatedName = nameArray ? (`${nameArray[0] ? (nameArray[0]) : ("")} ${nameArray[1] ? (nameArray[1]) : ("")}`) : ("")
               const userInitials = nameArray ? (`${nameArray[0] ? (nameArray[0].slice(0,1)) : ("")}${nameArray[1] ? (nameArray[1].slice(0,1)) : (nameArray[0].slice(1,2))}`) : ("")
-
               return (
                 <Paper
-                  key={user.id}
+                  key={user.user_id}
                   sx={{
                     width: "80vw",
                     m: 4,
                     mt: 1,
-                    mb: 4,
+                    mb: 3,
                     display: "flex",
                     flexDirection: "column",
                   }}>
@@ -232,10 +221,10 @@ export const UsersInfo = () => {
                         justifyContent: "space-between",
                       }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography sx={{ fontSize: "1rem" }}>
+                        <Typography sx={{ fontSize: "0.9rem" }}>
                           Nome do Usuário: {user?.name}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.9rem" }}>
+                        <Typography sx={{ fontSize: "0.8rem" }}>
                           Email: {user?.email}
                         </Typography>
                       </Box>
@@ -245,13 +234,13 @@ export const UsersInfo = () => {
                           gap: "10px",
                           alignItems: "center",
                         }}>
-                        <Button variant="outlined" sx={{ height: "30px" }}>
+                        <Button variant="outlined" sx={{ height: "30px", fontSize: "0.8rem" }} onClick={() => supabaseClient.supabase.auth.resetPasswordForEmail(user?.email)}>
                           Enviar Email para redefinição de Senha
                         </Button>
                         <>
                           <Button
                             variant="contained"
-                            sx={{ height: "30px" }}
+                            sx={{ height: "30px", fontSize: "0.8rem" }}
                             onClick={() => handleClickOpen(user)}>
                             Editar Informações
                           </Button>
@@ -345,18 +334,6 @@ export const UsersInfo = () => {
                       </Box>
                     </Box>
                   </Box>
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ArrowDownwardIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"></AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>
-                        Ramal {user?.ramal}, Email {user?.email}, Tipo de
-                        usuario {user?.isAdmin ? "Admin" : "Cliente"}
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
                 </Paper>
               );
             })}

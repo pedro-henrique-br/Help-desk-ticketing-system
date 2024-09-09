@@ -52,7 +52,7 @@ export const ResetPassword = () => {
           alignItems: "center",
         }}>
         <img
-          src="src\assets\img\Imagem2.png"
+          src="/Imagem2.png"
           alt=""
           style={{ width: "200px", height: "100px" }}
         />
