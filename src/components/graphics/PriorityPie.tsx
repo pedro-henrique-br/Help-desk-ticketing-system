@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { supabaseClient } from "../../services/supabase";
 
-
 ChartJS.register(ArcElement, Tooltip, Legend);
-
 
 export const PriorityPie = () => {
   const [ticketData, setTicketData] = useState([])
@@ -55,7 +53,7 @@ export const PriorityPie = () => {
       {
         data: ticketData,
         backgroundColor: ["#3D933F", "#FDA403", "#EE4E4E"],
-        hoverBackgroundColor: ["#1976d2", "#FDA403", "#EE4E4E"],
+        hoverBackgroundColor: ["#3D933F", "#FDA403", "#EE4E4E"],
       },
     ],
   };

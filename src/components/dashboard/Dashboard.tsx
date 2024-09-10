@@ -6,12 +6,19 @@ import {
   BsFillFolderSymlinkFill,
 } from "react-icons/bs";
 import { PriorityPie } from "../graphics/PriorityPie";
+import { StatusGraphic } from "../graphics/StatusGraphic";
+import { ClosedTicketsGraphic } from "../graphics/ClosedTicketsGraphic";
+import { supabaseClient } from "../../services/supabase";
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
 
 export const Dashboard = () => {
+  const [ticketData, setTicketData] = useState([])
+
   const cards = [
     {
       text: "Chamados Abertos",
-      count: 14,
+      count: ticketData[0],
       backgroundColor: "#3D933F",
       icon: () => {
         return <BsStarFill color="#fff" size={80} />;
@@ -19,7 +26,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Em Atendimento",
-      count: 6,
+      count: ticketData[1],
       backgroundColor: "#1976d2",
       icon: () => {
         return <BsPinAngleFill color="#fff" size={80} />;
@@ -27,7 +34,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Em Espera",
-      count: 8,
+      count: ticketData[2],
       backgroundColor: "#FDA403",
       icon: () => {
         return <BsFillFolderSymlinkFill color="#fff" size={80} />;
@@ -35,7 +42,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Urgentes",
-      count: 2,
+      count: ticketData[3],
       backgroundColor: "#EE4E4E",
       icon: () => {
         return <BsExclamationTriangleFill color="#fff" size={80} />;
@@ -43,8 +50,50 @@ export const Dashboard = () => {
     },
   ];
 
+  
+  const getPriority = async () => {
+    const response = await api.getAllTickets()
+    if(response){
+      let priorityHigh: number = 0
+      let openedTickets: number = 0
+      let inService: number = 0
+      let waiting: number = 0
+      
+      response.forEach((ticket) => {
+        openedTickets++
+        if(ticket.assignee != "Em espera"){
+          inService++
+        } else if(ticket.assignee === "Em espera"){
+          waiting++
+        }
+        switch(ticket.priority){
+          case "Alta 🟥" :
+            priorityHigh++
+            break
+        }
+      const totalPriority = [openedTickets, inService, waiting, priorityHigh]
+      setTicketData(totalPriority as never)
+      })
+    }
+  }
+
+  useEffect(() => {
+    getPriority()
+  }, [])
+
+
+  supabaseClient.supabase
+  .channel("tickets")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "tickets" },
+    getPriority
+  )
+  .subscribe();
+  
+
   return (
-    <Box sx={{ p: 4, width: "85vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%" }}>
+    <Box sx={{ p: 4, width: "85vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%"}}>
       <Box
         sx={{ display: "flex", width: "100%", gap: "15px"}}>
         {cards &&
@@ -106,7 +155,7 @@ export const Dashboard = () => {
           })}
       </Box>
 
-      <Box sx={{width: "100%", mt: "50px"}}>
+      <Box sx={{width: "100%", mt: "4vh", display: "flex", gap: "40px", overflow: "auto"}}>
         <Box
           sx={{
             height: "500px",
@@ -151,10 +200,94 @@ export const Dashboard = () => {
             </Box>
           </Box>
         </Box>
-
-        <Box></Box>
-
-        <Box></Box>
+        <Box
+          sx={{
+            height: "500px",
+            width: "400px",
+            border: 1,
+            borderColor: "rgba(22, 22, 22, 0.21)",
+            display: "flex",
+            flexDirection: "column",
+          }}>
+          <Paper
+            sx={{
+              background: "#1976d2",
+              width: "100%",
+              height: "50px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Typography
+              sx={{
+                color: "#fff",
+                fontSize: "1.1rem",
+                fontFamily: "karla",
+                fontWeight: "700",
+              }}>
+              Chamados não atendidos por Status
+            </Typography>
+          </Paper>
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <StatusGraphic />
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            height: "500px",
+            width: "700px",
+            border: 1,
+            borderColor: "rgba(22, 22, 22, 0.21)",
+            display: "flex",
+            flexDirection: "column",
+          }}>
+          <Paper
+            sx={{
+              background: "#1976d2",
+              width: "100%",
+              height: "50px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Typography
+              sx={{
+                color: "#fff",
+                fontSize: "1.1rem",
+                fontFamily: "karla",
+                fontWeight: "700",
+              }}>
+              Quantidade de Chamados atendidos por Técnico
+            </Typography>
+          </Paper>
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <ClosedTicketsGraphic />
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
