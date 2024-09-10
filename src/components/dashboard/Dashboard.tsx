@@ -18,7 +18,7 @@ export const Dashboard = () => {
   const cards = [
     {
       text: "Chamados Abertos",
-      count: ticketData[0],
+      count: ticketData[0] || 0,
       backgroundColor: "#3D933F",
       icon: () => {
         return <BsStarFill color="#fff" size={80} />;
@@ -26,7 +26,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Em Atendimento",
-      count: ticketData[1],
+      count: ticketData[1] || 0,
       backgroundColor: "#1976d2",
       icon: () => {
         return <BsPinAngleFill color="#fff" size={80} />;
@@ -34,7 +34,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Em Espera",
-      count: ticketData[2],
+      count: ticketData[2] || 0,
       backgroundColor: "#FDA403",
       icon: () => {
         return <BsFillFolderSymlinkFill color="#fff" size={80} />;
@@ -42,7 +42,7 @@ export const Dashboard = () => {
     },
     {
       text: "Chamados Urgentes",
-      count: ticketData[3],
+      count: ticketData[3] || 0,
       backgroundColor: "#EE4E4E",
       icon: () => {
         return <BsExclamationTriangleFill color="#fff" size={80} />;
@@ -186,13 +186,13 @@ export const Dashboard = () => {
           </Box>
           <Box
             sx={{
-              height: "300px",
+              height: "80%",
               display: "flex",
               alignItems: "center",
             }}>
             <Box
               sx={{
-                height: "90%",
+                height: "300px",
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",

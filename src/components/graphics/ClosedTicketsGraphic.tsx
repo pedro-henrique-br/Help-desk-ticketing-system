@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { supabaseClient } from "../../services/supabase";
+import { Typography } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -18,34 +19,40 @@ interface userData {
   email: string;
   ramal: string;
   user_id: string;
-  isAdmin: boolean
+  isAdmin: boolean;
 }
 
 export const ClosedTicketsGraphic = () => {
-  const [ticketData, setTicketData] = useState([]);
+  const [admins, setAdmins] = useState([])
+  const [closedTickets, setClosedTickets] = useState([])
 
   const getClosedTickets = async () => {
     const response = await api.getAllClosedTickets();
-    const users: userData[] = await api.getAllUsers() as never
-    if(response) {
-      response.forEach((ticket) => {
-        for(let i: number = 0; users.length > i; i++){
-          if(users[i].isAdmin)
-          console.log(users[i].name)
-        }
-
-        switch (ticket.assignee) {
-          case "Em espera":
-            break;
-          case "Fechado":
-            break;
-          default:
-            break;
-        }
-        const totalPriority = [4, 19, 24, 1];
-        setTicketData(totalPriority as never);
+    setClosedTickets(response as never)
+    const users: userData[] = (await api.getAllUsers()) as never;
+    if (users) {
+      const adminsArr: userData[] = []
+      const colors = ["#A04747", "#A04747", "#D8A25E", "#EEDF7A", "#36BA98", "#522258"]
+      users.forEach((user) => {
+        if (user.isAdmin) {
+          if(response) {
+            let closedTickets: number = 0
+            response.forEach((ticket) => {
+              if(ticket.assignee == user.name){
+                closedTickets++
+              }
+            });
+            const admin = {
+              label: user.name,
+              data: [closedTickets],
+              backgroundColor: colors[Math.floor(Math.random() * 5)],
+            };
+            adminsArr.push(admin as never);
+            setAdmins(adminsArr as never)
+          }}
       });
     }
+
   };
 
   useEffect(() => {
@@ -62,32 +69,10 @@ export const ClosedTicketsGraphic = () => {
     .subscribe();
 
   const data = {
-    labels: [
-      "Chamados atendidos",
-    ],
-    datasets: [
-      {
-        label: "Pedro Henrique",
-        data: [ticketData[0]],
-        backgroundColor: "#3D933F",
-      },
-      {
-        label: "João Pedro",
-        data: [ticketData[1]],
-        backgroundColor: "#FDA403",
-      },
-      {
-        label: "Lucas Claro",
-        data: [ticketData[2]],
-        backgroundColor: "#EE4E4E",
-      },
-      {
-        label: "Cleverson Resende",
-        data: [ticketData[3]],
-        backgroundColor: "#CECECE",
-      },
-    ],
+    labels: ["Chamados atendidos"],
+    datasets: admins
   };
+
 
   const options = {
     responsive: true,
@@ -102,10 +87,17 @@ export const ClosedTicketsGraphic = () => {
   };
 
   return (
-    <Bar
+    <>
+    {admins.length > 0 && closedTickets.length > 0 ? (
+      <Bar
       data={data}
       options={options}
       style={{ width: "500px", height: "650px" }}
-    />
+      />
+    ) : (null)}
+    {!(admins.length > 0 && closedTickets.length > 0) ? (
+      <Typography>Nenhum Chamado Atendido este mês!</Typography>
+    ) : (null)}
+    </>
   );
 };

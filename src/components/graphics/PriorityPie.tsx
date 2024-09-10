@@ -3,6 +3,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { supabaseClient } from "../../services/supabase";
+import { Typography } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -58,8 +59,17 @@ export const PriorityPie = () => {
     ],
   };
   
-  return ( 
-  <Pie data={data} />
+  return (
+    <>
+      {ticketData.length > 0 && data.datasets[0].data.length > 0 ?(
+        <Pie data={data} />
+      )
+      :
+      (
+        <Typography>Nenhum Chamado Aberto</Typography>
+      )
+    }
+    </>
   )
 };
 
