@@ -13,13 +13,27 @@ import { supabaseClient } from "../../services/supabase";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+interface userData {
+  name: string;
+  email: string;
+  ramal: string;
+  user_id: string;
+  isAdmin: boolean
+}
+
 export const ClosedTicketsGraphic = () => {
   const [ticketData, setTicketData] = useState([]);
 
   const getClosedTickets = async () => {
-    const response = await api.getAllTickets();
-    if (response) {
+    const response = await api.getAllClosedTickets();
+    const users: userData[] = await api.getAllUsers() as never
+    if(response) {
       response.forEach((ticket) => {
+        for(let i: number = 0; users.length > i; i++){
+          if(users[i].isAdmin)
+          console.log(users[i].name)
+        }
+
         switch (ticket.assignee) {
           case "Em espera":
             break;
@@ -70,7 +84,7 @@ export const ClosedTicketsGraphic = () => {
       {
         label: "Cleverson Resende",
         data: [ticketData[3]],
-        backgroundColor: "#EE4E4E",
+        backgroundColor: "#CECECE",
       },
     ],
   };

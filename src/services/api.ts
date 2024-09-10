@@ -84,8 +84,12 @@ const getUserTickets = async (userId: string) => {
 };
 
 const getAllUsers = async () => {
-  const { data } = await supabaseClient.supabase.from("users").select("*");
-  return data;
+  const {error, data} = await supabaseClient.supabase.from("users").select("*");
+  if(data){
+    return data;
+  } else {
+    return error
+  }
 };
 
 const getUserInfo = async () => {
@@ -191,7 +195,24 @@ const deleteTicketFile = async (fileName: string) => {
   }
 };
 
+const getAllClosedTickets = async () => {
+  const {data} = await supabaseClient.supabase
+  .from("closed_tickets")
+  .select("*")
+  if(data){
+    return data
+  }
+}
+
 const closeTicket = async (ticketId: number) => {
+  const { data } = await supabaseClient.supabase
+    .from("tickets")
+    .select("*")
+    .eq("id", ticketId);
+  await supabaseClient.supabase
+    .from("closed_tickets")
+    .insert(data)
+
   const response = await supabaseClient.supabase
     .from("tickets")
     .delete()
@@ -328,4 +349,5 @@ export const api = {
   deleteTicketFile,
   getAllUsers,
   changeUsersInfo,
+  getAllClosedTickets
 };

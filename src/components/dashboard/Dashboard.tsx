@@ -93,7 +93,7 @@ export const Dashboard = () => {
   
 
   return (
-    <Box sx={{ p: 4, width: "85vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%"}}>
+    <Box sx={{ p: 4, width: "88vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%"}}>
       <Box
         sx={{ display: "flex", width: "100%", gap: "15px"}}>
         {cards &&
@@ -103,7 +103,7 @@ export const Dashboard = () => {
                 key={card.text}
                 sx={{
                   borderRadius: "15px",
-                  height: "170px",
+                  height: "22vh",
                   width: "300px",
                   border: 1,
                   borderColor: "rgba(22, 22, 22, 0.21)",
@@ -155,21 +155,21 @@ export const Dashboard = () => {
           })}
       </Box>
 
-      <Box sx={{width: "100%", mt: "4vh", display: "flex", gap: "40px", overflow: "auto"}}>
+      <Box sx={{width: "100%", mt: "2vh", display: "flex", gap: "40px", overflow: "auto", pb: 1.5}}>
         <Box
           sx={{
-            height: "500px",
+            height: "58vh",
             width: "400px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
             flexDirection: "column",
           }}>
-          <Paper
+          <Box
             sx={{
               background: "#1976d2",
-              width: "100%",
-              height: "50px",
+              width: "400px",
+              height: "10%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -183,15 +183,16 @@ export const Dashboard = () => {
               }}>
               Chamados não atendidos por prioridade
             </Typography>
-          </Paper>
+          </Box>
           <Box
             sx={{
-              height: "100%",
+              height: "300px",
               display: "flex",
               alignItems: "center",
             }}>
             <Box
               sx={{
+                height: "90%",
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",
@@ -202,14 +203,14 @@ export const Dashboard = () => {
         </Box>
         <Box
           sx={{
-            height: "500px",
+            height: "58vh",
             width: "400px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
             flexDirection: "column",
           }}>
-          <Paper
+          <Box
             sx={{
               background: "#1976d2",
               width: "100%",
@@ -227,7 +228,7 @@ export const Dashboard = () => {
               }}>
               Chamados não atendidos por Status
             </Typography>
-          </Paper>
+          </Box>
           <Box
             sx={{
               height: "100%",
@@ -246,17 +247,17 @@ export const Dashboard = () => {
         </Box>
         <Box
           sx={{
-            height: "500px",
-            width: "700px",
+            height: "58vh",
+            width: "650px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
             flexDirection: "column",
           }}>
-          <Paper
+          <Box
             sx={{
               background: "#1976d2",
-              width: "100%",
+              width: "650px",
               height: "50px",
               display: "flex",
               alignItems: "center",
@@ -271,7 +272,7 @@ export const Dashboard = () => {
               }}>
               Quantidade de Chamados atendidos por Técnico
             </Typography>
-          </Paper>
+          </Box>
           <Box
             sx={{
               height: "100%",

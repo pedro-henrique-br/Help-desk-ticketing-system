@@ -59,7 +59,7 @@ export const PriorityPie = () => {
   };
   
   return ( 
-  <Pie data={data} style={{width: "350px", height: "300px"}}/>
+  <Pie data={data} />
   )
 };
 
