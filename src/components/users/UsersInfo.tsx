@@ -81,14 +81,16 @@ export const UsersInfo = () => {
   const handleSubmit = async (inputValue: string, filterType: string) => {
     setError(false);
     const response = await api.getAllUsers();
+
+    const data: userData[] = response as never
     setIsLoading(true);
 
     switch (filterType) {
       case "name":
         setIsLoading(false);
         if (response != null) {
-          const filteredUsers = response.filter((user) => {
-            return Object.assign(user?.name).includes(inputValue) ? user : null;
+          const filteredUsers = data.filter((user) => {
+            return Object.assign(user?.name as never).includes(inputValue) ? user : null;
           });
           return filteredUsers.length === 0
             ? (setError(true), setUsers([]))
@@ -98,8 +100,8 @@ export const UsersInfo = () => {
       case "email":
         setIsLoading(false);
         if (response != null) {
-          const filteredUsers = response.filter((user) => {
-            return Object.assign(user?.email).includes(inputValue) ? user : null;
+          const filteredUsers = data.filter((user) => {
+            return Object.assign(user?.email as never).includes(inputValue) ? user : null;
           });
           return filteredUsers.length === 0
             ? (setError(true), setUsers([]))
@@ -109,7 +111,7 @@ export const UsersInfo = () => {
       default:
         setIsLoading(false);
         if (response != null) {
-          return response.length > 0 ? setUsers(response) : null;
+          return data.length > 0 ? setUsers(data) : null;
         }
     }
   };
