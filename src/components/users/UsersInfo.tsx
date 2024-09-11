@@ -35,6 +35,7 @@ export const UsersInfo = () => {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(Boolean(false));
   const [open, setOpen] = useState(false);
+  const [openUserType, setOpenUserType] = useState(false);
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -73,16 +74,58 @@ export const UsersInfo = () => {
     setUserEmail(user?.email);
     setUserRamal(user?.ramal);
   };
-
+  
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleClickOpenUserType = () => {
+    setOpenUserType(true);
+  };
+
+  const handleClickCloseUserType = () => {
+    setOpenUserType(false)
+  };
+  
+  const changeUserType = async (userId: string, isAdmin: boolean) => {
+    const {data, error} = await supabaseClient.supabase
+    .from("users")
+    .update({ isAdmin: !isAdmin})
+    .eq("user_id", userId)
+    .select();
+    if(!error){
+      toast.success(`O Usuário ${data[0].name} foi alterado para ${data[0].isAdmin ? ("Administrador") : ("Cliente")} com sucesso!`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+    else {
+      toast.error(`Ocorreu um erro ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  }
 
   const handleSubmit = async (inputValue: string, filterType: string) => {
     setError(false);
     const response = await api.getAllUsers();
 
-    const data: userData[] = response as never
+    const data: userData[] = response as never;
     setIsLoading(true);
 
     switch (filterType) {
@@ -90,7 +133,9 @@ export const UsersInfo = () => {
         setIsLoading(false);
         if (response != null) {
           const filteredUsers = data.filter((user) => {
-            return Object.assign(user?.name as never).includes(inputValue) ? user : null;
+            return Object.assign(user?.name as never).includes(inputValue)
+              ? user
+              : null;
           });
           return filteredUsers.length === 0
             ? (setError(true), setUsers([]))
@@ -101,7 +146,9 @@ export const UsersInfo = () => {
         setIsLoading(false);
         if (response != null) {
           const filteredUsers = data.filter((user) => {
-            return Object.assign(user?.email as never).includes(inputValue) ? user : null;
+            return Object.assign(user?.email as never).includes(inputValue)
+              ? user
+              : null;
           });
           return filteredUsers.length === 0
             ? (setError(true), setUsers([]))
@@ -115,6 +162,20 @@ export const UsersInfo = () => {
         }
     }
   };
+
+  supabaseClient.supabase
+  .channel("users")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "users" },
+    () => {
+      setTimeout(() => {
+        handleSubmit("", "")
+      }, 300)
+    }
+  )
+  .subscribe();
+
 
   return (
     <Box>
@@ -242,10 +303,20 @@ export const UsersInfo = () => {
                       }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
                         <Typography sx={{ fontSize: "0.9rem" }}>
-                          Nome do Usuário: {user?.name}
+                          Nome do Usuário:{" "}
+                          <span style={{ fontWeight: 600, fontSize: "1rem" }}>
+                            {user?.name}
+                          </span>
                         </Typography>
                         <Typography sx={{ fontSize: "0.8rem" }}>
-                          Email: {user?.email}
+                          Email:{" "}
+                          <span style={{ fontWeight: 600 }}>{user?.email}</span>
+                        </Typography>
+                        <Typography sx={{ fontSize: "0.8rem" }}>
+                          Tipo de Usuário:{" "}
+                          <span style={{ fontWeight: 600 }}>
+                            {user?.isAdmin ? "Administrador" : "Cliente"}
+                          </span>
                         </Typography>
                       </Box>
                       <Box
@@ -276,7 +347,9 @@ export const UsersInfo = () => {
                             onClose={handleClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title" sx={{fontSize: "1.2rem"}}>
+                            <DialogTitle
+                              id="alert-dialog-title"
+                              sx={{ fontSize: "1.2rem" }}>
                               {`Editar informações de ${formatedName}`}
                             </DialogTitle>
                             <DialogContent>
@@ -333,6 +406,11 @@ export const UsersInfo = () => {
                                     onChange={(e) =>
                                       setUserRamal(e.target.value)
                                     }></TextField>
+                                  {userDialog?.isAdmin ? (
+                                    <Button onClick={handleClickOpenUserType}>Transformar o Usuário em Cliente</Button>
+                                  ) : (
+                                    <Button onClick={handleClickOpenUserType}>Transformar o Usuário em Administrador</Button>
+                                  )}
                                 </Box>
                               </DialogContentText>
                             </DialogContent>
@@ -350,6 +428,34 @@ export const UsersInfo = () => {
                                 autoFocus
                                 variant="outlined">
                                 Salvar
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                          <Dialog
+                            open={openUserType}
+                            onClose={handleClickCloseUserType}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle
+                              id="alert-dialog-title"
+                              sx={{ fontSize: "1.2rem" }}>
+                              <Typography>Tem certeza que deseja editar o tipo do Usuário <span style={{fontSize: "1.2rem", color: "#000"}}>{formatedName}</span> para <span style={{fontSize: "1.2rem", color: "#1976d2"}}>{userDialog?.isAdmin ? ("Cliente") : ("Administrador")}</span> ?</Typography>
+                            </DialogTitle>
+                            <DialogActions>
+                              <Button
+                                onClick={handleClickCloseUserType}
+                                sx={{ color: "red" }}>
+                                Não
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  handleClickCloseUserType();
+                                  changeUserType(userDialog?.user_id as string, userDialog?.isAdmin as boolean)
+                                  return userDialog ? (userDialog.isAdmin = !userDialog?.isAdmin) : (null)
+                                }}
+                                autoFocus
+                                variant="text">
+                                Sim
                               </Button>
                             </DialogActions>
                           </Dialog>
