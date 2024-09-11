@@ -44,6 +44,14 @@ as dependencias
 Você precisa configurar e adaptar ele de acordo com a sua necessidade
 e configuração do supabase
 
+## Variáveis de ambiente
+
+Antes de Rodar este repositório, você precisará adicionar as seguintes variáveis ​​de ambiente ao seu arquivo .env
+
+`VITE_APP_ANON_KEY = SUPABASE_KEY_ENTERS_HERE`
+
+`VITE_APP_URLD = SUPABASE_URL`
+
 ## Inicie o servidor
 
 ```bash
