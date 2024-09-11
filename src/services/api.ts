@@ -1,6 +1,8 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
 import Cookies from "js-cookie";
+import { calculateTimeConclusion } from "./calculateTimeConclusion";
+import { formatDate } from "./date";
 
 interface ticket {
   request_type: string;
@@ -10,6 +12,7 @@ interface ticket {
   created_at: string;
   status: string;
   assignee: string;
+  time_conclusion: string | null;
 }
 
 interface userData {
@@ -209,9 +212,18 @@ const closeTicket = async (ticketId: number) => {
     .from("tickets")
     .select("*")
     .eq("id", ticketId);
-  await supabaseClient.supabase
+
+  const time_now: unknown = new Date
+  
+  if(data){
+    const closedTicket: ticket = data[0]
+    const conclusionTime = calculateTimeConclusion(formatDate(closedTicket.created_at as string), formatDate(time_now as string))
+    closedTicket.time_conclusion = conclusionTime
+    await supabaseClient.supabase
     .from("closed_tickets")
     .insert(data)
+  }
+    
 
   const response = await supabaseClient.supabase
     .from("tickets")
