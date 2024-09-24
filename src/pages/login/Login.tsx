@@ -12,7 +12,6 @@ import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import Cookies from 'js-cookie'
 
-
 export const Login = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(Boolean(false))
 
@@ -57,18 +56,13 @@ export const Login = () => {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 15,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}>
-        <img
-          src="/Imagem2.png"
-          alt=""
-          style={{ width: "200px", height: "100px" }}
-        />
-        <Typography sx={{margin: "10px 0 15px 0"}} component="h1" variant="h5">
-          Entrar
+        <Typography sx={{margin: "15px 0 15px 0"}} component="h1" variant="h5">
+          Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField

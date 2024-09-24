@@ -61,16 +61,11 @@ export const Register = () => {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 2,
+          marginTop: 15,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}>
-        <img
-          src="/Imagem2.png"
-          alt=""
-          style={{ width: "200px", height: "100px" }}
-        />
         <Typography component="h1" variant="h5">
           Página de cadastro
         </Typography>

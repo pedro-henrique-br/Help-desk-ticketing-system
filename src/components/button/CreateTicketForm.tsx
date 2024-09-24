@@ -1,6 +1,7 @@
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { AiOutlinePlusSquare } from "react-icons/ai";
 
 export const CreateTicketForm = () => {
   
@@ -14,7 +15,10 @@ export const CreateTicketForm = () => {
     <div>
       {
         !isButtonClicked ? (
-          <Button variant="contained" onClick={handleTicketCreate}>Abrir chamado</Button>
+          <Button sx={{color: '#fff', display: "flex", textTransform: "lowercase", gap: "2px"}} onClick={handleTicketCreate}>
+            <AiOutlinePlusSquare size={26} color='#fff' />
+            <Typography sx={{fontSize: "1rem"}}>New Ticket</Typography>    
+          </Button>
         ) :
         (
           <Navigate to={"/home/formTicket"} />
