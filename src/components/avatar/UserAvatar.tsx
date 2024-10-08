@@ -1,11 +1,16 @@
 import { Avatar } from "@mui/material";
 
-export const UserAvatar = (user: {name: string, avatarPath: string}) => {
+export const UserAvatar = (avatar: {
+  name: string;
+  avatarPath: string;
+  width: string;
+  height: string;
+}) => {
   return (
     <Avatar
-      sx={{ width: "130px", height: "130px" }}
-      alt={user.name}
-      src={user.avatarPath}
+      sx={{ width: avatar.width, height: avatar.height }}
+      alt={avatar.name}
+      src={avatar.avatarPath}
     />
   );
 };

@@ -104,21 +104,26 @@ export const SideBar = () => {
 
   return (
     <>
-      {!matches ? (
         <Box
           sx={{
             bgcolor: "background.paper",
             display: "flex",
-            height: "100vh",
+            flexDirection: !matches ? "row" : "column",
+            height: !matches ? "100vh" : "8vh",
+            width: !matches ? (null) : ("100vw")
           }}>
           <Tabs
-            orientation="vertical"
+            orientation={!matches ? "vertical" : "horizontal"}
             value={value}
             onChange={handleChange}
             sx={{
-              borderRight: 1,
+              borderRight: !matches ? 1 : 0,
               borderColor: "divider",
-              width: "11vw",
+              display: matches ? "flex" : "",
+              justifyContent: "center",
+              alignItems: "center",
+              height: !matches ? "100vh" : "8vh",
+              width: !matches ? ("11vw") : ("100vw"),
               background: "#373A40",
               "&:selected": {
                 color: "#fff",
@@ -130,25 +135,27 @@ export const SideBar = () => {
               label={
                 <Box
                   sx={{
-                    width: "11vw",
-                    mt: 3,
-                    mb: 1,
+                    ml: matches ? 4 : 0,
+                    mr: matches ? 15 : 0,
+                    width: !matches ? "11vw" : "auto",
+                    mt: !matches ? 3 : 0,
+                    mb: !matches ? 1 : 0,
                     gap: 2,
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: !matches ? "column" : "row",
                     alignItems: "center",
                   }}>
-                  <UserAvatar name={avatar} avatarPath={avatar} />
+                  <UserAvatar name={avatar} avatarPath={avatar} width={!matches ? ("150px") : ("40px")} height={!matches ? ("150px") : ("40px")}/>
                   <Typography
                     variant="body1"
                     sx={{
                       textTransform: "capitalize",
-                      pb: 1,
+                      pb: !matches ? 1 : 0,
                       display: "flex",
                       width: "90%",
                       color: "#fff",
                       justifyContent: "center",
-                      borderBottom: "solid 1px #616468",
+                      borderBottom: !matches ? "solid 1px #616468" : "none",
                     }}>
                     Pedro Henrique
                   </Typography>
@@ -159,7 +166,7 @@ export const SideBar = () => {
                 <Tab
                   key={tab.a11yProps}
                   sx={{
-                    width: "100%",
+                    width: !matches ? "100%" : "auto",
                     display: "flex",
                     alignItems: "flex-start",
                     fontFamily: "Karla",
@@ -195,7 +202,7 @@ export const SideBar = () => {
           <TabPanel value={value} index={3} children={<Docs />} />
           <TabPanel value={value} index={4} children={<UsersInfo />} />
           <TabPanel value={value} index={5} children={<UserSettings />} />
-          <Box
+          {!matches ? ( <Box
             sx={{
               width: "10.5vw",
               position: "absolute",
@@ -206,9 +213,21 @@ export const SideBar = () => {
               justifyContent: "center",
             }}>
             <LogoutButton />
-          </Box>
+          </Box>) : (
+            <Box
+            sx={{
+              position: "absolute",
+              right: 0,
+              mt: 0.5,
+              mr: 3,
+              gap: 2,
+              display: "flex",
+              justifyContent: "center",
+            }}>
+              <LogoutButton />
+            </Box>
+            )}
         </Box>
-      ) : (null)}
     </>
   );
 };

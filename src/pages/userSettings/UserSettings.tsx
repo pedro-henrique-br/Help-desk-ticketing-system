@@ -1,5 +1,4 @@
 import { Avatar, Box, Button, InputLabel, TextField, Typography } from "@mui/material";
-import { Nav } from "../../parts/nav/Nav";
 import { useEffect, useState } from "react";
 import { api } from "../../utils/api";
 import { motion } from "framer-motion";
@@ -75,7 +74,6 @@ export const UserSettings = () => {
   return (
     <>
       {isButtonPress ? <Navigate to={"/home"} /> : null}
-      <Nav isAdmin={true} />
       <Box
         sx={{
           width: "100%",
