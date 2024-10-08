@@ -1,11 +1,11 @@
 import { Avatar, Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import { Nav } from "../../parts/nav/Nav";
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
-import { supabaseClient } from "../../services/supabase";
+import { supabaseClient } from "../../utils/supabase";
 
 interface userData {
   name: string;

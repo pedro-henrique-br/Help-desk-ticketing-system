@@ -2,7 +2,7 @@ import { Box, Button, MenuItem, Select } from "@mui/material";
 import { BsBoxArrowInLeft } from "react-icons/bs";
 import { PiCaretDownBold, PiUserGear } from "react-icons/pi";
 import { AiOutlineUser } from "react-icons/ai";
-import { auth } from "../../services/auth";
+import { auth } from "../../utils/auth";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 

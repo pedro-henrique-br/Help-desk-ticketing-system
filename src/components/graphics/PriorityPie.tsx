@@ -1,8 +1,8 @@
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import { supabaseClient } from "../../services/supabase";
+import { api } from "../../utils/api";
+import { supabaseClient } from "../../utils/supabase";
 import { Typography } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);

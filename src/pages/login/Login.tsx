@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { auth } from "../../services/auth";
+import { auth } from "../../utils/auth";
 import { Navigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import Cookies from 'js-cookie'

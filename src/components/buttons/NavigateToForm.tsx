@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { AiOutlinePlusSquare } from "react-icons/ai";
 
-export const CreateTicketForm = () => {
+export const NavigateToForm = () => {
   
   const [isButtonClicked, setIsButtonClicked] = useState(Boolean(false))
 

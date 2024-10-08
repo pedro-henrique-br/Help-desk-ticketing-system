@@ -1,12 +1,12 @@
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import { api } from "../../services/api";
-import { CreateTicketForm } from "../button/CreateTicketForm";
+import { api } from "../../utils/api";
+import { NavigateToForm } from "../buttons/NavigateToForm";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Cookies from "js-cookie";
-import { supabaseClient } from "../../services/supabase";
+import { supabaseClient } from "../../utils/supabase";
 import { useEffect, useState } from "react";
-import { formatDate } from "../../services/date";
+import { formatDate } from "../../utils/date";
 
 const columns: GridColDef[] = [
   { field: "request_type", headerName: "Tipo do chamado", width: 300 },
@@ -98,7 +98,7 @@ export const ClientTickets = () => {
             <Typography sx={{ fontSize: "2rem" }}>
               Você ainda não abriu nenhum chamado!
             </Typography>
-            <CreateTicketForm />
+            <NavigateToForm />
           </Box>
         ) : null}
       </motion.div>

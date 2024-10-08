@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import {
   BsPinAngleFill,
   BsStarFill,
@@ -8,9 +8,9 @@ import {
 import { PriorityPie } from "../graphics/PriorityPie";
 import { StatusGraphic } from "../graphics/StatusGraphic";
 import { ClosedTicketsGraphic } from "../graphics/ClosedTicketsGraphic";
-import { supabaseClient } from "../../services/supabase";
+import { supabaseClient } from "../../utils/supabase";
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 
 export const Dashboard = () => {
   const [ticketData, setTicketData] = useState([])
@@ -21,7 +21,7 @@ export const Dashboard = () => {
       count: ticketData[0] || 0,
       backgroundColor: "#3D933F",
       icon: () => {
-        return <BsStarFill color="#fff" size={80} />;
+        return <BsStarFill color="#fff" size={50} />;
       },
     },
     {
@@ -29,7 +29,7 @@ export const Dashboard = () => {
       count: ticketData[1] || 0,
       backgroundColor: "#1976d2",
       icon: () => {
-        return <BsPinAngleFill color="#fff" size={80} />;
+        return <BsPinAngleFill color="#fff" size={50} />;
       },
     },
     {
@@ -37,7 +37,7 @@ export const Dashboard = () => {
       count: ticketData[2] || 0,
       backgroundColor: "#FDA403",
       icon: () => {
-        return <BsFillFolderSymlinkFill color="#fff" size={80} />;
+        return <BsFillFolderSymlinkFill color="#fff" size={50} />;
       },
     },
     {
@@ -45,7 +45,31 @@ export const Dashboard = () => {
       count: ticketData[3] || 0,
       backgroundColor: "#EE4E4E",
       icon: () => {
-        return <BsExclamationTriangleFill color="#fff" size={80} />;
+        return <BsExclamationTriangleFill color="#fff" size={50} />;
+      },
+    },
+    {
+      text: "Chamados Fechados",
+      count: ticketData[3] || 0,
+      backgroundColor: "#EE4E4E",
+      icon: () => {
+        return <BsExclamationTriangleFill color="#fff" size={50} />;
+      },
+    },
+    {
+      text: "Usúarios",
+      count: ticketData[3] || 0,
+      backgroundColor: "#EE4E4E",
+      icon: () => {
+        return <BsExclamationTriangleFill color="#fff" size={50} />;
+      },
+    },
+    {
+      text: "Admins",
+      count: ticketData[3] || 0,
+      backgroundColor: "#EE4E4E",
+      icon: () => {
+        return <BsExclamationTriangleFill color="#fff" size={50} />;
       },
     },
   ];
@@ -95,7 +119,7 @@ export const Dashboard = () => {
   return (
     <Box sx={{ p: 4, width: "88vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%"}}>
       <Box
-        sx={{ display: "flex", width: "100%", gap: "15px"}}>
+        sx={{ display: "flex", width: "100%", gap: "15px", flexWrap: "wrap"}}>
         {cards &&
           cards.map((card) => {
             return (
@@ -103,43 +127,36 @@ export const Dashboard = () => {
                 key={card.text}
                 sx={{
                   borderRadius: "15px",
-                  height: "22vh",
-                  width: "300px",
-                  border: 1,
-                  borderColor: "rgba(22, 22, 22, 0.21)",
+                  height: "12vh",
+                  width: "250px",
+                  border: "1px solid rgba(22, 22, 22, 0.21)",
+                  alignItems: "center",
                   display: "flex",
-                  flexDirection: "column",
                 }}>
+                <Box 
+                sx={{
+                  borderRadius: "50%",
+                  padding: "15px",
+                  background: card.backgroundColor,
+                }}>
+                  <card.icon />
+                </Box>
                 <Box
                   sx={{
-                    height: "80%",
-                    width: "100%",
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "25px",
-                    background: card.backgroundColor,
-                  }}>
-                  <card.icon />
-                  <Typography
-                    sx={{
-                      color: "#fff",
-                      fontSize: "4rem",
-                      fontFamily: "karla",
-                      fontWeight: "700",
-                    }}>
-                    {card.count}
-                  </Typography>
-                </Box>
-                <Paper
-                  sx={{
-                    borderRadius: "15px",
-                    width: "100%",
-                    height: "20%",
-                    display: "flex",
-                    alignItems: "center",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
                     justifyContent: "center",
                   }}>
+                    <Typography
+                      sx={{
+                        color: "#4a4a4a",
+                        fontSize: "4rem",
+                        fontFamily: "karla",
+                        fontWeight: "200",
+                      }}>
+                      {card.count}
+                    </Typography>
                   <Typography
                     sx={{
                       color: "#4a4a4a",
@@ -149,8 +166,8 @@ export const Dashboard = () => {
                     }}>
                     {card.text}
                   </Typography>
-                </Paper>
-              </Box>
+                </Box>
+                </Box>
             );
           })}
       </Box>

@@ -17,7 +17,7 @@ import React, { useState } from "react";
 import { BsCloud } from "react-icons/bs";
 import styled from "@emotion/styled";
 import { Navigate } from "react-router-dom";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 import { Bounce, toast } from "react-toastify";
 
 const VisuallyHiddenInput = styled("input")({

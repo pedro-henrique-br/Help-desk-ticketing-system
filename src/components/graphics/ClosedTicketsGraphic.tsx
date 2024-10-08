@@ -8,8 +8,8 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import { supabaseClient } from "../../services/supabase";
+import { api } from "../../utils/api";
+import { supabaseClient } from "../../utils/supabase";
 import { Typography } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);

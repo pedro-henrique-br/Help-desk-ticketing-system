@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import { supabaseClient } from "../../services/supabase";
+import { supabaseClient } from "../../utils/supabase";
 import { Bounce, toast } from "react-toastify";
 
 export const ForgotPassword = () => {

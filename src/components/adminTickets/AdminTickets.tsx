@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 import {
   DataGrid,
   GridColDef,
@@ -20,8 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Cookies from "js-cookie";
-import { supabaseClient } from "../../services/supabase";
-import { formatDate } from "../../services/date";
+import { supabaseClient } from "../../utils/supabase";
+import { formatDate } from "../../utils/date";
 interface ticketData {
   id: number;
   user_name: string;

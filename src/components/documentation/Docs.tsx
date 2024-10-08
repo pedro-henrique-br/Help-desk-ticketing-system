@@ -6,14 +6,14 @@ import {
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 import {
   DataGrid,
   GridColDef,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { supabaseClient } from "../../services/supabase";
-import { formatDate } from "../../services/date";
+import { supabaseClient } from "../../utils/supabase";
+import { formatDate } from "../../utils/date";
 
 export const Docs = () => {
   const columns: GridColDef[] = [

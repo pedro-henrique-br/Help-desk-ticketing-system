@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../../services/api";
+import { api } from "../../utils/api";
 import {
   Avatar,
   Box,
@@ -18,7 +18,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Bounce, toast } from "react-toastify";
-import { supabaseClient } from "../../services/supabase";
+import { supabaseClient } from "../../utils/supabase";
 
 interface userData {
   user_id: string;
