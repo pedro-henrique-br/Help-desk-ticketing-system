@@ -9,7 +9,7 @@ export const LogoutButton = () => {
       sx={{
         width: "100%",
         display: "flex",
-        gap: "15px",
+        gap: "5px",
         color: "#fff",
         "&:hover": {
           background: "none",
@@ -18,8 +18,8 @@ export const LogoutButton = () => {
       }}
       variant="text"
       onClick={auth.signOut}>
-      <BsBoxArrowInLeft size={30} />
-      <Typography>Sair</Typography>
+      <BsBoxArrowInLeft size={24} />
+      <Typography variant="body1" sx={{textTransform: "capitalize"}}>Sair</Typography>
     </Button>
   );
 };

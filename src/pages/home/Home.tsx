@@ -44,7 +44,7 @@ export const Home = () => {
 
   return (
     <>
-    {matchesDesktop ? (<Nav user={user} />) : (<SideBar role={user?.isAdmin ? "admin" : "cliente"} name={user?.name} avatar={user?.avatar} />)}
+    {matchesDesktop ? (<Nav role={user?.isAdmin ? "admin" : "cliente"} name={user?.name as string} avatar={user?.avatar as string} />) : (<SideBar role={user?.isAdmin ? "admin" : "cliente"} name={user?.name as string} avatar={user?.avatar as string} />)}
       
     {/* {isAdmin === "false" ? <ClientTickets /> : null} */}
     </>
