@@ -262,7 +262,8 @@ const changeUserInfo = async (user: userData) => {
 
   const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
 
-  try{await supabaseClient.supabase
+  try{
+    await supabaseClient.supabase
     .from("users")
     .update({ email: user?.email })
     .eq("user_id", userId);

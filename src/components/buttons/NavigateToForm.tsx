@@ -12,7 +12,7 @@ export const NavigateToForm = () => {
   }
 
   return (
-    <div>
+    <>
       {
         !isButtonClicked ? (
           <Button sx={{color: '#fff', display: "flex", textTransform: "lowercase", gap: "2px"}} onClick={handleTicketCreate}>
@@ -25,6 +25,6 @@ export const NavigateToForm = () => {
         )
       }
       
-    </div>
+    </>
   )
 }

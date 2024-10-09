@@ -13,11 +13,11 @@ import {
 import { Dashboard } from "../../components/dashboard/Dashboard";
 import { UsersInfo } from "../../components/users/UsersInfo";
 import { Docs } from "../../components/documentation/Docs";
-import { Typography, useMediaQuery } from "@mui/material";
+import { Typography } from "@mui/material";
 import { LogoutButton } from "../../components/buttons/LogoutButton";
 import { UserSettings } from "../../pages/userSettings/UserSettings";
 import { UserAvatar } from "../../components/avatar/UserAvatar";
-import user from "../../utils/user";
+import { ClientTickets } from "../../components/clientTickets/ClientTickets";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,22 +47,18 @@ function a11yProps(index: number) {
   };
 }
 
-export const SideBar = () => {
+export const SideBar = (user: {
+  role: string;
+  name: string;
+  avatar: string;
+}) => {
   const [value, setValue] = React.useState(1);
-  const [avatar, setAvatar] = React.useState("")
-
-  React.useEffect(() => {
-    const getUserAvatar = async () => {
-      setAvatar(await user.fetchUserAvatar())
-    } 
-    getUserAvatar()
-  }, []);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const tabs = [
+  const adminTabs = [
     {
       text: "Painel",
       icon: () => {
@@ -97,137 +93,295 @@ export const SideBar = () => {
         return <PiUserGear size={25} />;
       },
       a11yProps: 5,
-    }
+    },
   ];
 
-  const matches = useMediaQuery("(max-width:1368px)");
+  const clientTabs = [
+    {
+      text: "Painel",
+      icon: () => {
+        return <PiChartLineBold size={25} />;
+      },
+      a11yProps: 1,
+    },
+    {
+      text: "Chamados",
+      icon: () => {
+        return <PiChalkboardTeacherDuotone size={25} />;
+      },
+      a11yProps: 2,
+    },
+    {
+      text: "Documentação",
+      icon: () => {
+        return <PiBookBookmarkFill size={25} />;
+      },
+      a11yProps: 3,
+    },
+    {
+      text: "Configurações",
+      icon: () => {
+        return <PiUserGear size={25} />;
+      },
+      a11yProps: 4,
+    },
+  ];
 
-  return (
-    <>
+  if (user.role === "admin" && user.name != undefined) {
+    return (
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          height: "100vh",
+          display: "flex",
+        }}>
+        <Tabs
+          orientation="vertical"
+          value={value}
+          onChange={handleChange}
+          sx={{
+            borderRight: 1,
+            borderColor: "divider",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "11vw",
+            background: "#373A40",
+            "&:selected": {
+              color: "#fff",
+            },
+            color: "#fff",
+          }}>
+          <Tab
+            disabled
+            label={
+              <Box
+                sx={{
+                  width: "11vw",
+                  mt: 3,
+                  mb: 1,
+                  gap: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
+                <UserAvatar
+                  name={user.avatar}
+                  fileName={user.avatar}
+                  width={"150px"}
+                  height={"150px"}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontStyle: "italic",
+                    textTransform: "capitalize",
+                    display: "flex",
+                    color: "#616468",
+                  }}>
+                  Função: Admin
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textTransform: "capitalize",
+                    pb: 1,
+                    display: "flex",
+                    width: "90%",
+                    color: "#fff",
+                    justifyContent: "center",
+                    borderBottom: "solid 1px #616468",
+                  }}>
+                  {user?.name?.split(" ")[1] != undefined
+                    ? user.name?.split(" ")[0] + " " + user.name?.split(" ")[1]
+                    : user.name?.split(" ")[0]}
+                </Typography>
+              </Box>
+            }></Tab>
+          {adminTabs &&
+            adminTabs.map((tab) => (
+              <Tab
+                key={tab.a11yProps}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  fontFamily: "Karla",
+                  textTransform: "Capitalize",
+                  fontWeight: "700",
+                  color: "#CECECE",
+                  "&.Mui-selected": {
+                    color: "#1976d2",
+                  },
+                  "&.Mui-focusVisible": {
+                    backgroundColor: "#1976d2",
+                  },
+                }}
+                label={
+                  <Typography
+                    variant="body2"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "5px",
+                    }}>
+                    <tab.icon />
+                    {tab.text}
+                  </Typography>
+                }
+                {...a11yProps(tab.a11yProps)}
+              />
+            ))}
+        </Tabs>
+        <TabPanel value={value} index={1} children={<Dashboard />} />
+        <TabPanel value={value} index={2} children={<AdminTickets />} />
+        <TabPanel value={value} index={3} children={<Docs />} />
+        <TabPanel value={value} index={4} children={<UsersInfo />} />
+        <TabPanel value={value} index={5} children={<UserSettings />} />
         <Box
           sx={{
-            bgcolor: "background.paper",
+            width: "10.5vw",
+            position: "absolute",
+            bottom: 0,
+            mb: 3,
+            gap: 2,
             display: "flex",
-            flexDirection: !matches ? "row" : "column",
-            height: !matches ? "100vh" : "8vh",
-            width: !matches ? (null) : ("100vw")
+            justifyContent: "center",
           }}>
-          <Tabs
-            orientation={!matches ? "vertical" : "horizontal"}
-            value={value}
-            onChange={handleChange}
-            sx={{
-              borderRight: !matches ? 1 : 0,
-              borderColor: "divider",
-              display: matches ? "flex" : "",
-              justifyContent: "center",
-              alignItems: "center",
-              height: !matches ? "100vh" : "8vh",
-              width: !matches ? ("11vw") : ("100vw"),
-              background: "#373A40",
-              "&:selected": {
-                color: "#fff",
-              },
-              color: "#fff",
-            }}>
-            <Tab
-              disabled
-              label={
-                <Box
-                  sx={{
-                    ml: matches ? 4 : 0,
-                    mr: matches ? 15 : 0,
-                    width: !matches ? "11vw" : "auto",
-                    mt: !matches ? 3 : 0,
-                    mb: !matches ? 1 : 0,
-                    gap: 2,
-                    display: "flex",
-                    flexDirection: !matches ? "column" : "row",
-                    alignItems: "center",
-                  }}>
-                  <UserAvatar name={avatar} avatarPath={avatar} width={!matches ? ("150px") : ("40px")} height={!matches ? ("150px") : ("40px")}/>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      textTransform: "capitalize",
-                      pb: !matches ? 1 : 0,
-                      display: "flex",
-                      width: "90%",
-                      color: "#fff",
-                      justifyContent: "center",
-                      borderBottom: !matches ? "solid 1px #616468" : "none",
-                    }}>
-                    Pedro Henrique
-                  </Typography>
-                </Box>
-              }></Tab>
-            {tabs &&
-              tabs.map((tab) => (
-                <Tab
-                  key={tab.a11yProps}
-                  sx={{
-                    width: !matches ? "100%" : "auto",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    fontFamily: "Karla",
-                    textTransform: "Capitalize",
-                    fontWeight: "700",
-                    color: "#CECECE",
-                    "&.Mui-selected": {
-                      color: "#1976d2",
-                    },
-                    "&.Mui-focusVisible": {
-                      backgroundColor: "#1976d2",
-                    },
-                  }}
-                  label={
-                    <Typography
-                      variant="body2"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "5px",
-                      }}>
-                      <tab.icon />
-                      {tab.text}
-                    </Typography>
-                  }
-                  {...a11yProps(tab.a11yProps)}
-                />
-              ))}
-          </Tabs>
-          <TabPanel value={value} index={1} children={<Dashboard />} />
-          <TabPanel value={value} index={2} children={<AdminTickets />} />
-          <TabPanel value={value} index={3} children={<Docs />} />
-          <TabPanel value={value} index={4} children={<UsersInfo />} />
-          <TabPanel value={value} index={5} children={<UserSettings />} />
-          {!matches ? ( <Box
-            sx={{
-              width: "10.5vw",
-              position: "absolute",
-              bottom: 0,
-              mb: 3,
-              gap: 2,
-              display: "flex",
-              justifyContent: "center",
-            }}>
-            <LogoutButton />
-          </Box>) : (
-            <Box
-            sx={{
-              position: "absolute",
-              right: 0,
-              mt: 0.5,
-              mr: 3,
-              gap: 2,
-              display: "flex",
-              justifyContent: "center",
-            }}>
-              <LogoutButton />
-            </Box>
-            )}
+          <LogoutButton />
         </Box>
-    </>
-  );
+      </Box>
+    );
+  }
+
+  if (user.role === "cliente" && user.name != undefined) {
+    return (
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          height: "100vh",
+          display: "flex",
+        }}>
+        <Tabs
+          orientation="vertical"
+          value={value}
+          onChange={handleChange}
+          sx={{
+            borderRight: 1,
+            borderColor: "divider",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "11vw",
+            background: "#373A40",
+            "&:selected": {
+              color: "#fff",
+            },
+            color: "#fff",
+          }}>
+          <Tab
+            disabled
+            label={
+              <Box
+                sx={{
+                  width: "11vw",
+                  mt: 3,
+                  mb: 1,
+                  gap: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
+                <UserAvatar
+                  name={user.avatar}
+                  fileName={user.avatar}
+                  width={"150px"}
+                  height={"150px"}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontStyle: "italic",
+                    textTransform: "capitalize",
+                    display: "flex",
+                    color: "#616468",
+                  }}>
+                  Função: Cliente
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textTransform: "capitalize",
+                    pb: 1,
+                    minHeight: "10px",
+                    display: "flex",
+                    width: "90%",
+                    color: "#fff",
+                    justifyContent: "center",
+                    borderBottom: "solid 1px #616468",
+                  }}>
+                  {user?.name?.split(" ")[1] != undefined
+                    ? user.name?.split(" ")[0] + " " + user.name?.split(" ")[1]
+                    : user.name?.split(" ")[0]}
+                </Typography>
+              </Box>
+            }></Tab>
+          {clientTabs &&
+            clientTabs.map((tab) => (
+              <Tab
+                key={tab.a11yProps}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  fontFamily: "Karla",
+                  textTransform: "Capitalize",
+                  fontWeight: "700",
+                  color: "#CECECE",
+                  "&.Mui-selected": {
+                    color: "#1976d2",
+                  },
+                  "&.Mui-focusVisible": {
+                    backgroundColor: "#1976d2",
+                  },
+                }}
+                label={
+                  <Typography
+                    variant="body2"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "5px",
+                    }}>
+                    <tab.icon />
+                    {tab.text}
+                  </Typography>
+                }
+                {...a11yProps(tab.a11yProps)}
+              />
+            ))}
+        </Tabs>
+        <TabPanel value={value} index={1} children={<Dashboard />} />
+        <TabPanel value={value} index={2} children={<ClientTickets />} />
+        <TabPanel value={value} index={3} children={<Docs />} />
+        <TabPanel value={value} index={4} children={<UserSettings />} />
+        <Box
+          sx={{
+            width: "10.5vw",
+            position: "absolute",
+            bottom: 0,
+            mb: 3,
+            gap: 2,
+            display: "flex",
+            justifyContent: "center",
+          }}>
+          <LogoutButton />
+        </Box>
+      </Box>
+    );
+  }
 };

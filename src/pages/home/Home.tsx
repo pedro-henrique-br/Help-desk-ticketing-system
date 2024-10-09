@@ -1,32 +1,52 @@
-import { useEffect, useState } from "react";
-import { auth } from "../../utils/auth";
-import { motion } from "framer-motion";
-import { ClientTickets } from "../../components/clientTickets/ClientTickets";
+import React from "react";
+// import { ClientTickets } from "../../components/clientTickets/ClientTickets";
 import { SideBar } from "../../parts/sideBar/SideBar";
+import { useMediaQuery } from "@mui/material";
+import { Nav } from "../../parts/nav/Nav";
+import { useShallow } from "zustand/shallow";
+import useUserInfo from "../../hooks/useUserInfo";
+import { supabaseClient } from "../../utils/supabase";
 
 export const Home = () => {
-  const [isAdmin, setIsAdmin] = useState();
 
-  useEffect(() => {
-    const fetchIsAdmin = async () => {
-      setIsAdmin(await auth.isUserAdmin());
-    };
-    fetchIsAdmin();
-  });
+  const {user, fetchUser} = useUserInfo(
+    useShallow((state) => ({
+    user: state.user,
+    fetchUser: state.fetchUser
+  })))
+
+  supabaseClient.supabase
+  .channel("users")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "users" },
+    fetchUser
+  )
+  .subscribe();
+
+
+  React.useEffect(() => {
+    fetchUser()
+  }, [fetchUser])
+
+  supabaseClient.supabase
+  .channel("users")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "users" },
+    fetchUser
+  )
+  .subscribe();
+
+  
+  const matchesDesktop = useMediaQuery("(max-width:1368px)");
+  // const matchesMobile = useMediaQuery("(max-width: 968px)");
 
   return (
-    <div className="Home">
-        {isAdmin ? (
-          <>
-            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-              <SideBar />
-            </motion.div>
-          </>
-        ) : null}
-        {isAdmin === false ? (
-          <ClientTickets />)
-           : 
-          (null)}
-        </div>
+    <>
+    {matchesDesktop ? (<Nav user={user} />) : (<SideBar role={user?.isAdmin ? "admin" : "cliente"} name={user?.name} avatar={user?.avatar} />)}
+      
+    {/* {isAdmin === "false" ? <ClientTickets /> : null} */}
+    </>
   );
 };

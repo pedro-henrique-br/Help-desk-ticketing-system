@@ -31,16 +31,12 @@ const uploadUserAvatar = async (file: File) => {
     });
   }
 };
-const fetchUserAvatar = async () => {
-  const userInfo = await getUserInfo()
-  const fileName = userInfo?.[0].name
-  console.log("PedroHenriqueBarbosaRibeiro.jpeg")
+const fetchUserAvatar = async (fileName: string) => {
   const { data } = supabaseClient.supabase.storage
   .from("avatars")
-  .getPublicUrl(`PedroHenriqueBarbosaRibeiro.jpeg`);
+  .getPublicUrl(fileName);
   if (data) {
     const { publicUrl } = data;
-    console.log(publicUrl)
     return publicUrl as string;
   } else {
     return fileName;
