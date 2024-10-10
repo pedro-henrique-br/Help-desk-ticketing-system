@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import userType from "../types/userType";
-import { api } from "../utils/api";
+import user from "../utils/user";
 
 const getUserInfo = async () => {
-  const user = await api.getUserInfo()
-  if(user){
-    return user[0]
+  const userData = await user.getUserInfo()
+  if(userData){
+    return userData[0]
   }
   return null
 } 

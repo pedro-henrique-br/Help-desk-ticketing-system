@@ -102,9 +102,9 @@ export const SideBar = (user: {
 
   const clientTabs = [
     {
-      text: "Painel",
+      text: "Chamados",
       icon: () => {
-        return <PiChartLineBold size={25} />;
+        return <PiChalkboardTeacherDuotone size={25} />;
       },
       a11yProps: 1,
     },
@@ -116,25 +116,11 @@ export const SideBar = (user: {
       a11yProps: 2,
     },
     {
-      text: "Chamados",
-      icon: () => {
-        return <PiChalkboardTeacherDuotone size={25} />;
-      },
-      a11yProps: 3,
-    },
-    {
-      text: "Documentação",
-      icon: () => {
-        return <PiBookBookmarkFill size={25} />;
-      },
-      a11yProps: 4,
-    },
-    {
       text: "Configurações",
       icon: () => {
         return <PiUserGear size={25} />;
       },
-      a11yProps: 5,
+      a11yProps: 3,
     },
   ];
 
@@ -156,6 +142,7 @@ export const SideBar = (user: {
             justifyContent: matchesDesktop ? "center" : "flex-start",
             alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",
+            minWidth: matchesDesktop ? "11vw" : "50px",
             width: matchesDesktop ? "11vw" : "50px",
             background: "#373A40",
             "&:selected": {
@@ -413,11 +400,9 @@ export const SideBar = (user: {
               />
             ))}
         </Tabs>
-        <TabPanel value={value} index={1} children={<Dashboard />} />
+        <TabPanel value={value} index={1} children={<ClientTickets />} />
         <TabPanel value={value} index={2} children={<FormTicket />} />
-        <TabPanel value={value} index={3} children={<ClientTickets />} />
-        <TabPanel value={value} index={4} children={<Docs />} />
-        <TabPanel value={value} index={5} children={<UserSettings />} />
+        <TabPanel value={value} index={3} children={<UserSettings />} />
         <Box
           sx={{
             width: matchesDesktop ? "10.5vw" : "50px",
