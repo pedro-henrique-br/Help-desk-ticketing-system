@@ -7,17 +7,19 @@ import {
   PiBookBookmarkFill,
   PiChalkboardTeacherDuotone,
   PiChartLineBold,
+  PiTicket,
   PiUserGear,
   PiUsersThreeDuotone,
 } from "react-icons/pi";
 import { Dashboard } from "../../components/dashboard/Dashboard";
 import { UsersInfo } from "../../components/users/UsersInfo";
 import { Docs } from "../../components/documentation/Docs";
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import { LogoutButton } from "../../components/buttons/LogoutButton";
 import { UserSettings } from "../../pages/userSettings/UserSettings";
 import { UserAvatar } from "../../components/avatar/UserAvatar";
 import { ClientTickets } from "../../components/clientTickets/ClientTickets";
+import { FormTicket } from "../../components/formTicket/FormTicket";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,6 +59,8 @@ export const SideBar = (user: {
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const matchesDesktop = useMediaQuery("(min-width:1400px)");
 
   const adminTabs = [
     {
@@ -105,25 +109,32 @@ export const SideBar = (user: {
       a11yProps: 1,
     },
     {
+      text: "Criar Ticket",
+      icon: () => {
+        return <PiTicket size={25} />;
+      },
+      a11yProps: 2,
+    },
+    {
       text: "Chamados",
       icon: () => {
         return <PiChalkboardTeacherDuotone size={25} />;
       },
-      a11yProps: 2,
+      a11yProps: 3,
     },
     {
       text: "Documentação",
       icon: () => {
         return <PiBookBookmarkFill size={25} />;
       },
-      a11yProps: 3,
+      a11yProps: 4,
     },
     {
       text: "Configurações",
       icon: () => {
         return <PiUserGear size={25} />;
       },
-      a11yProps: 4,
+      a11yProps: 5,
     },
   ];
 
@@ -142,10 +153,10 @@ export const SideBar = (user: {
           sx={{
             borderRight: 1,
             borderColor: "divider",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: matchesDesktop ? "center" : "flex-start",
+            alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",
-            width: "11vw",
+            width: matchesDesktop ? "11vw" : "50px",
             background: "#373A40",
             "&:selected": {
               color: "#fff",
@@ -157,46 +168,53 @@ export const SideBar = (user: {
             label={
               <Box
                 sx={{
-                  width: "11vw",
-                  mt: 3,
-                  mb: 1,
-                  gap: 1,
+                  width: matchesDesktop ? "11vw" : "100%",
+                  mt: matchesDesktop ? 3 : 5,
+                  mb: matchesDesktop ? 1 : 4,
+                  mr: matchesDesktop ? 0 : 3,
+                  gap: matchesDesktop ? 1 : 0,
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  flexDirection: matchesDesktop ? "column" : "initial",
+                  justifyContent: matchesDesktop ? "center" : "initial",
+                  alignItems: matchesDesktop ? "center" : "flex-start",
                 }}>
                 <UserAvatar
                   name={user.avatar}
                   fileName={user.avatar}
-                  width={"150px"}
-                  height={"150px"}
+                  width={matchesDesktop ? "150px" : "40px"}
+                  height={matchesDesktop ? "150px" : "40px"}
                 />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontStyle: "italic",
-                    textTransform: "capitalize",
-                    display: "flex",
-                    color: "#616468",
-                  }}>
-                  Função: Admin
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    textTransform: "capitalize",
-                    pb: 1,
-                    display: "flex",
-                    width: "90%",
-                    color: "#fff",
-                    justifyContent: "center",
-                    borderBottom: "solid 1px #616468",
-                  }}>
-                  {user?.name?.split(" ")[1] != undefined
-                    ? user.name?.split(" ")[0] + " " + user.name?.split(" ")[1]
-                    : user.name?.split(" ")[0]}
-                </Typography>
+                {matchesDesktop ? (
+                  <>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontStyle: "italic",
+                        textTransform: "capitalize",
+                        display: "flex",
+                        color: "#616468",
+                      }}>
+                      Função: Admin
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textTransform: "capitalize",
+                        pb: 1,
+                        display: "flex",
+                        width: "90%",
+                        color: "#fff",
+                        justifyContent: "center",
+                        borderBottom: "solid 1px #616468",
+                      }}>
+                      {user?.name?.split(" ")[1] != undefined
+                        ? user.name?.split(" ")[0] +
+                          " " +
+                          user.name?.split(" ")[1]
+                        : user.name?.split(" ")[0]}
+                    </Typography>
+                  </>
+                ) : null}
               </Box>
             }></Tab>
           {adminTabs &&
@@ -215,21 +233,33 @@ export const SideBar = (user: {
                     color: "#1976d2",
                   },
                   "&.Mui-focusVisible": {
-                    backgroundColor: "#1976d2",
+                    backgroundColor: "#373A40",
                   },
                 }}
                 label={
-                  <Typography
-                    variant="body2"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "5px",
-                    }}>
-                    <tab.icon />
-                    {tab.text}
-                  </Typography>
+                  <>
+                    {matchesDesktop ? (
+                      <Typography
+                        variant="body2"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "5px",
+                        }}>
+                        <tab.icon />
+                        {tab.text}
+                      </Typography>
+                    ) : (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          left: "10px",
+                        }}>
+                        <tab.icon />
+                      </Box>
+                    )}
+                  </>
                 }
                 {...a11yProps(tab.a11yProps)}
               />
@@ -242,15 +272,15 @@ export const SideBar = (user: {
         <TabPanel value={value} index={5} children={<UserSettings />} />
         <Box
           sx={{
-            width: "10.5vw",
+            width: matchesDesktop ? "10.5vw" : "50px",
             position: "absolute",
             bottom: 0,
-            mb: 3,
-            gap: 2,
+            mb: matchesDesktop ? 3 : 2,
+            gap: matchesDesktop ? 2 : 0,
             display: "flex",
             justifyContent: "center",
           }}>
-          <LogoutButton />
+          <LogoutButton icon={true} text={matchesDesktop ? true : false} />
         </Box>
       </Box>
     );
@@ -271,10 +301,10 @@ export const SideBar = (user: {
           sx={{
             borderRight: 1,
             borderColor: "divider",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: matchesDesktop ? "center" : "flex-start",
+            alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",
-            width: "11vw",
+            width: matchesDesktop ? "11vw" : "50px",
             background: "#373A40",
             "&:selected": {
               color: "#fff",
@@ -286,47 +316,53 @@ export const SideBar = (user: {
             label={
               <Box
                 sx={{
-                  width: "11vw",
-                  mt: 3,
-                  mb: 1,
-                  gap: 1,
+                  width: matchesDesktop ? "11vw" : "100%",
+                  mt: matchesDesktop ? 3 : 5,
+                  mb: matchesDesktop ? 1 : 4,
+                  mr: matchesDesktop ? 0 : 3,
+                  gap: matchesDesktop ? 1 : 0,
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  flexDirection: matchesDesktop ? "column" : "initial",
+                  justifyContent: matchesDesktop ? "center" : "initial",
+                  alignItems: matchesDesktop ? "center" : "flex-start",
                 }}>
                 <UserAvatar
                   name={user.avatar}
                   fileName={user.avatar}
-                  width={"150px"}
-                  height={"150px"}
+                  width={matchesDesktop ? "150px" : "40px"}
+                  height={matchesDesktop ? "150px" : "40px"}
                 />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontStyle: "italic",
-                    textTransform: "capitalize",
-                    display: "flex",
-                    color: "#616468",
-                  }}>
-                  Função: Cliente
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    textTransform: "capitalize",
-                    pb: 1,
-                    minHeight: "10px",
-                    display: "flex",
-                    width: "90%",
-                    color: "#fff",
-                    justifyContent: "center",
-                    borderBottom: "solid 1px #616468",
-                  }}>
-                  {user?.name?.split(" ")[1] != undefined
-                    ? user.name?.split(" ")[0] + " " + user.name?.split(" ")[1]
-                    : user.name?.split(" ")[0]}
-                </Typography>
+                {matchesDesktop ? (
+                  <>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontStyle: "italic",
+                        textTransform: "capitalize",
+                        display: "flex",
+                        color: "#616468",
+                      }}>
+                      Função: Client
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textTransform: "capitalize",
+                        pb: 1,
+                        display: "flex",
+                        width: "90%",
+                        color: "#fff",
+                        justifyContent: "center",
+                        borderBottom: "solid 1px #616468",
+                      }}>
+                      {user?.name?.split(" ")[1] != undefined
+                        ? user.name?.split(" ")[0] +
+                          " " +
+                          user.name?.split(" ")[1]
+                        : user.name?.split(" ")[0]}
+                    </Typography>
+                  </>
+                ) : null}
               </Box>
             }></Tab>
           {clientTabs &&
@@ -345,43 +381,56 @@ export const SideBar = (user: {
                     color: "#1976d2",
                   },
                   "&.Mui-focusVisible": {
-                    backgroundColor: "#1976d2",
+                    backgroundColor: "#373A40",
                   },
                 }}
                 label={
-                  <Typography
-                    variant="body2"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "5px",
-                    }}>
-                    <tab.icon />
-                    {tab.text}
-                  </Typography>
+                  <>
+                    {matchesDesktop ? (
+                      <Typography
+                        variant="body2"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "5px",
+                        }}>
+                        <tab.icon />
+                        {tab.text}
+                      </Typography>
+                    ) : (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          left: "10px",
+                        }}>
+                        <tab.icon />
+                      </Box>
+                    )}
+                  </>
                 }
                 {...a11yProps(tab.a11yProps)}
               />
             ))}
         </Tabs>
         <TabPanel value={value} index={1} children={<Dashboard />} />
-        <TabPanel value={value} index={2} children={<ClientTickets />} />
-        <TabPanel value={value} index={3} children={<Docs />} />
-        <TabPanel value={value} index={4} children={<UserSettings />} />
+        <TabPanel value={value} index={2} children={<FormTicket />} />
+        <TabPanel value={value} index={3} children={<ClientTickets />} />
+        <TabPanel value={value} index={4} children={<Docs />} />
+        <TabPanel value={value} index={5} children={<UserSettings />} />
         <Box
           sx={{
-            width: "10.5vw",
+            width: matchesDesktop ? "10.5vw" : "50px",
             position: "absolute",
             bottom: 0,
-            mb: 3,
-            gap: 2,
+            mb: matchesDesktop ? 3 : 2,
+            gap: matchesDesktop ? 2 : 0,
             display: "flex",
             justifyContent: "center",
           }}>
-          <LogoutButton />
+          <LogoutButton icon={true} text={matchesDesktop ? true : false} />
         </Box>
       </Box>
     );
   }
-};
+ };

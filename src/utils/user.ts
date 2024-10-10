@@ -32,14 +32,16 @@ const uploadUserAvatar = async (file: File) => {
   }
 };
 const fetchUserAvatar = async (fileName: string) => {
-  const { data } = supabaseClient.supabase.storage
-  .from("avatars")
-  .getPublicUrl(fileName);
-  if (data) {
-    const { publicUrl } = data;
-    return publicUrl as string;
-  } else {
-    return fileName;
+  if(fileName != null || fileName != undefined){
+    const { data } = supabaseClient.supabase.storage
+    .from("avatars")
+    .getPublicUrl(fileName);
+    if (data) {
+      const { publicUrl } = data;
+      return publicUrl as string;
+    } else {
+      return fileName;
+    }
   }
 };
 

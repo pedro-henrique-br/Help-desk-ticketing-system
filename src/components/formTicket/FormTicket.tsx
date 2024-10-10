@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import styles from "./formTicket.module.css";
-import { Nav } from "../../parts/nav/Nav";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { BsCloud } from "react-icons/bs";
@@ -132,7 +131,6 @@ export const FormTicket = () => {
 
   return (
     <>
-      <Nav isAdmin={true} />
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         <Box className={styles.container}>
           <Box className={styles["form-container"]}>

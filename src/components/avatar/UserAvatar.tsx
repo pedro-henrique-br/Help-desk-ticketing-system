@@ -19,7 +19,7 @@ export const UserAvatar = (avatar: {
     getUserAvatar()
   }, [avatar.fileName]) 
 
-  if(avatarPath != "" && avatarPath != undefined){
+  if(avatarPath != null && avatarPath != undefined){
     return (
     <Avatar
       sx={{ width: avatar.width, height: avatar.height }}
@@ -29,12 +29,10 @@ export const UserAvatar = (avatar: {
     )
   }
 
-  if(avatarPath != undefined && avatarPath === ""){
+  if(avatarPath === undefined || avatarPath === null){
     return (
     <Avatar
       sx={{ width: avatar.width, height: avatar.height }}
-      alt={avatar.name}
-      src={avatarPath}
     />
     )
   }

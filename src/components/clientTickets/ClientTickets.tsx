@@ -58,17 +58,15 @@ export const ClientTickets = () => {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center",
         height: "100vh",
-        width: "100vw",
         alignItems: "flex-start",
       }}>
       {isLoading ? <CircularProgress sx={{ mb: 16 }} /> : null}
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
         {!isLoading && tickets.length > 0 ? (
-          <Paper sx={{ height: "92vh", width: '100vw' }}>
+          <Paper sx={{ height: "100vh"}}>
             <DataGrid
-              sx={{ fontSize: "1rem" }}
+              sx={{ fontSize: "1rem", width: "88vw"}}
               rows={tickets}
               columns={columns}
               initialState={{
