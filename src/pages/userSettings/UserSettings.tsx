@@ -1,12 +1,12 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import React from "react";
-import { api } from "../../utils/api";
 import { motion } from "framer-motion";
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "../../utils/supabase";
 import useUserInfo from "../../hooks/useUserInfo";
 import { useShallow } from "zustand/shallow";
 import { UserAvatar } from "../../components/avatar/UserAvatar";
+import user from "../../utils/user";
 
 export const UserSettings = () => {
   const [handleEdit, setHandleEdit] = React.useState(Boolean(true));
@@ -14,9 +14,9 @@ export const UserSettings = () => {
   const [userEmail, setUserEmail] = React.useState("");
   const [userRamal, setUserRamal] = React.useState("");
 
-  const { user, fetchUser } = useUserInfo(
+  const { userInfo, fetchUser } = useUserInfo(
     useShallow((state) => ({
-      user: state.user,
+      userInfo: state.user,
       fetchUser: state.fetchUser,
     }))
   );
@@ -61,9 +61,8 @@ export const UserSettings = () => {
         name: userName,
         email: userEmail,
         ramal: userRamal,
-        user_id: "",
       };
-      api.changeUserInfo(userChange);
+      user.changeUserInfo(userChange);
     }
   };
 
@@ -77,7 +76,7 @@ export const UserSettings = () => {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        {user ? (
+        {userInfo ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -108,12 +107,12 @@ export const UserSettings = () => {
                     justifyContent: "start",
                   }}>
                   <UserAvatar
-                    name={user.avatar}
-                    fileName={user.avatar}
+                    name={userInfo.avatar}
+                    fileName={userInfo.avatar}
                     width={"150px"}
                     height={"150px"}
                   />
-                  <Typography component={"h4"} sx={{mt: 2}}>{user?.name}</Typography>
+                  <Typography component={"h4"} sx={{mt: 2}}>{userInfo?.name}</Typography>
                   <Typography
                     variant="body1"
                     sx={{
@@ -122,7 +121,7 @@ export const UserSettings = () => {
                       display: "flex",
                       color: "#616468",
                     }}>
-                    Função: {user?.isAdmin ? ("Admin") : ("Client")}
+                    Função: {userInfo?.isAdmin ? ("Admin") : ("Client")}
                   </Typography>
                 </Box>
                 <Box
@@ -135,21 +134,21 @@ export const UserSettings = () => {
                   <InputLabel>Nome</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100%" }}
-                    value={user?.name}
+                    value={userInfo?.name}
                     onChange={(e) => setUserName(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Nome"}></TextField>
                   <InputLabel>Email</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100" }}
-                    value={user?.email}
+                    value={userInfo?.email}
                     onChange={(e) => setUserEmail(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Email"}></TextField>
                   <InputLabel>Ramal</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100" }}
-                    value={user?.ramal}
+                    value={userInfo?.ramal}
                     onChange={(e) => setUserRamal(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Ramal"}></TextField>

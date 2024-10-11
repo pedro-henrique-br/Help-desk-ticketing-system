@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Link,
   Paper,
   Typography,
 } from "@mui/material";
@@ -56,9 +57,9 @@ export const Docs = () => {
     { field: "photo", headerName: "Imagem", width: 250, renderCell: (params) => {
       if(params.row.image){
         const imageURL = api.getFile(params.row.image as string)
-        return <a href={imageURL} target="_blank">Clique para ver a imagem</a>
+        return <Link href={imageURL} target="_blank">Clique para ver a imagem</Link>
       } else {
-        return <p>Sem imagem</p>
+        return <Typography variant="body2">Sem imagem</Typography>
       }
     } },
   ];

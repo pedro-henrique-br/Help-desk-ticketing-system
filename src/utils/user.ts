@@ -1,7 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
 import Cookies from "js-cookie";
-import userType from "../types/userType";
 
 const getUserInfo = async () => {
   const userId = Cookies.get("user_id");
@@ -46,7 +45,10 @@ const fetchUserAvatar = async (fileName: string) => {
   }
 };
 
-const changeUserInfo = async (user: userType) => {
+const changeUserInfo = async (user: {name: string,
+  email: string,
+  ramal: string
+  }) => {
   const userId = Cookies.get("user_id");
 
   const { data } = await supabaseClient.supabase.from("users").select("*").eq("user_id", userId);
@@ -104,7 +106,12 @@ const changeUserInfo = async (user: userType) => {
 }
 };
 
-const changeUsersInfo = async (user: userType) => {
+const changeUsersInfo = async (user: {
+  user_id: string,
+  name: string,
+  email: string,
+  ramal: string
+  }) => {
   const { data } = await supabaseClient.supabase
     .from("users")
     .select("*")

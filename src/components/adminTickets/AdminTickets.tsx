@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Dialog,
+  Link,
   // Link,
   MenuItem,
   Select,
@@ -29,7 +30,6 @@ import { useShallow } from "zustand/shallow";
 import useUserInfo from "../../hooks/useUserInfo";
 import { UserAvatar } from "../avatar/UserAvatar";
 import { PiFunnelFill } from "react-icons/pi";
-import { calculateTimeConclusion } from "../../utils/calculateTimeConclusion";
 
 export const AdminTickets = () => {
   const columns: GridColDef[] = [
@@ -157,9 +157,9 @@ export const AdminTickets = () => {
         if (params.row.image) {
           const imageURL = api.getFile(params.row.image as string);
           return (
-            <a href={imageURL} target="_blank">
+            <Link href={imageURL} target="_blank">
               Clique para ver a imagem
-            </a>
+            </Link>
           );
         } else {
           return <p>Nenhuma Imagem Anexada</p>;
@@ -170,6 +170,8 @@ export const AdminTickets = () => {
 
   const [windowWidth, setWindowWidth] = useState(window.screen.width);
   const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileCloseTicketOpen, setMobileCloseTicketOpen] = useState(false);
   const [ticketInfo, SetTicketInfo] = useState<null | ticket>();
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(Boolean(true));
@@ -200,11 +202,43 @@ export const AdminTickets = () => {
     await api.closeTicket(params.row.id);
   };
 
+  const closeTicketMobile = async (params: ticket) => {
+    await api.closeTicket(params.id);
+  };
+
   const handleClickOpen = (
     params: GridRenderCellParams<ticket, unknown, GridTreeNodeWithRender>
   ) => {
     SetTicketInfo(params.row);
     setOpen(true);
+  };
+
+  const handleClickMobileOpen = (params: ticket) => {
+    if (params.assignee === "Em espera") {
+      SetTicketInfo(params);
+      setMobileOpen(true);
+    } else if (params.assignee === user?.name) {
+      SetTicketInfo(params);
+      setMobileCloseTicketOpen(true);
+    }
+  };
+
+  const handleCloseMobileTicket = (e: HTMLElement) => {
+    setMobileCloseTicketOpen(false);
+    if (e.innerText === "SIM" && ticketInfo) {
+      setTimeout(() => {
+        closeTicketMobile(ticketInfo);
+      }, 300);
+    }
+  };
+
+  const handleCloseMobile = (e: HTMLElement) => {
+    setMobileOpen(false);
+    if (e.innerText === "SIM" && ticketInfo) {
+      setTimeout(() => {
+        api.changeAssignee(ticketInfo.id, user ? user?.name : "");
+      }, 300);
+    }
   };
 
   const handleClose = (e: HTMLElement) => {
@@ -302,14 +336,14 @@ export const AdminTickets = () => {
               sx={{
                 display: "flex",
                 mt: 4,
-                mr: 2,
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                width: "100%",
+                width: windowWidth - 50,
               }}>
               <Box
                 sx={{
+                  width: windowWidth - 80,
                   display: "flex",
                   flexDirection: "column",
                   height: "100px",
@@ -318,6 +352,7 @@ export const AdminTickets = () => {
                 }}>
                 <Box
                   sx={{
+                    minWidth: "150px",
                     height: "40px",
                     display: "flex",
                     alignItems: "center",
@@ -326,16 +361,17 @@ export const AdminTickets = () => {
                   }}>
                   <PiFunnelFill color="#fff" size={26} />
                   <Typography component={"h4"} sx={{ color: "#fff", ml: 1 }}>
-                    Chamados
+                    Filtro
                   </Typography>
                 </Box>
                 <Box
                   sx={{
+                    minWidth: "60px",
                     display: "flex",
                     gap: "5px",
                     height: "55px",
                     alignItems: "center",
-                    ml: 3,
+                    ml: windowWidth <= 320 ? 1 : 3,
                   }}
                   component={"form"}>
                   <Select
@@ -344,19 +380,23 @@ export const AdminTickets = () => {
                       height: "30px",
                       padding: "3px 0 0 0",
                     }}
-                    value={"email"}
+                    value={"name"}
                     // onChange={(e) => setFilterUsersBy(e.target.value)}
                   >
-                    <MenuItem value={"email"}>Email</MenuItem>
                     <MenuItem value={"name"}>Nome</MenuItem>
+                    <MenuItem value={"email"}>Email</MenuItem>
+                    <MenuItem value={"priority"}>Departamento</MenuItem>
+                    <MenuItem value={"priority"}>Prioridade</MenuItem>
                   </Select>
                   <TextField
                     // onChange={(e) => setInputValue(e.target.value)}
                     sx={{
-                      minWidth: "150px",
+                      minWidth: "30px",
+                      pr: 1,
                       width: "300px",
                       "& .MuiInputBase-input": {
                         height: "30px",
+                        minWidth: "30px",
                         padding: "3px 0 0 10px",
                       },
                     }}
@@ -366,34 +406,49 @@ export const AdminTickets = () => {
                     placeholder="Pesquisar"></TextField>
                 </Box>
               </Box>
+              <Box
+              sx={{
+                mt: 2,
+                height: window.screen.height <=  568 ? "65vh" : "75vh",
+                overflow: "scroll",
+              }}> 
+              <Box 
+              sx={{
+                display: "flex",
+                gap: 2,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
               {tickets &&
                 tickets.map((ticket: ticket) => {
                   return (
                     <Box
+                      onClick={() => handleClickMobileOpen(ticket)}
                       key={ticket.id}
                       sx={{
-                        mt: 2,
                         borderRadius: "6px",
-                        height: "150px",
+                        height: windowWidth <= 420 ? "250px" : "200px",
+                        maxHeight: "350px",
                         minWidth: "20%",
-                        width: "80%",
+                        width: "90%",
                         border: "1px solid rgba(22, 22, 22, 0.21)",
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
                         display: "flex",
                         "&:hover": {
-                              cursor: "pointer",
-                              borderColor: "#2F8670",
-                              },
+                          cursor: "pointer",
+                          borderColor: "#2F8670",
+                        },
                       }}>
                       <Box
                         sx={{
                           display: "flex",
                           alignItems: "center",
+                          gap: 1,
                           justifyContent: "space-around",
-                          width: "100%",
-                        }}>
+                          width: windowWidth <= 420 ? "90%" : "100%",                        }}>
                         <Box
                           sx={{
                             display: "flex",
@@ -415,87 +470,51 @@ export const AdminTickets = () => {
                           </Typography>
                         </Box>
                         <Typography variant="body2" fontSize={"0.7rem"}>
-                          {calculateTimeConclusion(ticket.created_at, Date()) + " " + "Atrás"}
-                           
+                          {`Aberto em ${ticket.created_at}`}
                         </Typography>
                       </Box>
                       <Typography
                         sx={{
                           color: "#4a4a4a",
                           fontSize: "0.9rem",
+                          maxHeight: "70px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          width: "90%",
+                          width: windowWidth <= 420 ? "80%" :"90%",
+                          textAlign: "center",
                           fontFamily: "karla",
+                          pt: 1,
                           fontWeight: "200",
                         }}>
                         {ticket.message}
                       </Typography>
                       <Typography
                         sx={{
+                          width: windowWidth <= 420 ? "80%" : "auto",
+                          height: windowWidth <= 420 ? "50px" :"30px",
                           color: "#4a4a4a",
                           fontSize: "0.8rem",
                           fontFamily: "karla",
                           fontWeight: "700",
-                          mb: 1
+                          mb: 1,
                         }}>
-                        {ticket.assignee}
+                        {ticket.assignee === "Em espera"
+                          ? ticket.assignee
+                          : `Chamado sendo atendido por ${ticket.assignee}`}
                       </Typography>
                       <Box
                         sx={{
                           display: "flex",
+                          flexDirection: windowWidth <= 340 ? "column" : "row",
                           justifyContent: "center",
                           gap: 1,
                         }}>
-                        {/* {ticket.assignee === user?.name ? (
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              width: "100px",
-                              borderRadius: "16px",
-                              fontSize: "0.6rem",
-                              background: "#5F8670",
-                              "&:hover": {
-                                backgroundColor: "#2F8670",
-                              },
-                            }}
-                            // onClick={() => closeTicket(ticket)}
-                          >
-                            Fechar chamado
-                          </Button>
-                        ) : null}
-                        {ticket.assignee === "Em espera" ? (
-                          <Button
-                            sx={{
-                              width: "100px",
-                              borderRadius: "16px",
-                              fontSize: "0.6rem",
-                            }}
-                            variant="outlined"
-                            // onClick={() => handleClickOpen(ticket)}
-                          >
-                            Atender Chamado
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              width: "100px",
-                              borderRadius: "16px",
-                              fontSize: "0.6rem",
-                              background: "#CD5C08",
-                              "&:hover": {
-                                backgroundColor: "#CD5C08",
-                              },
-                            }}>
-                            Em atendimento
-                          </Button>
-                        )} */}
                         <Typography
                           sx={{
-                            width: "100px",
-                            height: "30px",
+                            maxWidth: "150px",
+                            minWidth: "120px",
+                            p: 1,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -507,7 +526,9 @@ export const AdminTickets = () => {
                         </Typography>
                         <Typography
                           sx={{
-                            width: "100px",
+                            maxWidth: "150px",
+                            minWidth: "120px",
+                            p: 1,
                             border: 1,
                             display: "flex",
                             alignItems: "center",
@@ -522,7 +543,102 @@ export const AdminTickets = () => {
                   );
                 })}
             </Box>
+            </Box>
+            </Box>
           ) : null}
+
+          <Dialog
+            open={mobileCloseTicketOpen}
+            onClose={handleCloseMobileTicket}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">
+              Deseja fechar o chamado de {ticketInfo?.user_name}?
+            </DialogTitle>
+            <DialogContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                }}>
+                <Typography>
+                  Tipo do chamado: {ticketInfo?.request_type}
+                </Typography>
+                <Typography>Mensagem: {ticketInfo?.message}</Typography>
+                <Typography>
+                  Email:{" "}
+                  <span style={{ color: "#1976d2" }}>{ticketInfo?.email}</span>
+                </Typography>
+                <Typography>ramal: {ticketInfo?.ramal}</Typography>
+                {ticketInfo?.image != "" ? (
+                  <Link
+                    href={api.getFile(ticketInfo?.image as string)}
+                    target="_blank">
+                    Clique para ver a imagem
+                  </Link>
+                ) : null}
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setMobileCloseTicketOpen(false)}>
+                Não
+              </Button>
+              <Button
+                onClick={(e) =>
+                  handleCloseMobileTicket(e.target as HTMLElement)
+                }
+                autoFocus>
+                Sim
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog
+            open={mobileOpen}
+            onClose={handleCloseMobile}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">
+              Deseja atender o chamado de {ticketInfo?.user_name}?
+            </DialogTitle>
+            <DialogContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                }}>
+                <Typography>
+                  Tipo do chamado: {ticketInfo?.request_type}
+                </Typography>
+                <Typography>Mensagem: {ticketInfo?.message}</Typography>
+                <Typography>
+                  Email:{" "}
+                  <span style={{ color: "#1976d2" }}>{ticketInfo?.email}</span>
+                </Typography>
+                <Typography>ramal: {ticketInfo?.ramal}</Typography>
+                {ticketInfo?.image != "" ? (
+                  <Link
+                    href={api.getFile(ticketInfo?.image as string)}
+                    target="_blank">
+                    Clique para ver a imagem
+                  </Link>
+                ) : null}
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={(e) => handleCloseMobile(e.target as HTMLElement)}>
+                Não
+              </Button>
+              <Button
+                onClick={(e) => handleCloseMobile(e.target as HTMLElement)}
+                autoFocus>
+                Sim
+              </Button>
+            </DialogActions>
+          </Dialog>
 
           <Dialog
             open={open}

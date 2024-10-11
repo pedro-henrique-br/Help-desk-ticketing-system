@@ -1,7 +1,7 @@
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "./supabase";
 import Cookies from 'js-cookie';
-import { api } from "./api";
+import user from "./user";
 
 const signUp = async (
   email: string,
@@ -64,7 +64,7 @@ const signIn = async (email: string, password: string) => {
     Cookies.set("user_id", userId as string, { expires : 1, sameSite: "Lax" });
     
     setTimeout(async ()  => {
-      const userName = await api.getUserInfo()
+      const userName = await user.getUserInfo()
       if(userName){
         Cookies.set("user_name", userName[0].name, {sameSite: "Lax"})
         window.location.href = "/home";

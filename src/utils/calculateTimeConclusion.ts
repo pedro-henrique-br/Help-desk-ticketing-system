@@ -10,7 +10,7 @@ export const calculateTimeConclusion = (createdAt: string, deletedAt: string): s
   const minutes = Math.floor((diffInSeconds % 3600) / 60);
   const seconds = diffInSeconds % 60;
 
-  if(days > 0){
+  if(days >= 1){
     return `${days} dias, ${hours} horas`;
   } else if(hours <= 24 && hours > 0){
     return `${hours} horas, ${minutes} minutos`;

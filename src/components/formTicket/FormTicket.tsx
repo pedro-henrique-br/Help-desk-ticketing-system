@@ -12,10 +12,9 @@ import {
 } from "@mui/material";
 import styles from "./formTicket.module.css";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
 import { BsCloud } from "react-icons/bs";
 import styled from "@emotion/styled";
-import { Navigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { Bounce, toast } from "react-toastify";
 
@@ -35,7 +34,6 @@ export const FormTicket = () => {
   const [type, setType] = React.useState("");
   const [priority, setPriority] = React.useState("");
   const [department, setDepartment] = React.useState("");
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const ticketTypes = [
     "📨 Problemas com Email",
@@ -87,6 +85,7 @@ export const FormTicket = () => {
       ticket.message != "" &&
       ticket.file?.name != ""
     ) {
+      api.uploadFile(ticket.file as never);
       api.createTicket(
         ticket._type,
         ticket._priority,
@@ -94,10 +93,6 @@ export const FormTicket = () => {
         ticket.message,
         ticket.file.name
       );
-      api.uploadFile(ticket.file as never);
-      setTimeout(() => {
-        setIsButtonClicked(true)
-      }, 1000);
     } else if (
       ticket._type != "" &&
       ticket._priority != "" &&
@@ -111,9 +106,6 @@ export const FormTicket = () => {
         ticket.message,
         ""
       );
-      setTimeout(() => {
-        setIsButtonClicked(true)
-      }, 1000);
     } else {
       toast.info(`Preencha todos os campos`, {
         position: "top-right",
@@ -254,16 +246,6 @@ export const FormTicket = () => {
               />
             </Grid>
           </Box>
-          {!isButtonClicked ? (
-            <Button
-              className={styles["home-button"]}
-              variant="contained"
-              onClick={() => setIsButtonClicked(true)}>
-              Voltar para Página Inicial
-            </Button>
-          ) : (
-            <Navigate to={"/home"} />
-          )}
         </Box>
       </motion.div>
     </>
