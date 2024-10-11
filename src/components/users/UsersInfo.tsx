@@ -19,6 +19,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "../../utils/supabase";
+import user from "../../utils/user";
 
 interface userData {
   user_id: string;
@@ -62,7 +63,7 @@ export const UsersInfo = () => {
         ramal: userRamal,
         user_id: userId,
       };
-      api.changeUsersInfo(userChange);
+      user.changeUsersInfo(userChange);
     }
   };
 

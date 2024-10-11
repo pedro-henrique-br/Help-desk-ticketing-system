@@ -3,7 +3,10 @@ import {
   Button,
   CircularProgress,
   Dialog,
-  Link,
+  // Link,
+  MenuItem,
+  Select,
+  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -25,6 +28,8 @@ import ticket from "../../types/ticketType";
 import { useShallow } from "zustand/shallow";
 import useUserInfo from "../../hooks/useUserInfo";
 import { UserAvatar } from "../avatar/UserAvatar";
+import { PiFunnelFill } from "react-icons/pi";
+import { calculateTimeConclusion } from "../../utils/calculateTimeConclusion";
 
 export const AdminTickets = () => {
   const columns: GridColDef[] = [
@@ -292,115 +297,233 @@ export const AdminTickets = () => {
               pageSizeOptions={[5, 10]}
             />
           ) : null}
-          {matchesMobile && tickets
-            ? tickets.map((ticket: ticket) => {
-                console.log(ticket);
-                return (
-                  <Box
-                    key={ticket.id}
+          {matchesMobile ? (
+            <Box
+              sx={{
+                display: "flex",
+                mt: 4,
+                mr: 2,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "100%",
+              }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100px",
+                  boxShadow: "1px 4px 6px #979797cb",
+                  borderColor: "divider",
+                }}>
+                <Box
+                  sx={{
+                    height: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#2e4e5f",
+                    pl: 1,
+                  }}>
+                  <PiFunnelFill color="#fff" size={26} />
+                  <Typography component={"h4"} sx={{ color: "#fff", ml: 1 }}>
+                    Chamados
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    height: "55px",
+                    alignItems: "center",
+                    ml: 3,
+                  }}
+                  component={"form"}>
+                  <Select
                     sx={{
-                      borderRadius: "15px",
-                      height: "200px",
-                      width: "250px",
-                      border: "1px solid rgba(22, 22, 22, 0.21)",
-                      alignItems: "center",
-                      display: "flex",
-                    }}>
+                      width: "100px",
+                      height: "30px",
+                      padding: "3px 0 0 0",
+                    }}
+                    value={"email"}
+                    // onChange={(e) => setFilterUsersBy(e.target.value)}
+                  >
+                    <MenuItem value={"email"}>Email</MenuItem>
+                    <MenuItem value={"name"}>Nome</MenuItem>
+                  </Select>
+                  <TextField
+                    // onChange={(e) => setInputValue(e.target.value)}
+                    sx={{
+                      minWidth: "150px",
+                      width: "300px",
+                      "& .MuiInputBase-input": {
+                        height: "30px",
+                        padding: "3px 0 0 10px",
+                      },
+                    }}
+                    // onKeyDownCapture={(e) =>
+                    //   e.key === "Enter" ? handleSubmit(inputValue, filterUsersBy) : null
+                    // }
+                    placeholder="Pesquisar"></TextField>
+                </Box>
+              </Box>
+              {tickets &&
+                tickets.map((ticket: ticket) => {
+                  return (
                     <Box
+                      key={ticket.id}
                       sx={{
-                        borderRadius: "50%",
-                        padding: "15px",
-                      }}></Box>
-                    <Box
-                      sx={{
-                        display: "flex",
+                        mt: 2,
+                        borderRadius: "6px",
+                        height: "150px",
+                        minWidth: "20%",
+                        width: "80%",
+                        border: "1px solid rgba(22, 22, 22, 0.21)",
                         flexDirection: "column",
-                        alignItems: "flex-start",
                         justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                        "&:hover": {
+                              cursor: "pointer",
+                              borderColor: "#2F8670",
+                              },
                       }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-around",
+                          width: "100%",
+                        }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                          }}>
+                          <UserAvatar
+                            width={"35px"}
+                            height={"35px"}
+                            fileName={ticket.requesterAvatar}
+                            name={ticket.user_name}
+                          />
+                          <Typography>
+                            {ticket?.user_name?.split(" ")[1] != undefined
+                              ? ticket?.user_name?.split(" ")[0] +
+                                " " +
+                                ticket?.user_name?.split(" ")[1]
+                              : ticket?.user_name?.split(" ")[0]}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" fontSize={"0.7rem"}>
+                          {calculateTimeConclusion(ticket.created_at, Date()) + " " + "Atrás"}
+                           
+                        </Typography>
+                      </Box>
                       <Typography
                         sx={{
                           color: "#4a4a4a",
-                          fontSize: "0.8rem",
+                          fontSize: "0.9rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "90%",
                           fontFamily: "karla",
                           fontWeight: "200",
                         }}>
-                        {ticket.email}
-                        {ticket.priority}
-                        {ticket.ramal}
-                        {ticket.request_type}
-                        {ticket.created_at}
-                        {ticket.user_name}
-                        {ticket.message}
                         {ticket.message}
                       </Typography>
-                        
-                      {ticket.image === "" ? (
-                      <Typography>
-                        Nenhuma Imagem Anexada
-                      </Typography>
-                      )
-                    :
-                    (
-                      <Link href="ticket.image" variant="body2">
-                        Clique parar ver a Imagem
-                      </Link>
-                    )}
-                      
                       <Typography
                         sx={{
                           color: "#4a4a4a",
                           fontSize: "0.8rem",
                           fontFamily: "karla",
                           fontWeight: "700",
+                          mb: 1
                         }}>
                         {ticket.assignee}
                       </Typography>
-                      <UserAvatar
-                        width={"50px"}
-                        height={"50px"}
-                        fileName={ticket.requesterAvatar}
-                        name={ticket.user_name}
-                      />
-            <Button
-              variant="contained"
-              sx={{
-                width: "200px",
-                fontSize: "0.8rem",
-                background: "#5F8670",
-                "&:hover": {
-                  backgroundColor: "#2F8670",
-                },
-              }}
-              onClick={() => closeTicket(ticket)}>
-              Fechar chamado
-            </Button>
-            <Button
-              sx={{
-                width: "200px",
-                fontSize: "0.8rem",
-              }}
-              variant="contained"
-              onClick={() => handleClickOpen(ticket)}>
-              Atender Chamado
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                width: "200px",
-                fontSize: "0.8rem",
-                background: "#CD5C08",
-                "&:hover": {
-                  backgroundColor: "#CD5C08",
-                },
-              }}>
-              Em atendimento
-            </Button>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          gap: 1,
+                        }}>
+                        {/* {ticket.assignee === user?.name ? (
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              width: "100px",
+                              borderRadius: "16px",
+                              fontSize: "0.6rem",
+                              background: "#5F8670",
+                              "&:hover": {
+                                backgroundColor: "#2F8670",
+                              },
+                            }}
+                            // onClick={() => closeTicket(ticket)}
+                          >
+                            Fechar chamado
+                          </Button>
+                        ) : null}
+                        {ticket.assignee === "Em espera" ? (
+                          <Button
+                            sx={{
+                              width: "100px",
+                              borderRadius: "16px",
+                              fontSize: "0.6rem",
+                            }}
+                            variant="outlined"
+                            // onClick={() => handleClickOpen(ticket)}
+                          >
+                            Atender Chamado
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              width: "100px",
+                              borderRadius: "16px",
+                              fontSize: "0.6rem",
+                              background: "#CD5C08",
+                              "&:hover": {
+                                backgroundColor: "#CD5C08",
+                              },
+                            }}>
+                            Em atendimento
+                          </Button>
+                        )} */}
+                        <Typography
+                          sx={{
+                            width: "100px",
+                            height: "30px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            border: 1,
+                            borderRadius: "16px",
+                            fontSize: "0.6rem",
+                          }}>
+                          Prioridade {ticket.priority}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            width: "100px",
+                            border: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: "16px",
+                            fontSize: "0.6rem",
+                          }}>
+                          Departamento {ticket.department}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })
-            : null}
+                  );
+                })}
+            </Box>
+          ) : null}
+
           <Dialog
             open={open}
             onClose={handleClose}
