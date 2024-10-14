@@ -140,7 +140,6 @@ export const SideBar = (user: {
           sx={{
             borderRight: 1,
             borderColor: "divider",
-            overflow: "hidden",
             justifyContent: matchesDesktop ? "center" : "flex-start",
             alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",

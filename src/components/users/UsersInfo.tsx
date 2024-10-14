@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { api } from "../../utils/api";
 import {
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -25,7 +24,7 @@ import { UserAvatar } from "../avatar/UserAvatar";
 import userType from "../../types/userType";
 
 export const UsersInfo = () => {
-  const [windowWidth, setWindowWidth] = useState(window.screen.width)
+  const [windowWidth, setWindowWidth] = useState(window.screen.width);
   const [users, setUsers] = useState<userType[] | null>([]);
   const [filterUsersBy, setFilterUsersBy] = useState("email");
   const [isLoading, setIsLoading] = useState(Boolean(false));
@@ -183,7 +182,6 @@ export const UsersInfo = () => {
   window.addEventListener("resize", () => {
     setWindowWidth(window.screen.width);
   });
- 
 
   return (
     <Box>
@@ -193,7 +191,7 @@ export const UsersInfo = () => {
           mt: 4,
           display: "flex",
           flexDirection: "column",
-          height: "100px",
+          height: matchesMobile ? "120px" : "100px",
           width: matchesMobile ? windowWidth - 80 : "80vw",
           boxShadow: "1px 4px 6px #979797cb",
           borderColor: "divider",
@@ -215,33 +213,49 @@ export const UsersInfo = () => {
         <Box
           sx={{
             display: "flex",
-            gap: "15px",
+            gap: matchesMobile ? "5px" : "1",
             height: "55px",
             alignItems: "center",
-            ml: 3,
+            flexDirection: matchesMobile ? "column" : "row",
+            ml: matchesMobile ? 1 : 3,
             mr: 1,
           }}
           component={"form"}>
-          <Select
-            sx={{ width: "250px", height: "30px", padding: "3px 0 0 0" }}
-            value={filterUsersBy}
-            onChange={(e) => setFilterUsersBy(e.target.value)}>
-            <MenuItem value={"email"}>Email</MenuItem>
-            <MenuItem value={"name"}>Nome</MenuItem>
-          </Select>
-          <TextField
-            onChange={(e) => setInputValue(e.target.value)}
+          <Box
             sx={{
-              width: "300px",
-              "& .MuiInputBase-input": {
+              mt: 1,
+              display: "flex",
+              width: "100%",
+              gap: 1,
+              alignItems: "center",
+            }}>
+            <Select
+              sx={{
+                width: matchesMobile ? "80%" : "250px",
                 height: "30px",
-                padding: "3px 0 0 10px",
-              },
-            }}
-            onKeyDownCapture={(e) =>
-              e.key === "Enter" ? handleSubmit(inputValue, filterUsersBy) : null
-            }
-            placeholder="Filtrar por..."></TextField>
+                padding: "3px 0 0 0",
+              }}
+              value={filterUsersBy}
+              onChange={(e) => setFilterUsersBy(e.target.value)}>
+              <MenuItem value={"email"}>Email</MenuItem>
+              <MenuItem value={"name"}>Nome</MenuItem>
+            </Select>
+            <TextField
+              onChange={(e) => setInputValue(e.target.value)}
+              sx={{
+                width: matchesMobile ? "80%" : "300px",
+                "& .MuiInputBase-input": {
+                  height: "27px",
+                  padding: "3px 0 0 10px",
+                },
+              }}
+              onKeyDownCapture={(e) =>
+                e.key === "Enter"
+                  ? handleSubmit(inputValue, filterUsersBy)
+                  : null
+              }
+              placeholder="Filtrar por..."></TextField>
+          </Box>
           <Button
             variant="contained"
             sx={{ height: "30px" }}
@@ -258,7 +272,11 @@ export const UsersInfo = () => {
         ) : null}
         {!isLoading && error ? (
           <Typography
-            sx={{ position: "absolute", left: "50%", mt: 10 }}
+            sx={{
+              position: "absolute",
+              left: matchesMobile ? "30%" : "50%",
+              mt: 10,
+            }}
             fontSize={"1.2rem"}>
             Nenhum Usuário encontrado
           </Typography>
@@ -266,10 +284,11 @@ export const UsersInfo = () => {
         <Box
           sx={{
             width: matchesMobile ? windowWidth - 80 : "80vw",
-            ml: matchesMobile ? 1 : 0,
+            mt: matchesMobile ? 1 : 2,
+            ml: matchesMobile ? 1 : 4,
             overflowX: "hidden",
             overflowY: "scroll",
-            height: "66.5vh",
+            height: "80vh",
             display: "flex",
             flexDirection: "column",
           }}>
@@ -279,13 +298,6 @@ export const UsersInfo = () => {
               const formatedName = nameArray
                 ? `${nameArray[0] ? nameArray[0] : ""} ${
                     nameArray[1] ? nameArray[1] : ""
-                  }`
-                : "";
-              const userInitials = nameArray
-                ? `${nameArray[0] ? nameArray[0].slice(0, 1) : ""}${
-                    nameArray[1]
-                      ? nameArray[1].slice(0, 1)
-                      : nameArray[0].slice(1, 2)
                   }`
                 : "";
               return (
@@ -299,7 +311,7 @@ export const UsersInfo = () => {
                   }}>
                   <Box
                     sx={{
-                      height: matchesMobile ? "200px" :"80px",
+                      height: matchesMobile ? "200px" : "80px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -312,29 +324,51 @@ export const UsersInfo = () => {
                         display: "flex",
                         gap: matchesMobile ? 1 : 0,
                         alignItems: matchesMobile ? "center" : "auto",
-                        justifyContent: matchesMobile ? "center" :"space-between",
-                        flexDirection: matchesMobile ? "column" : "row" 
+                        justifyContent: matchesMobile
+                          ? "center"
+                          : "space-between",
+                        flexDirection: matchesMobile ? "column" : "row",
                       }}>
                       <Box
-                        sx={{ display: "flex", alignItems: "center", textAlign: matchesMobile ? "center" : "auto", gap: 1, flexDirection: matchesMobile ? "column" : "row" }}>
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 1,
+                          alignItems: "center",
+                          textAlign: matchesMobile ? "center" : "auto",
+                          flexDirection: matchesMobile ? "column" : "row",
+                        }}>
                         <UserAvatar
-                          width="30"
-                          height="30"
+                          width="35"
+                          height="35"
                           fileName={user?.avatar}
                           name={user?.name}
                         />
-                        <Box sx={{ display: "flex", flexDirection: "column", flexWrap: "wrap" }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            flexWrap: "wrap",
+                            wordWrap: "break-word",
+                          }}>
                           <Typography sx={{ fontSize: "1rem" }}>
-                            Nome: {user?.name}
+                            {user?.name}
                           </Typography>
                           <Typography
-                            sx={{ fontSize: "1rem", color: "#1976d2" }}>
-                            Email: {user?.email}
+                            sx={{
+                              fontSize: matchesMobile ? "0.6rem" : "1rem",
+                              color: "#1976d2",
+                            }}>
+                            {user?.email}
                           </Typography>
                           <Typography sx={{ fontSize: "1rem" }}>
                             Função:
-                            <span style={{ fontStyle: "italic" }}>
-                              {user?.isAdmin ? "Administrador" : "Cliente"}
+                            <span
+                              style={{
+                                fontStyle: "italic",
+                                fontSize: matchesMobile ? "0.8rem" : "1rem",
+                              }}>
+                              {user?.isAdmin ? " Administrador" : " Cliente"}
                             </span>
                           </Typography>
                         </Box>
@@ -350,21 +384,24 @@ export const UsersInfo = () => {
                             variant="outlined"
                             sx={{ height: "30px", fontSize: "0.8rem" }}
                             onClick={() =>
-                              supabaseClient.supabase.auth.resetPasswordForEmail(
-                                user?.email
-                              ).then(() => {
-                                toast.success(`Email de redefinição de senha enviado para ${user?.email}`, {
-                                  position: "top-right",
-                                  autoClose: 5000,
-                                  hideProgressBar: false,
-                                  closeOnClick: true,
-                                  pauseOnHover: true,
-                                  draggable: true,
-                                  progress: undefined,
-                                  theme: "light",
-                                  transition: Bounce,
-                                });
-                              })
+                              supabaseClient.supabase.auth
+                                .resetPasswordForEmail(user?.email)
+                                .then(() => {
+                                  toast.success(
+                                    `Email de redefinição de senha enviado para ${user?.email}`,
+                                    {
+                                      position: "top-right",
+                                      autoClose: 5000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      theme: "light",
+                                      transition: Bounce,
+                                    }
+                                  );
+                                })
                             }>
                             <PiKey />
                           </Button>
@@ -396,7 +433,6 @@ export const UsersInfo = () => {
                               Editar Informações
                             </Button>
                           )}
-
                           <Dialog
                             open={open}
                             onClose={handleClose}
@@ -414,7 +450,6 @@ export const UsersInfo = () => {
                                   sx={{
                                     display: "flex",
                                     height: "400px",
-                                    width: "500px",
                                     justifyContent: "center",
                                     flexDirection: "column",
                                     alignItems: "center",
@@ -423,22 +458,28 @@ export const UsersInfo = () => {
                                     sx={{
                                       display: "flex",
                                       alignItems: "center",
-                                      width: "400px",
+                                      width: matchesMobile ? "100%" : "400px",
                                       justifyContent: "space-around",
                                       mb: 3,
                                     }}>
-                                    <Avatar
-                                      sx={{
-                                        bgcolor: "#1976d2",
-                                        height: "70px",
-                                        width: "70px",
-                                        fontSize: "2rem",
-                                      }}>
-                                      {userInitials != "" ? userInitials : null}
-                                    </Avatar>
-                                    <Typography component={"h4"}>
-                                      {formatedName}
-                                    </Typography>
+                                    <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      width: matchesMobile ? "100%" : "400px",
+                                      gap: 5,
+                                      justifyContent: "center",
+                                    }}>
+                                      <UserAvatar
+                                        name={userDialog?.name as never}
+                                        fileName={userDialog?.avatar as never}
+                                        height="70px"
+                                        width="70px"
+                                      />
+                                      <Typography component={"h4"} sx={{fontSize: "1.5rem"}}>
+                                        {formatedName}
+                                      </Typography>
+                                    </Box>
                                   </Box>
                                   <TextField
                                     label="Nome"
@@ -528,7 +569,7 @@ export const UsersInfo = () => {
                                   handleClickCloseUserType();
                                   changeUserType(
                                     userDialog?.user_id as string,
-                                    userDialog?.isAdmin as boolean
+                                    userDialog?.isAdmin as never
                                   );
                                   return userDialog
                                     ? (userDialog.isAdmin =

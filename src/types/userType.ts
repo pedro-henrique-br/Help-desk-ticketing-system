@@ -3,6 +3,6 @@ export default interface userType {
   name: string,
   email: string,
   ramal: string,
-  isAdmin: string,
+  isAdmin: boolean,
   avatar: string,
 }
