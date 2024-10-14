@@ -10,6 +10,7 @@ import {
   Select,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { PiFunnelFill } from "react-icons/pi";
 import Dialog from "@mui/material/Dialog";
@@ -177,6 +178,8 @@ export const UsersInfo = () => {
   )
   .subscribe();
 
+  const matchesDesktop = useMediaQuery("(min-width:1400px)");
+  const matchesMobile = useMediaQuery("(max-width: 600px)");
 
   return (
     <Box>

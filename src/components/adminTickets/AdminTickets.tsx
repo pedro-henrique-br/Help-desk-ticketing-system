@@ -281,6 +281,7 @@ export const AdminTickets = () => {
   window.addEventListener("resize", () => {
     setWindowWidth(window.screen.width);
   });
+ 
 
   return (
     <Box sx={{ width: "auto" }}>
