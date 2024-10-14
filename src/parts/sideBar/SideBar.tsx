@@ -128,6 +128,7 @@ export const SideBar = (user: {
     return (
       <Box
         sx={{
+          overflow: "hidden",
           bgcolor: "background.paper",
           height: "100vh",
           display: "flex",
@@ -139,6 +140,7 @@ export const SideBar = (user: {
           sx={{
             borderRight: 1,
             borderColor: "divider",
+            overflow: "hidden",
             justifyContent: matchesDesktop ? "center" : "flex-start",
             alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",
@@ -277,6 +279,7 @@ export const SideBar = (user: {
     return (
       <Box
         sx={{
+          overflow: "hidden",
           bgcolor: "background.paper",
           height: "100vh",
           display: "flex",
@@ -288,6 +291,7 @@ export const SideBar = (user: {
           sx={{
             borderRight: 1,
             borderColor: "divider",
+            overflow: "hidden",
             justifyContent: matchesDesktop ? "center" : "flex-start",
             alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",

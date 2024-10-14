@@ -12,7 +12,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { PiFunnelFill } from "react-icons/pi";
+import { PiFunnelFill, PiKey, PiPencilSimpleFill } from "react-icons/pi";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -21,17 +21,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Bounce, toast } from "react-toastify";
 import { supabaseClient } from "../../utils/supabase";
 import user from "../../utils/user";
-
-interface userData {
-  user_id: string;
-  name: string;
-  email: string;
-  ramal: string;
-  isAdmin: boolean;
-}
+import { UserAvatar } from "../avatar/UserAvatar";
+import userType from "../../types/userType";
 
 export const UsersInfo = () => {
-  const [users, setUsers] = useState<userData[] | null>([]);
+  const [windowWidth, setWindowWidth] = useState(window.screen.width)
+  const [users, setUsers] = useState<userType[] | null>([]);
   const [filterUsersBy, setFilterUsersBy] = useState("email");
   const [isLoading, setIsLoading] = useState(Boolean(false));
   const [inputValue, setInputValue] = useState("");
@@ -42,7 +37,7 @@ export const UsersInfo = () => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userRamal, setUserRamal] = useState("");
-  const [userDialog, setUserDialog] = useState<userData | null>();
+  const [userDialog, setUserDialog] = useState<userType | null>();
 
   const handleFormSubmit = () => {
     if (userName === "" || userEmail === "" || userRamal === "") {
@@ -68,7 +63,7 @@ export const UsersInfo = () => {
     }
   };
 
-  const handleClickOpen = (user: userData) => {
+  const handleClickOpen = (user: userType) => {
     setOpen(true);
     setUserDialog(user);
     setUserId(user?.user_id);
@@ -76,7 +71,7 @@ export const UsersInfo = () => {
     setUserEmail(user?.email);
     setUserRamal(user?.ramal);
   };
-  
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -86,29 +81,33 @@ export const UsersInfo = () => {
   };
 
   const handleClickCloseUserType = () => {
-    setOpenUserType(false)
+    setOpenUserType(false);
   };
-  
+
   const changeUserType = async (userId: string, isAdmin: boolean) => {
-    const {data, error} = await supabaseClient.supabase
-    .from("users")
-    .update({ isAdmin: !isAdmin})
-    .eq("user_id", userId)
-    .select();
-    if(!error){
-      toast.success(`O Usuário ${data[0].name} foi alterado para ${data[0].isAdmin ? ("Administrador") : ("Cliente")} com sucesso!`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-    }
-    else {
+    const { data, error } = await supabaseClient.supabase
+      .from("users")
+      .update({ isAdmin: !isAdmin })
+      .eq("user_id", userId)
+      .select();
+    if (!error) {
+      toast.success(
+        `O Usuário ${data[0].name} foi alterado para ${
+          data[0].isAdmin ? "Administrador" : "Cliente"
+        } com sucesso!`,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+    } else {
       toast.error(`Ocorreu um erro ${error}`, {
         position: "top-right",
         autoClose: 5000,
@@ -121,13 +120,13 @@ export const UsersInfo = () => {
         transition: Bounce,
       });
     }
-  }
+  };
 
   const handleSubmit = async (inputValue: string, filterType: string) => {
     setError(false);
     const response = await api.getAllUsers();
 
-    const data: userData[] = response as never;
+    const data: userType[] = response as never;
     setIsLoading(true);
 
     switch (filterType) {
@@ -166,30 +165,36 @@ export const UsersInfo = () => {
   };
 
   supabaseClient.supabase
-  .channel("users")
-  .on(
-    "postgres_changes",
-    { event: "*", schema: "public", table: "users" },
-    () => {
-      setTimeout(() => {
-        handleSubmit("", "")
-      }, 300)
-    }
-  )
-  .subscribe();
+    .channel("users")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "users" },
+      () => {
+        setTimeout(() => {
+          handleSubmit("", "");
+        }, 300);
+      }
+    )
+    .subscribe();
 
-  const matchesDesktop = useMediaQuery("(min-width:1400px)");
-  const matchesMobile = useMediaQuery("(max-width: 600px)");
+  const matchesOtherDevices = useMediaQuery("(max-width:1400px)");
+  const matchesMobile = useMediaQuery("(max-width: 900px)");
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.screen.width);
+  });
+ 
 
   return (
     <Box>
       <Box
         sx={{
-          m: 4,
+          ml: matchesMobile ? 1 : 4,
+          mt: 4,
           display: "flex",
           flexDirection: "column",
           height: "100px",
-          width: "80vw",
+          width: matchesMobile ? windowWidth - 80 : "80vw",
           boxShadow: "1px 4px 6px #979797cb",
           borderColor: "divider",
         }}>
@@ -214,6 +219,7 @@ export const UsersInfo = () => {
             height: "55px",
             alignItems: "center",
             ml: 3,
+            mr: 1,
           }}
           component={"form"}>
           <Select
@@ -259,6 +265,9 @@ export const UsersInfo = () => {
         ) : null}
         <Box
           sx={{
+            width: matchesMobile ? windowWidth - 80 : "80vw",
+            ml: matchesMobile ? 1 : 0,
+            overflowX: "hidden",
             overflowY: "scroll",
             height: "66.5vh",
             display: "flex",
@@ -283,8 +292,6 @@ export const UsersInfo = () => {
                 <Paper
                   key={user.user_id}
                   sx={{
-                    width: "80vw",
-                    m: 4,
                     mt: 1,
                     mb: 3,
                     display: "flex",
@@ -292,7 +299,7 @@ export const UsersInfo = () => {
                   }}>
                   <Box
                     sx={{
-                      height: "60px",
+                      height: matchesMobile ? "200px" :"80px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -303,25 +310,34 @@ export const UsersInfo = () => {
                       sx={{
                         width: "98%",
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: matchesMobile ? 1 : 0,
+                        alignItems: matchesMobile ? "center" : "auto",
+                        justifyContent: matchesMobile ? "center" :"space-between",
+                        flexDirection: matchesMobile ? "column" : "row" 
                       }}>
-                      <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography sx={{ fontSize: "0.9rem" }}>
-                          Nome do Usuário:{" "}
-                          <span style={{ fontWeight: 600, fontSize: "1rem" }}>
-                            {user?.name}
-                          </span>
-                        </Typography>
-                        <Typography sx={{ fontSize: "0.8rem" }}>
-                          Email:{" "}
-                          <span style={{ fontWeight: 600 }}>{user?.email}</span>
-                        </Typography>
-                        <Typography sx={{ fontSize: "0.8rem" }}>
-                          Tipo de Usuário:{" "}
-                          <span style={{ fontWeight: 600 }}>
-                            {user?.isAdmin ? "Administrador" : "Cliente"}
-                          </span>
-                        </Typography>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", textAlign: matchesMobile ? "center" : "auto", gap: 1, flexDirection: matchesMobile ? "column" : "row" }}>
+                        <UserAvatar
+                          width="30"
+                          height="30"
+                          fileName={user?.avatar}
+                          name={user?.name}
+                        />
+                        <Box sx={{ display: "flex", flexDirection: "column", flexWrap: "wrap" }}>
+                          <Typography sx={{ fontSize: "1rem" }}>
+                            Nome: {user?.name}
+                          </Typography>
+                          <Typography
+                            sx={{ fontSize: "1rem", color: "#1976d2" }}>
+                            Email: {user?.email}
+                          </Typography>
+                          <Typography sx={{ fontSize: "1rem" }}>
+                            Função:
+                            <span style={{ fontStyle: "italic" }}>
+                              {user?.isAdmin ? "Administrador" : "Cliente"}
+                            </span>
+                          </Typography>
+                        </Box>
                       </Box>
                       <Box
                         sx={{
@@ -329,23 +345,58 @@ export const UsersInfo = () => {
                           gap: "10px",
                           alignItems: "center",
                         }}>
-                        <Button
-                          variant="outlined"
-                          sx={{ height: "30px", fontSize: "0.8rem" }}
-                          onClick={() =>
-                            supabaseClient.supabase.auth.resetPasswordForEmail(
-                              user?.email
-                            )
-                          }>
-                          Enviar Email para redefinição de Senha
-                        </Button>
-                        <>
+                        {matchesOtherDevices ? (
                           <Button
-                            variant="contained"
+                            variant="outlined"
                             sx={{ height: "30px", fontSize: "0.8rem" }}
-                            onClick={() => handleClickOpen(user)}>
-                            Editar Informações
+                            onClick={() =>
+                              supabaseClient.supabase.auth.resetPasswordForEmail(
+                                user?.email
+                              ).then(() => {
+                                toast.success(`Email de redefinição de senha enviado para ${user?.email}`, {
+                                  position: "top-right",
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: "light",
+                                  transition: Bounce,
+                                });
+                              })
+                            }>
+                            <PiKey />
                           </Button>
+                        ) : (
+                          <Button
+                            variant="outlined"
+                            sx={{ height: "30px", fontSize: "0.8rem" }}
+                            onClick={() =>
+                              supabaseClient.supabase.auth.resetPasswordForEmail(
+                                user?.email
+                              )
+                            }>
+                            Enviar Email para redefinição de Senha
+                          </Button>
+                        )}
+                        <>
+                          {matchesOtherDevices ? (
+                            <Button
+                              variant="contained"
+                              sx={{ height: "30px", fontSize: "0.8rem" }}
+                              onClick={() => handleClickOpen(user)}>
+                              <PiPencilSimpleFill />
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              sx={{ height: "30px", fontSize: "0.8rem" }}
+                              onClick={() => handleClickOpen(user)}>
+                              Editar Informações
+                            </Button>
+                          )}
+
                           <Dialog
                             open={open}
                             onClose={handleClose}
@@ -411,9 +462,13 @@ export const UsersInfo = () => {
                                       setUserRamal(e.target.value)
                                     }></TextField>
                                   {userDialog?.isAdmin ? (
-                                    <Button onClick={handleClickOpenUserType}>Transformar o Usuário em Cliente</Button>
+                                    <Button onClick={handleClickOpenUserType}>
+                                      Transformar o Usuário em Cliente
+                                    </Button>
                                   ) : (
-                                    <Button onClick={handleClickOpenUserType}>Transformar o Usuário em Administrador</Button>
+                                    <Button onClick={handleClickOpenUserType}>
+                                      Transformar o Usuário em Administrador
+                                    </Button>
                                   )}
                                 </Box>
                               </DialogContentText>
@@ -443,7 +498,24 @@ export const UsersInfo = () => {
                             <DialogTitle
                               id="alert-dialog-title"
                               sx={{ fontSize: "1.2rem" }}>
-                              <Typography>Tem certeza que deseja editar o tipo do Usuário <span style={{fontSize: "1.2rem", color: "#000"}}>{formatedName}</span> para <span style={{fontSize: "1.2rem", color: "#1976d2"}}>{userDialog?.isAdmin ? ("Cliente") : ("Administrador")}</span> ?</Typography>
+                              <Typography>
+                                Tem certeza que deseja editar o tipo do Usuário{" "}
+                                <span
+                                  style={{ fontSize: "1.2rem", color: "#000" }}>
+                                  {formatedName}
+                                </span>{" "}
+                                para{" "}
+                                <span
+                                  style={{
+                                    fontSize: "1.2rem",
+                                    color: "#1976d2",
+                                  }}>
+                                  {userDialog?.isAdmin
+                                    ? "Cliente"
+                                    : "Administrador"}
+                                </span>{" "}
+                                ?
+                              </Typography>
                             </DialogTitle>
                             <DialogActions>
                               <Button
@@ -454,8 +526,14 @@ export const UsersInfo = () => {
                               <Button
                                 onClick={() => {
                                   handleClickCloseUserType();
-                                  changeUserType(userDialog?.user_id as string, userDialog?.isAdmin as boolean)
-                                  return userDialog ? (userDialog.isAdmin = !userDialog?.isAdmin) : (null)
+                                  changeUserType(
+                                    userDialog?.user_id as string,
+                                    userDialog?.isAdmin as boolean
+                                  );
+                                  return userDialog
+                                    ? (userDialog.isAdmin =
+                                        !userDialog?.isAdmin)
+                                    : null;
                                 }}
                                 autoFocus
                                 variant="text">
