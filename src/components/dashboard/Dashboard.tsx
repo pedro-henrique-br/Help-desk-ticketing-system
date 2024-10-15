@@ -172,7 +172,6 @@ export const Dashboard = () => {
           gap: 2,
           mb: matchesMobile ? 1 : 2,
           overflow: "auto",
-          pb: 1.5,
         }}>
         <Box
           sx={{
