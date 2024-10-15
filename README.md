@@ -6,10 +6,21 @@
 </div>
 
 <p align="center">
-  <h1 align="center">Layout</h1>
+  <h1 align="center">Layout Desktop</h1>
   <div align="center">
-    <img src="https://github.com/user-attachments/assets/36ca2d84-a88b-46b7-b43c-194a3fc2fdd4" alt="BetterMovies - Desktop Screen" width="600px">
-    <img src="https://github.com/user-attachments/assets/5bccf050-3f39-46e7-92eb-118ac5eff0f2" alt="BetterMovies - Desktop Screen" width="600px">
+    <img src="https://github.com/user-attachments/assets/f3b92ccd-8bb2-461b-b1a7-25bcfe83f9e9" alt="BetterMovies - Desktop Screen">
+    <img src="https://github.com/user-attachments/assets/74bab11b-67ab-4cde-a470-1218128971ad" alt="BetterMovies - Desktop Screen">
+    <img src="https://github.com/user-attachments/assets/998d2b9a-310f-4669-9d94-016c878c7e90" alt="BetterMovies - Desktop Screen">
+  </div>
+</p>
+
+<p align="center">
+  <h1 align="center">Layout Mobile</h1>
+  <div align="center">
+    <img src="https://github.com/user-attachments/assets/547427ed-666d-4022-bd2a-2500d1b7c6e1" alt="BetterMovies - Desktop Screen">
+    <img src="https://github.com/user-attachments/assets/a5875ed3-c916-4d06-95ad-fa4604f1e14d" alt="BetterMovies - Desktop Screen">
+    <img src="https://github.com/user-attachments/assets/9cf3250d-810c-4997-baaa-257bccd0059b" alt="BetterMovies - Desktop Screen">
+    <img src="https://github.com/user-attachments/assets/65f4762a-0fd7-4561-9287-1b0bdfc4af7a" alt="BetterMovies - Desktop Screen">
   </div>
 </p>
 
