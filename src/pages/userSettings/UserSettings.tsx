@@ -1,4 +1,11 @@
-import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputLabel,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React from "react";
 import { motion } from "framer-motion";
 import { Bounce, toast } from "react-toastify";
@@ -9,6 +16,7 @@ import { UserAvatar } from "../../components/avatar/UserAvatar";
 import user from "../../utils/user";
 
 export const UserSettings = () => {
+  const [windowWidth, setWindowWidth] = React.useState(window.screen.width);
   const [handleEdit, setHandleEdit] = React.useState(Boolean(true));
   const [userName, setUserName] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
@@ -20,6 +28,13 @@ export const UserSettings = () => {
       fetchUser: state.fetchUser,
     }))
   );
+
+  const handleUserEdit = () => {
+    setUserName(userInfo?.name as never);
+    setUserRamal(userInfo?.ramal as never);
+    setUserEmail(userInfo?.email as never);
+    return handleEdit ? setHandleEdit(false) : setHandleEdit(true);
+  };
 
   supabaseClient.supabase
     .channel("users")
@@ -66,12 +81,18 @@ export const UserSettings = () => {
     }
   };
 
+  const matchesMobile = useMediaQuery("(max-width: 900px)");
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.screen.width);
+  });
+
   return (
     <>
       <Box
         sx={{
-          width: "100%",
-          height: "92vh",
+          width: windowWidth ? windowWidth - 50 : "100vw",
+          height: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -83,21 +104,21 @@ export const UserSettings = () => {
             style={{ display: "flex", justifyContent: "center" }}>
             <Box
               sx={{
-                border: 1,
                 borderRadius: "8px",
-                borderColor: "divider",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "750px",
-                height: "80vh",
+                width: "100vw",
+                height: "100vh",
               }}>
               <Box
                 sx={{
+                  flexDirection: matchesMobile ? "column" : "row",
                   display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "flex-start",
-                  width: "90%",
+                  justifyContent: matchesMobile ? "center" : "space-around",
+                  alignItems: matchesMobile ? "center" : "flex-start",
+                  width: matchesMobile ? "100%" : "80%",
+                  gap: matchesMobile ? 2 : 0,
                 }}>
                 <Box
                   sx={{
@@ -109,10 +130,28 @@ export const UserSettings = () => {
                   <UserAvatar
                     name={userInfo.avatar}
                     fileName={userInfo.avatar}
-                    width={"150px"}
-                    height={"150px"}
+                    width={windowWidth <= 320 ? "100px" : "150px"}
+                    height={windowWidth <= 320 ? "100px" : "150px"}
                   />
-                  <Typography component={"h4"} sx={{mt: 2}}>{userInfo?.name}</Typography>
+                  <Box
+                    sx={{
+                      mt: 1,
+                      gap: windowWidth <= 320 ? 1 : 2,
+                      display: "flex",
+                      flexDirection: windowWidth <= 320 ? "column" : "row",
+                      justifyContent: "space-around",
+                      width: "100%",
+                    }}>
+                    <Button variant="contained" sx={{ height: "30px" }}>
+                      Adicionar
+                    </Button>
+                    <Button variant="outlined" sx={{ height: "30px" }}>
+                      Remover
+                    </Button>
+                  </Box>
+                  <Typography component={"h4"} sx={{ mt: 1.5 }}>
+                    {userInfo?.name}
+                  </Typography>
                   <Typography
                     variant="body1"
                     sx={{
@@ -121,48 +160,46 @@ export const UserSettings = () => {
                       display: "flex",
                       color: "#616468",
                     }}>
-                    Função: {userInfo?.isAdmin ? ("Admin") : ("Client")}
+                    Função: {userInfo?.isAdmin ? "Admin" : "Client"}
                   </Typography>
                 </Box>
                 <Box
                   component={"form"}
                   sx={{
                     display: "flex",
-                    width: "400px",
+                    width: matchesMobile ? windowWidth - 100 : "400px",
                     flexDirection: "column",
                   }}>
                   <InputLabel>Nome</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100%" }}
-                    value={userInfo?.name}
+                    value={handleEdit ? userInfo?.name : userName}
                     onChange={(e) => setUserName(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Nome"}></TextField>
                   <InputLabel>Email</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100" }}
-                    value={userInfo?.email}
+                    value={handleEdit ? userInfo?.email : userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Email"}></TextField>
                   <InputLabel>Ramal</InputLabel>
                   <TextField
                     sx={{ mb: "10px", width: "100" }}
-                    value={userInfo?.ramal}
+                    value={handleEdit ? userInfo?.ramal : userRamal}
                     onChange={(e) => setUserRamal(e.target.value)}
                     disabled={handleEdit}
                     placeholder={"Ramal"}></TextField>
 
                   <Box
                     sx={{
-                      mt: 3,
+                      mt: windowWidth <= 320 ? 1 : 3,
                       display: "flex",
                       justifyContent: "space-around",
                       width: "100%",
                     }}>
-                    <Button
-                      sx={{}}
-                      onClick={() => setHandleEdit(handleEdit ? false : true)}>
+                    <Button sx={{}} onClick={handleUserEdit}>
                       Editar usuário
                     </Button>
                     <Button variant="contained" sx={{}} onClick={handleSubmit}>
