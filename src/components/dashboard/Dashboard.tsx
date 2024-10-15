@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import {
   BsPinAngleFill,
   BsStarFill,
@@ -13,113 +13,99 @@ import { useEffect, useState } from "react";
 import { api } from "../../utils/api";
 
 export const Dashboard = () => {
-  const [ticketData, setTicketData] = useState([])
+  const [windowWidth, setWindowWidth] = useState(window.screen.width);
+  const [ticketData, setTicketData] = useState([]);
 
   const cards = [
     {
       text: "Chamados Abertos",
       count: ticketData[0] || 0,
-      backgroundColor: "#3D933F",
       icon: () => {
-        return <BsStarFill color="#fff" size={50} />;
+        return <BsStarFill color="#3D933F" size={44} />;
       },
     },
     {
       text: "Chamados Em Atendimento",
       count: ticketData[1] || 0,
-      backgroundColor: "#1976d2",
       icon: () => {
-        return <BsPinAngleFill color="#fff" size={50} />;
+        return <BsPinAngleFill color="#1976d2" size={44} />;
       },
     },
     {
       text: "Chamados Em Espera",
       count: ticketData[2] || 0,
-      backgroundColor: "#FDA403",
       icon: () => {
-        return <BsFillFolderSymlinkFill color="#fff" size={50} />;
+        return <BsFillFolderSymlinkFill color="#FDA403" size={44} />;
       },
     },
     {
       text: "Chamados Urgentes",
       count: ticketData[3] || 0,
-      backgroundColor: "#EE4E4E",
       icon: () => {
-        return <BsExclamationTriangleFill color="#fff" size={50} />;
-      },
-    },
-    {
-      text: "Chamados Fechados",
-      count: ticketData[3] || 0,
-      backgroundColor: "#EE4E4E",
-      icon: () => {
-        return <BsExclamationTriangleFill color="#fff" size={50} />;
-      },
-    },
-    {
-      text: "Usúarios",
-      count: ticketData[3] || 0,
-      backgroundColor: "#EE4E4E",
-      icon: () => {
-        return <BsExclamationTriangleFill color="#fff" size={50} />;
-      },
-    },
-    {
-      text: "Admins",
-      count: ticketData[3] || 0,
-      backgroundColor: "#EE4E4E",
-      icon: () => {
-        return <BsExclamationTriangleFill color="#fff" size={50} />;
+        return <BsExclamationTriangleFill color="#EE4E4E" size={44} />;
       },
     },
   ];
 
-  
   const getPriority = async () => {
-    const response = await api.getAllTickets()
-    if(response){
-      let priorityHigh: number = 0
-      let openedTickets: number = 0
-      let inService: number = 0
-      let waiting: number = 0
-      
+    const response = await api.getAllTickets();
+    if (response) {
+      let priorityHigh: number = 0;
+      let openedTickets: number = 0;
+      let inService: number = 0;
+      let waiting: number = 0;
+
       response.forEach((ticket) => {
-        openedTickets++
-        if(ticket.assignee != "Em espera"){
-          inService++
-        } else if(ticket.assignee === "Em espera"){
-          waiting++
+        openedTickets++;
+        if (ticket.assignee != "Em espera") {
+          inService++;
+        } else if (ticket.assignee === "Em espera") {
+          waiting++;
         }
-        switch(ticket.priority){
-          case "Alta 🟥" :
-            priorityHigh++
-            break
+        switch (ticket.priority) {
+          case "Alta 🟥":
+            priorityHigh++;
+            break;
         }
-      const totalPriority = [openedTickets, inService, waiting, priorityHigh]
-      setTicketData(totalPriority as never)
-      })
+        const totalPriority = [openedTickets, inService, waiting, priorityHigh];
+        setTicketData(totalPriority as never);
+      });
     }
-  }
+  };
 
   useEffect(() => {
-    getPriority()
-  }, [])
-
+    getPriority();
+  }, []);
 
   supabaseClient.supabase
-  .channel("tickets")
-  .on(
-    "postgres_changes",
-    { event: "*", schema: "public", table: "tickets" },
-    getPriority
-  )
-  .subscribe();
-  
+    .channel("tickets")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "tickets" },
+      getPriority
+    )
+    .subscribe();
+
+  const matchesDesktop = useMediaQuery("(min-width:1400px)");
+  const matchesMobile = useMediaQuery("(max-width: 600px)");
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.screen.width);
+  });
 
   return (
-    <Box sx={{ p: 4, width: "88vw", display: "flex", flexDirection: "column", justifyContent: "space-around", height: "100%"}}>
+    <Box
+      sx={{
+        width: matchesDesktop ? "89vw" : windowWidth - 50,
+        display: "flex",
+        flexDirection: "column",
+        gap: matchesMobile ? 1 : 4,
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}>
       <Box
-        sx={{ display: "flex", width: "100%", gap: "15px", flexWrap: "wrap"}}>
+        sx={{ display: "flex", mt: matchesMobile ? 1 : 5, justifyContent: "center", gap: 1, alignItems: "center", flexWrap:"wrap"}}>
         {cards &&
           cards.map((card) => {
             return (
@@ -127,23 +113,26 @@ export const Dashboard = () => {
                 key={card.text}
                 sx={{
                   borderRadius: "15px",
-                  height: "12vh",
-                  width: "250px",
+                  height: matchesMobile ? "90px" : "100px",
+                  width: matchesMobile ? "180px" : "200px",
                   border: "1px solid rgba(22, 22, 22, 0.21)",
                   alignItems: "center",
                   display: "flex",
+                  justifyContent: "space-around",
                 }}>
-                <Box 
-                sx={{
-                  borderRadius: "50%",
-                  padding: "15px",
-                  background: card.backgroundColor,
-                }}>
-                  <card.icon />
-                </Box>
                 <Box
                   sx={{
                     display: "flex",
+                    textAlign: "flex-start",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    gap: matchesMobile ? 1 : 2,
+                  }}>
+                  <card.icon />
+                  <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "flex-start",
                     flexDirection: "column",
                     alignItems: "flex-start",
                     justifyContent: "center",
@@ -151,32 +140,44 @@ export const Dashboard = () => {
                     <Typography
                       sx={{
                         color: "#4a4a4a",
-                        fontSize: "4rem",
+                        fontSize: matchesMobile ? "1.4rem" : "2rem",
                         fontFamily: "karla",
-                        fontWeight: "200",
+                        fontWeight: "500",
                       }}>
                       {card.count}
                     </Typography>
-                  <Typography
-                    sx={{
-                      color: "#4a4a4a",
-                      fontSize: "1.1rem",
-                      fontFamily: "karla",
-                      fontWeight: "700",
-                    }}>
-                    {card.text}
-                  </Typography>
+                    <Typography
+                      sx={{
+                        color: "#4a4a4a",
+                        fontSize: "0.8rem",
+                        maxWidth: "100px",
+                        fontFamily: "karla",
+                        fontWeight: "700",
+                      }}>
+                      {card.text}
+                    </Typography>
+                  </Box>
                 </Box>
-                </Box>
+              </Box>
             );
           })}
       </Box>
-
-      <Box sx={{width: "100%", mt: "2vh", display: "flex", gap: "40px", overflow: "auto", pb: 1.5}}>
+      <Box
+        sx={{
+          width: "100%",
+          flexWrap: "wrap",
+          mt: 1,
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+          mb: matchesMobile ? 1 : 2,
+          overflow: "auto",
+          pb: 1.5,
+        }}>
         <Box
           sx={{
             height: "58vh",
-            width: "400px",
+            width: matchesMobile ? windowWidth - 80 : "400px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
@@ -185,7 +186,7 @@ export const Dashboard = () => {
           <Box
             sx={{
               background: "#1976d2",
-              width: "400px",
+              width: matchesMobile ? windowWidth - 80 : "400px",
               height: "10%",
               display: "flex",
               alignItems: "center",
@@ -194,7 +195,8 @@ export const Dashboard = () => {
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "1.1rem",
+                textAlign: "center",
+                fontSize: matchesMobile ? "0.9rem" : "1.1rem",
                 fontFamily: "karla",
                 fontWeight: "700",
               }}>
@@ -221,7 +223,7 @@ export const Dashboard = () => {
         <Box
           sx={{
             height: "58vh",
-            width: "400px",
+            width: matchesMobile ? windowWidth - 80 : "400px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
@@ -231,6 +233,7 @@ export const Dashboard = () => {
             sx={{
               background: "#1976d2",
               width: "100%",
+              textAlign: "center",
               height: "50px",
               display: "flex",
               alignItems: "center",
@@ -239,7 +242,7 @@ export const Dashboard = () => {
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "1.1rem",
+                fontSize: matchesMobile ? "0.9rem" : "1.1rem",
                 fontFamily: "karla",
                 fontWeight: "700",
               }}>
@@ -265,7 +268,7 @@ export const Dashboard = () => {
         <Box
           sx={{
             height: "58vh",
-            width: "650px",
+            width: matchesMobile ? windowWidth - 80 : "450px",
             border: 1,
             borderColor: "rgba(22, 22, 22, 0.21)",
             display: "flex",
@@ -274,7 +277,8 @@ export const Dashboard = () => {
           <Box
             sx={{
               background: "#1976d2",
-              width: "650px",
+              textAlign: "center",
+              width: matchesMobile ? windowWidth - 80 : "450px",
               height: "50px",
               display: "flex",
               alignItems: "center",
@@ -283,7 +287,7 @@ export const Dashboard = () => {
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "1.1rem",
+                fontSize:  matchesMobile ? "0.9rem" : "1.1rem",
                 fontFamily: "karla",
                 fontWeight: "700",
               }}>

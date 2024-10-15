@@ -13,9 +13,29 @@ const getUserInfo = async () => {
   } 
 };
 
+const deleteUserAvatar = async () => {
+  const {error} = await supabaseClient.supabase.from("users").update({avatar: ""}).eq("user_id", Cookies.get("user_id"))
+  if(!error){
+    toast.info(`Avatar removido`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+  }
+
+}
+
 const uploadUserAvatar = async (file: File) => {
+  await supabaseClient.supabase.from("users").update({avatar: file.name}).eq("user_id", Cookies.get("user_id"))
+  console.log(file)
   const { error } = await supabaseClient.supabase.storage
-    .from("screenshots")
+    .from("avatars")
     .upload(`${file.name}`, file);
   if (error) {
     toast.error(`Ocorreu um erro com o arquivo inserido ${error.message}`, {
@@ -148,6 +168,7 @@ const changeUsersInfo = async (user: {
 export default {
   getUserInfo,
   uploadUserAvatar,
+  deleteUserAvatar,
   fetchUserAvatar,
   changeUserInfo,
   changeUsersInfo,

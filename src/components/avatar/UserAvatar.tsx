@@ -1,6 +1,7 @@
 import { Avatar } from "@mui/material";
 import user from "../../utils/user";
 import React from "react";
+import { supabaseClient } from "../../utils/supabase";
 
 export const UserAvatar = (avatar: {
   name: string;
@@ -11,6 +12,11 @@ export const UserAvatar = (avatar: {
 
   const [avatarPath, setAvatarPath] = React.useState()
 
+  const getUserAvatar = async () => {
+    const fileUrl = await user.fetchUserAvatar(avatar.fileName)
+    return fileUrl != undefined ? setAvatarPath(fileUrl as never) : ("")
+  }
+  
   React.useEffect(() => {
     const getUserAvatar = async () => {
       const fileUrl = await user.fetchUserAvatar(avatar.fileName)
@@ -18,6 +24,16 @@ export const UserAvatar = (avatar: {
     }
     getUserAvatar()
   }, [avatar.fileName]) 
+
+  supabaseClient.supabase
+  .channel("users")
+  .on(
+    "postgres_changes",
+    { event: "UPDATE", schema: "public", table: "users" },
+    getUserAvatar
+  )
+  .subscribe();
+
 
   if(avatarPath != null && avatarPath != undefined){
     return (

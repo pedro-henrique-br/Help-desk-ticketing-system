@@ -5,13 +5,11 @@ import {
   Link,
   Paper,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { api } from "../../utils/api";
-import {
-  DataGrid,
-  GridColDef,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { supabaseClient } from "../../utils/supabase";
 import { formatDate } from "../../utils/date";
@@ -28,20 +26,20 @@ export const Docs = () => {
       maxWidth: 170,
       width: 170,
       renderCell: () => {
-          return (
-            <Button
-              variant="contained"
-              sx={{
-                width: "160px",
-                background: "red",
-                fontWeight: "600",
-                "&:hover": {
-                  backgroundColor: "red",
-                },
-              }}>
-              Chamado Fechado
-            </Button>
-          );
+        return (
+          <Button
+            variant="contained"
+            sx={{
+              width: "160px",
+              background: "red",
+              fontWeight: "600",
+              "&:hover": {
+                backgroundColor: "red",
+              },
+            }}>
+            Chamado Fechado
+          </Button>
+        );
       },
     },
     { field: "request_type", headerName: "Tipo do chamado", width: 200 },
@@ -54,16 +52,26 @@ export const Docs = () => {
     { field: "created_at", headerName: "Aberto em", width: 200 },
     { field: "ramal", headerName: "Ramal", width: 80 },
     { field: "email", headerName: "Email", width: 150 },
-    { field: "photo", headerName: "Imagem", width: 250, renderCell: (params) => {
-      if(params.row.image){
-        const imageURL = api.getFile(params.row.image as string)
-        return <Link href={imageURL} target="_blank">Clique para ver a imagem</Link>
-      } else {
-        return <Typography variant="body2">Sem imagem</Typography>
-      }
-    } },
+    {
+      field: "photo",
+      headerName: "Imagem",
+      width: 250,
+      renderCell: (params) => {
+        if (params.row.image) {
+          const imageURL = api.getFile(params.row.image as string);
+          return (
+            <Link href={imageURL} target="_blank">
+              Clique para ver a imagem
+            </Link>
+          );
+        } else {
+          return <Typography variant="body2">Sem imagem</Typography>;
+        }
+      },
+    },
   ];
 
+  const [windowWidth, setWindowWidth] = useState(window.screen.width);
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(Boolean(true));
 
@@ -71,8 +79,8 @@ export const Docs = () => {
     const fetchTickets = await api.getAllClosedTickets();
     if (fetchTickets) {
       fetchTickets.forEach((ticket) => {
-        return ticket.created_at = formatDate(ticket.created_at as string)
-      })
+        return (ticket.created_at = formatDate(ticket.created_at as string));
+      });
       setTickets(fetchTickets as never);
       setIsLoading(false);
     }
@@ -91,6 +99,12 @@ export const Docs = () => {
     )
     .subscribe();
 
+  const matchesDesktop = useMediaQuery("(min-width:1400px)");
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.screen.width);
+  });
+
   return (
     <Box>
       {isLoading ? (
@@ -101,14 +115,16 @@ export const Docs = () => {
             alignItems: "center",
             height: "80vh",
           }}>
-          <CircularProgress sx={{ mb: 16, left: "50%", position: "absolute"}} />
+          <CircularProgress
+            sx={{ mb: 16, left: "50%", position: "absolute" }}
+          />
         </Box>
       ) : null}
       {!isLoading && tickets.length > 0 ? (
         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
           <Paper>
             <DataGrid
-              sx={{ fontSize: "0.8rem", width: "88vw", height: "92vh"}}
+              sx={{ fontSize: "0.8rem", width: matchesDesktop ? "89vw" : windowWidth - 50, height: "100vh" }}
               rows={tickets}
               columns={columns}
               density="comfortable"
@@ -118,7 +134,8 @@ export const Docs = () => {
               initialState={{
                 pagination: {
                   paginationModel: { page: 0, pageSize: 5 },
-                }}}
+                },
+              }}
               pageSizeOptions={[5, 10]}
             />
           </Paper>
@@ -131,7 +148,7 @@ export const Docs = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "60vh",
-            width: "80vw"
+            width: "80vw",
           }}>
           <Typography sx={{ fontSize: "1.4rem" }}>
             Não há nenhum Chamado fechado
@@ -141,4 +158,3 @@ export const Docs = () => {
     </Box>
   );
 };
-

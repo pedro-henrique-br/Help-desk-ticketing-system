@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   InputLabel,
+  styled,
   TextField,
   Typography,
   useMediaQuery,
@@ -14,6 +15,18 @@ import useUserInfo from "../../hooks/useUserInfo";
 import { useShallow } from "zustand/shallow";
 import { UserAvatar } from "../../components/avatar/UserAvatar";
 import user from "../../utils/user";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export const UserSettings = () => {
   const [windowWidth, setWindowWidth] = React.useState(window.screen.width);
@@ -142,10 +155,16 @@ export const UserSettings = () => {
                       justifyContent: "space-around",
                       width: "100%",
                     }}>
-                    <Button variant="contained" sx={{ height: "30px" }}>
+                     <Button
+                    sx={{ height: "30px" }}
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}>
                       Adicionar
-                    </Button>
-                    <Button variant="outlined" sx={{ height: "30px" }}>
+                    <VisuallyHiddenInput onChange={(e) => user.uploadUserAvatar(e.target.files?.[0] as File)} name="file" type="file" />
+                  </Button>
+                    <Button onClick={user.deleteUserAvatar} variant="outlined" sx={{ height: "30px" }}>
                       Remover
                     </Button>
                   </Box>

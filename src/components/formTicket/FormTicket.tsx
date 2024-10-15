@@ -172,6 +172,7 @@ export const FormTicket = () => {
                   </InputLabel>
                   <InputLabel>
                     <TextField
+                      sx={{height: "400px"}}
                       margin="normal"
                       required
                       fullWidth
