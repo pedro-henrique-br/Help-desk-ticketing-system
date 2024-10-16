@@ -281,7 +281,6 @@ export const AdminTickets = () => {
   window.addEventListener("resize", () => {
     setWindowWidth(window.screen.width);
   });
- 
 
   return (
     <Box sx={{ width: "auto" }}>
@@ -408,143 +407,145 @@ export const AdminTickets = () => {
                 </Box>
               </Box>
               <Box
-              sx={{
-                mt: 2,
-                height: window.screen.height <=  568 ? "65vh" : "75vh",
-                overflow: "scroll",
-              }}> 
-              <Box 
-              sx={{
-                display: "flex",
-                gap: 2,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-              {tickets &&
-                tickets.map((ticket: ticket) => {
-                  return (
-                    <Box
-                      onClick={() => handleClickMobileOpen(ticket)}
-                      key={ticket.id}
-                      sx={{
-                        borderRadius: "6px",
-                        height: windowWidth <= 420 ? "250px" : "200px",
-                        maxHeight: "350px",
-                        minWidth: "20%",
-                        width: "90%",
-                        border: "1px solid rgba(22, 22, 22, 0.21)",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        display: "flex",
-                        "&:hover": {
-                          cursor: "pointer",
-                          borderColor: "#2F8670",
-                        },
-                      }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          justifyContent: "space-around",
-                          width: windowWidth <= 420 ? "90%" : "100%",                        }}>
+                sx={{
+                  mt: 2,
+                  height: window.screen.height <= 568 ? "65vh" : "75vh",
+                  overflow: "scroll",
+                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
+                  {tickets &&
+                    tickets.map((ticket: ticket) => {
+                      return (
                         <Box
+                          onClick={() => handleClickMobileOpen(ticket)}
+                          key={ticket.id}
                           sx={{
-                            display: "flex",
+                            borderRadius: "6px",
+                            height: windowWidth <= 420 ? "250px" : "200px",
+                            maxHeight: "350px",
+                            minWidth: "20%",
+                            width: "90%",
+                            border: "1px solid rgba(22, 22, 22, 0.21)",
+                            flexDirection: "column",
+                            justifyContent: "center",
                             alignItems: "center",
-                            gap: 1,
+                            display: "flex",
+                            "&:hover": {
+                              cursor: "pointer",
+                              borderColor: "#2F8670",
+                            },
                           }}>
-                          <UserAvatar
-                            width={"35px"}
-                            height={"35px"}
-                            fileName={ticket.requesterAvatar}
-                            name={ticket.user_name}
-                          />
-                          <Typography>
-                            {ticket?.user_name?.split(" ")[1] != undefined
-                              ? ticket?.user_name?.split(" ")[0] +
-                                " " +
-                                ticket?.user_name?.split(" ")[1]
-                              : ticket?.user_name?.split(" ")[0]}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                              justifyContent: "space-around",
+                              width: windowWidth <= 420 ? "90%" : "100%",
+                            }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}>
+                              <UserAvatar
+                                width={"35px"}
+                                height={"35px"}
+                                fileName={ticket.requesterAvatar}
+                                name={ticket.user_name}
+                              />
+                              <Typography>
+                                {ticket?.user_name?.split(" ")[1] != undefined
+                                  ? ticket?.user_name?.split(" ")[0] +
+                                    " " +
+                                    ticket?.user_name?.split(" ")[1]
+                                  : ticket?.user_name?.split(" ")[0]}
+                              </Typography>
+                            </Box>
+                            <Typography variant="body2" fontSize={"0.7rem"}>
+                              {`Aberto em ${ticket.created_at}`}
+                            </Typography>
+                          </Box>
+                          <Typography
+                            sx={{
+                              color: "#4a4a4a",
+                              fontSize: "0.9rem",
+                              maxHeight: "70px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: windowWidth <= 420 ? "80%" : "90%",
+                              textAlign: "center",
+                              fontFamily: "karla",
+                              pt: 1,
+                              fontWeight: "200",
+                            }}>
+                            {ticket.message}
                           </Typography>
+                          <Typography
+                            sx={{
+                              width: windowWidth <= 420 ? "80%" : "auto",
+                              height: windowWidth <= 420 ? "50px" : "30px",
+                              color: "#4a4a4a",
+                              fontSize: "0.8rem",
+                              fontFamily: "karla",
+                              fontWeight: "700",
+                              mb: 1,
+                            }}>
+                            {ticket.assignee === "Em espera"
+                              ? ticket.assignee
+                              : `Chamado sendo atendido por ${ticket.assignee}`}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection:
+                                windowWidth <= 340 ? "column" : "row",
+                              justifyContent: "center",
+                              gap: 1,
+                            }}>
+                            <Typography
+                              sx={{
+                                maxWidth: "150px",
+                                minWidth: "120px",
+                                p: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                border: 1,
+                                borderRadius: "16px",
+                                fontSize: "0.6rem",
+                              }}>
+                              Prioridade {ticket.priority}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                maxWidth: "150px",
+                                minWidth: "120px",
+                                p: 1,
+                                border: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: "16px",
+                                fontSize: "0.6rem",
+                              }}>
+                              Departamento {ticket.department}
+                            </Typography>
+                          </Box>
                         </Box>
-                        <Typography variant="body2" fontSize={"0.7rem"}>
-                          {`Aberto em ${ticket.created_at}`}
-                        </Typography>
-                      </Box>
-                      <Typography
-                        sx={{
-                          color: "#4a4a4a",
-                          fontSize: "0.9rem",
-                          maxHeight: "70px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: windowWidth <= 420 ? "80%" :"90%",
-                          textAlign: "center",
-                          fontFamily: "karla",
-                          pt: 1,
-                          fontWeight: "200",
-                        }}>
-                        {ticket.message}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          width: windowWidth <= 420 ? "80%" : "auto",
-                          height: windowWidth <= 420 ? "50px" :"30px",
-                          color: "#4a4a4a",
-                          fontSize: "0.8rem",
-                          fontFamily: "karla",
-                          fontWeight: "700",
-                          mb: 1,
-                        }}>
-                        {ticket.assignee === "Em espera"
-                          ? ticket.assignee
-                          : `Chamado sendo atendido por ${ticket.assignee}`}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: windowWidth <= 340 ? "column" : "row",
-                          justifyContent: "center",
-                          gap: 1,
-                        }}>
-                        <Typography
-                          sx={{
-                            maxWidth: "150px",
-                            minWidth: "120px",
-                            p: 1,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            border: 1,
-                            borderRadius: "16px",
-                            fontSize: "0.6rem",
-                          }}>
-                          Prioridade {ticket.priority}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            maxWidth: "150px",
-                            minWidth: "120px",
-                            p: 1,
-                            border: 1,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: "16px",
-                            fontSize: "0.6rem",
-                          }}>
-                          Departamento {ticket.department}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  );
-                })}
-            </Box>
-            </Box>
+                      );
+                    })}
+                </Box>
+              </Box>
             </Box>
           ) : null}
 

@@ -9,8 +9,8 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
-import styles from "./formTicket.module.css";
 import { motion } from "framer-motion";
 import React from "react";
 import { BsCloud } from "react-icons/bs";
@@ -31,6 +31,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export const FormTicket = () => {
+  const [windowWidth, setWindowWidth] = React.useState(window.screen.width);
   const [type, setType] = React.useState("");
   const [priority, setPriority] = React.useState("");
   const [department, setDepartment] = React.useState("");
@@ -121,11 +122,39 @@ export const FormTicket = () => {
     }
   };
 
+  const matchesDesktop = useMediaQuery("(min-width:1400px)");
+  const matchesMobile = useMediaQuery("(max-width: 800px)");
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.screen.width);
+  });
+
   return (
     <>
       <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-        <Box className={styles.container}>
-          <Box className={styles["form-container"]}>
+        <Box
+          sx={{
+            color: "#000000",
+            width: matchesDesktop ? "89vw" : windowWidth - 50,
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            background: "#e2e2e2",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <Box
+            sx={{
+              background: "#ffff",
+              height: "95vh",
+              width: matchesMobile ? "100%" : "90%",
+              borderRadius: "8px",
+              border: "1px solid #cecece",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+            }}>
             <Grid
               container
               component="main"
@@ -140,7 +169,6 @@ export const FormTicket = () => {
                 sx={{
                   my: 8,
                   mx: 4,
-                  paddingBottom: "2vh",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -151,13 +179,14 @@ export const FormTicket = () => {
                   sx={{ marginTop: "1vh" }}>
                   Abertura de Chamado
                 </Typography>
-                <Box component="form" noValidate onSubmit={handleSubmit}>
+                <Box component="form" sx={{width: matchesMobile ? windowWidth - 100 : "auto"}} noValidate onSubmit={handleSubmit}>
                   <InputLabel>
                     <InputLabel id="demo-simple-select-label">
                       Tipo de Chamado
                     </InputLabel>
                     <Select
-                      sx={{ width: "500px" }}
+                      fullWidth
+                      sx={{ width:  matchesMobile ? windowWidth - 100 :"500px" }}
                       value={type}
                       onChange={handleChangeType}>
                       {ticketTypes &&
@@ -172,12 +201,13 @@ export const FormTicket = () => {
                   </InputLabel>
                   <InputLabel>
                     <TextField
-                      sx={{height: "400px"}}
                       margin="normal"
                       required
+                      label="Conte-nos mais sobre o problema..."
+                      multiline
+                      rows={4}
                       fullWidth
                       name="message"
-                      placeholder="Conte-nos mais sobre o problema..."
                       id="message"
                     />
                   </InputLabel>
@@ -191,13 +221,13 @@ export const FormTicket = () => {
                     Anexar imagem
                     <VisuallyHiddenInput name="file" type="file" />
                   </Button>
-                  <InputLabel sx={{ display: "flex", gap: "20px" }}>
+                  <InputLabel sx={{ display: "flex", flexDirection: matchesMobile ? "column" : "row", gap: matchesMobile ?  "10px" : "20px" }}>
                     <InputLabel>
                       <InputLabel id="demo-simple-select-label">
                         Prioridade do Chamado
                       </InputLabel>
                       <Select
-                        sx={{ width: "240px" }}
+                        sx={{ width: matchesMobile ? windowWidth - 100  : "240px" }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={priority}
@@ -212,7 +242,7 @@ export const FormTicket = () => {
                         Departamento
                       </InputLabel>
                       <Select
-                        sx={{ width: "240px" }}
+                        sx={{ width: matchesMobile ? windowWidth - 100  : "240px" }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={department}
@@ -240,11 +270,13 @@ export const FormTicket = () => {
                   </Grid>
                 </Box>
               </Box>
-              <img
-                className={styles.image}
-                src="https://www.valuehost.com.br/blog/wp-content/uploads/2021/07/suporte-de-ti.jpeg"
-                alt=""
-              />
+              {matchesDesktop ? (
+                <img
+                  style={{ height: "300px", width: "450px" }}
+                  src="https://www.valuehost.com.br/blog/wp-content/uploads/2021/07/suporte-de-ti.jpeg"
+                  alt=""
+                />
+              ) : (null)}
             </Grid>
           </Box>
         </Box>
