@@ -294,6 +294,7 @@ export const SideBar = (user: {
             justifyContent: matchesDesktop ? "center" : "flex-start",
             alignItems: matchesDesktop ? "center" : "flex-start",
             height: "100vh",
+            minWidth: matchesDesktop ? "11vw" : "50px",
             width: matchesDesktop ? "11vw" : "50px",
             background: "#373A40",
             "&:selected": {

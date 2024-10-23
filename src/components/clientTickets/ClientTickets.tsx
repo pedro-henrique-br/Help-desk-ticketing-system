@@ -78,6 +78,7 @@ export const ClientTickets = () => {
   return (
     <Box
       sx={{
+        width: "auto"
       }}>
       {isLoading ? (
         <CircularProgress
@@ -184,9 +185,6 @@ export const ClientTickets = () => {
                         padding: "3px 0 0 10px",
                       },
                     }}
-                    // onKeyDownCapture={(e) =>
-                    //   e.key === "Enter" ? handleSubmit(inputValue, filterUsersBy) : null
-                    // }
                     placeholder="Pesquisar"></TextField>
                 </Box>
               </Box>

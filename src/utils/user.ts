@@ -33,7 +33,6 @@ const deleteUserAvatar = async () => {
 
 const uploadUserAvatar = async (file: File) => {
   await supabaseClient.supabase.from("users").update({avatar: file.name}).eq("user_id", Cookies.get("user_id"))
-  console.log(file)
   const { error } = await supabaseClient.supabase.storage
     .from("avatars")
     .upload(`${file.name}`, file);

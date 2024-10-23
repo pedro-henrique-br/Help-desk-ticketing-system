@@ -173,6 +173,7 @@ export const AdminTickets = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileCloseTicketOpen, setMobileCloseTicketOpen] = useState(false);
   const [ticketInfo, SetTicketInfo] = useState<null | ticket>();
+  const [ticketType, setTicketType] = useState("user_name");
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(Boolean(true));
 
@@ -282,6 +283,38 @@ export const AdminTickets = () => {
     setWindowWidth(window.screen.width);
   });
 
+  let typingTimeout: ReturnType<typeof setTimeout>;
+  
+  const filterTickets = (inputvalue: string) => {
+    clearInterval(typingTimeout);
+    if (inputvalue != "") {
+      typingTimeout = setTimeout(() => {
+        switch(ticketType){
+          case "email":
+            tickets.filter((ticket) => Object.assign(ticket?.email).includes(inputvalue) ? (setTickets([ticket])) : null)
+          break
+        }
+        switch(ticketType){
+          case "department":
+            tickets.filter((ticket) => Object.assign(ticket?.department).includes(inputvalue) ? (setTickets([ticket])) : null)
+          break
+        }
+        switch(ticketType){
+          case "priority":
+            tickets.filter((ticket) => Object.assign(ticket?.priority).includes(inputvalue) ? (setTickets([ticket])) : null)
+          break
+        }
+        switch(ticketType){
+          case "user_name":
+            tickets.filter((ticket) => Object.assign(ticket?.user_name).includes(inputvalue) ? (setTickets([ticket])) : null)
+          break
+        }
+      }, 400);
+    } else {
+      fetchClientTickets();
+    }
+};
+
   return (
     <Box sx={{ width: "auto" }}>
       {isLoading ? (
@@ -380,16 +413,15 @@ export const AdminTickets = () => {
                       height: "30px",
                       padding: "3px 0 0 0",
                     }}
-                    value={"name"}
-                    // onChange={(e) => setFilterUsersBy(e.target.value)}
-                  >
-                    <MenuItem value={"name"}>Nome</MenuItem>
+                    value={ticketType}
+                    onChange={(e) => setTicketType(e.target.value)}>
+                    <MenuItem value={"user_name"}>Nome</MenuItem>
                     <MenuItem value={"email"}>Email</MenuItem>
                     <MenuItem value={"priority"}>Departamento</MenuItem>
                     <MenuItem value={"priority"}>Prioridade</MenuItem>
                   </Select>
                   <TextField
-                    // onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) => filterTickets(e.target.value)}
                     sx={{
                       minWidth: "30px",
                       pr: 1,
@@ -400,9 +432,6 @@ export const AdminTickets = () => {
                         padding: "3px 0 0 10px",
                       },
                     }}
-                    // onKeyDownCapture={(e) =>
-                    //   e.key === "Enter" ? handleSubmit(inputValue, filterUsersBy) : null
-                    // }
                     placeholder="Pesquisar"></TextField>
                 </Box>
               </Box>
