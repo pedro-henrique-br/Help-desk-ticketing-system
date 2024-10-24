@@ -174,7 +174,7 @@ export const AdminTickets = () => {
   const [mobileCloseTicketOpen, setMobileCloseTicketOpen] = useState(false);
   const [ticketInfo, SetTicketInfo] = useState<null | ticket>();
   const [ticketType, setTicketType] = useState("user_name");
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState<ticket[]>([]);
   const [isLoading, setIsLoading] = useState(Boolean(true));
 
   const { user, fetchUser } = useUserInfo(
@@ -252,12 +252,13 @@ export const AdminTickets = () => {
   };
 
   const fetchClientTickets = async () => {
-    const fetchTickets = await api.getAllTickets();
-    if (fetchTickets) {
-      fetchTickets.forEach((ticket) => {
+    const getTickets = await api.getAllTickets();
+    if (getTickets) {
+      const allTickets: ticket[] = getTickets
+      getTickets.forEach((ticket) => {
         return (ticket.created_at = formatDate(ticket.created_at as string));
       });
-      setTickets(fetchTickets as never);
+      setTickets(allTickets);
       setIsLoading(false);
     }
   };
@@ -291,22 +292,22 @@ export const AdminTickets = () => {
       typingTimeout = setTimeout(() => {
         switch(ticketType){
           case "email":
-            tickets.filter((ticket) => Object.assign(ticket?.email).includes(inputvalue) ? (setTickets([ticket])) : null)
+            setTickets(tickets?.filter((ticket) => Object.assign(ticket?.email as never).includes(inputvalue) ? (ticket) : null))
           break
         }
         switch(ticketType){
           case "department":
-            tickets.filter((ticket) => Object.assign(ticket?.department).includes(inputvalue) ? (setTickets([ticket])) : null)
+            setTickets(tickets?.filter((ticket) => Object.assign(ticket?.department as never).includes(inputvalue) ? (ticket) : null))
           break
         }
         switch(ticketType){
           case "priority":
-            tickets.filter((ticket) => Object.assign(ticket?.priority).includes(inputvalue) ? (setTickets([ticket])) : null)
+            setTickets(tickets?.filter((ticket) => Object.assign(ticket?.priority  as never).includes(inputvalue) ? (ticket) : null))
           break
         }
         switch(ticketType){
           case "user_name":
-            tickets.filter((ticket) => Object.assign(ticket?.user_name).includes(inputvalue) ? (setTickets([ticket])) : null)
+            setTickets(tickets?.filter((ticket) => Object.assign(ticket?.user_name  as never).includes(inputvalue) ? (ticket) : null))
           break
         }
       }, 400);
@@ -324,9 +325,8 @@ export const AdminTickets = () => {
           />
         </Box>
       ) : null}
-      {!isLoading && tickets.length > 0 ? (
         <>
-          {matchesDesktop ? (
+          {matchesDesktop && tickets?.length > 0 ? (
             <DataGrid
               sx={{ fontSize: "0.9rem", width: "89vw", height: "100vh" }}
               rows={tickets}
@@ -697,8 +697,7 @@ export const AdminTickets = () => {
             </DialogActions>
           </Dialog>
         </>
-      ) : null}
-      {!isLoading && tickets.length === 0 ? (
+      {!isLoading && tickets?.length === 0 ? (
         <Box
           sx={{
             position: "absolute",
