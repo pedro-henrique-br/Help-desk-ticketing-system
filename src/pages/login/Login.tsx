@@ -71,7 +71,7 @@ export const Login = () => {
             fullWidth
             id="email"
             label="Email"
-            placeholder="ex: seunome@caprichoveiculos.com.br"
+            placeholder="ex: pedro.dev@gmail.com"
             name="email"
             autoComplete="email"
             autoFocus
