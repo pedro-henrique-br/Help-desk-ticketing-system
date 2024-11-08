@@ -57,7 +57,7 @@ export const ForgotPassword = () => {
           margin="normal"
           fullWidth
           name="email"
-          placeholder="ex: seunome@caprichoveiculos.com.br"
+          placeholder="ex: pedro@gmail.com"
           type="email"
           autoComplete="email"
         />
