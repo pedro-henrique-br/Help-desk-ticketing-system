@@ -96,7 +96,7 @@ export const Register = () => {
                 fullWidth
                 id="email"
                 label="Email"
-                placeholder="ex: seunome@caprichoveiculos.com.br"
+                placeholder="ex: pedro@gmail.com"
                 name="email"
                 autoComplete="email"
               />
