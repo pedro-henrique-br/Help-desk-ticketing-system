@@ -24,6 +24,10 @@
   </div>
 </p>
 
+## Credenciais para teste
+Email: Admin@admin.com
+Senha: admin@
+
 ## Stack utilizada
 
 **Client:** React, Typescript, MUI (Material Design) & Supabase.
